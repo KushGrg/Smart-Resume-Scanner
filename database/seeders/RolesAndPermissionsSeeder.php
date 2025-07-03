@@ -36,6 +36,12 @@ class RolesAndPermissionsSeeder extends Seeder
             
             // Dashboard permission
             'access dashboard',
+            
+            // HR specific permissions
+            'view job posts',
+            'create job posts',
+            'edit job posts',
+            'delete job posts',
         ];
 
         foreach ($permissions as $permission) {
@@ -56,6 +62,10 @@ class RolesAndPermissionsSeeder extends Seeder
         $hrRole= Role::create(['name' => 'hr']);
         $hrRole->givePermissionTo([
             'access dashboard',
+            'view job posts',
+            'create job posts',
+            'edit job posts',
+            'delete job posts',
         ]);
     }
 } 

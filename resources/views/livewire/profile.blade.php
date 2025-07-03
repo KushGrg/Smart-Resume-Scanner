@@ -41,7 +41,7 @@ new class extends Component {
             'new_password' => 'nullable|min:8|confirmed',
             'organization_name' => 'nullable|string|max:255',
             'phone' => 'nullable|string|max:20',
-            'logo' => 'nullable|image|max:2048', // 2MB max
+            'logo' => 'nullable|max:2048', // 2MB max
         ];
     }
 

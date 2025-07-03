@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('logo')->nullable();
             $table->timestamps();
 
-            $table->foreign('hid')->references('id')->on('users');
+            $table->foreign(columns: 'hid')->references('id')->on('users');
         });
     }
 
