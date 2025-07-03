@@ -51,5 +51,11 @@ class RolesAndPermissionsSeeder extends Seeder
         // Create admin role and assign permissions
         $adminRole = Role::create(['name' => 'admin']);
         $adminRole->givePermissionTo(Permission::all());
+
+
+        $hrRole= Role::create(['name' => 'hr']);
+        $hrRole->givePermissionTo([
+            'access dashboard',
+        ]);
     }
 } 

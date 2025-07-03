@@ -29,5 +29,14 @@ class DefaultUsersSeeder extends Seeder
             'previously_verified' => true,
         ]);
         $user->assignRole('user');
+
+         $hr = User::create([
+            'name' => 'Hr',
+            'email' => 'hr@gmail.com',
+            'password' => Hash::make('password'),
+            'email_verified_at' => now(),
+            'previously_verified' => true,
+        ]);
+        $user->assignRole('hr');
     }
 } 

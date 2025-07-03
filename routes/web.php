@@ -56,6 +56,8 @@ Route::middleware('auth')->group(function () {
     Volt::route('/profile', 'profile')->name('profile');
     Volt::route('/dashboard', 'dashboard')->name('dashboard')->middleware('permission:access dashboard');
     Volt::route('/logout', 'auth.logout')->name('logout');
+    Volt::route('/hr/jobpost', 'hr.jobpost')->name('hr.jobpost.index')->middleware('permission:manage job posts');
+
 });
 
 // Protected routes requiring email verification

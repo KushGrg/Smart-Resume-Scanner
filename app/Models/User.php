@@ -46,4 +46,9 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function hrDetail()
+{
+    return $this->hasOne(\App\Models\Hr\HrDetail::class, 'hid');
+}
 }
