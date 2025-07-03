@@ -25,9 +25,9 @@ new class extends Component {
         $user = Auth::user();
         $this->name = $user->name;
         $this->email = $user->email;
+        $this->phone = $user->phone;
         if($user->hasRole('hr')) {
         $this->organization_name = $user->hrDetail->organization_name ?? '';
-        $this->phone = $user->hrDetail->phone ?? '';
         $this->logo = $user->hrDetail->logo ?? '';
         }
     }
@@ -56,6 +56,8 @@ new class extends Component {
         $updateData = [
             'name' => $this->name,
             'email' => $this->email,
+
+            
         ];
 
         if ($emailChanged) {
@@ -89,6 +91,15 @@ new class extends Component {
                     'orgainzation_name' => $this->organization_name,
                     'phone' => $this->phone,
                     'logo' => $logoPath,
+                ]
+            );
+        }
+        else{
+            App\Models\Job_seeker\Job_seeker_details::updateOrCreate(
+                ['jid' => $user->id],
+                [
+                    
+                    'phone' => $this->phone,
                 ]
             );
         }
@@ -128,12 +139,12 @@ new class extends Component {
              hint="Leave empty if you don't want to change your password" />
     <x-input label="New Password" type="password" wire:model="new_password" hint="Minimum 8 characters" />
     <x-input label="Confirm New Password" type="password" wire:model="new_password_confirmation" />
+    <x-input label="Phone Number" wire:model="phone" type="tel" />
 
-    
    
     @if(auth()->user()->hasRole('hr'))
         <x-input label="Organization Name" wire:model="organization_name" />
-        <x-input label="Phone Number" wire:model="phone" />
+        
         <x-file label="Logo" wire:model="logo" />
 
         @if ($logo)

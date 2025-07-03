@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Livewire\WithFileUploads;
 new App\Models\Hr\HrDetail;
+new App\Models\Job_seeker\Job_seeker_details;
 
 new #[Layout('components.layouts.empty')] #[Title('Registration')] class extends Component {
     use WithFileUploads;
@@ -28,6 +29,7 @@ new #[Layout('components.layouts.empty')] #[Title('Registration')] class extends
     public $photo;
     public $phone;
     public $organization_name;
+    public $designation;
 
     #[Rule('required')]
     public $role = 'user';
@@ -42,7 +44,7 @@ new #[Layout('components.layouts.empty')] #[Title('Registration')] class extends
         $this->roles = \Spatie\Permission\Models\Role::where('name', '!=', 'admin')
             ->get()
             ->map(function ($role) {
-                return [
+                return [    
                     'id' => $role->name,
                     'name' => ucwords($role->name),
                 ];
@@ -62,6 +64,18 @@ new #[Layout('components.layouts.empty')] #[Title('Registration')] class extends
         // dd($user);
 
       
+      //If user is job_seeker
+      if($data['role']=='job_seeker'){
+        //Save JOb seeker details
+        \APP\Models\Job_seeker\Job_seeker_details::create([
+            'jid'=>$user->id,
+            'name'=>$user->name,
+            'email'=>$user->email,
+            'phone'=>$user->phone,
+            'designation'=>$this->designation,
+
+        ]);
+      }
         // Save HR Details if role is HR
         if ($data['role'] === 'hr') {
             $logoPath = null;
@@ -105,9 +119,12 @@ new #[Layout('components.layouts.empty')] #[Title('Registration')] class extends
             <x-input placeholder="E-mail" wire:model="email" icon="o-envelope" />
             <x-input placeholder="Password" wire:model="password" type="password" icon="o-key" />
             <x-input placeholder="Confirm Password" wire:model="password_confirmation" type="password" icon="o-key" />
+            <x-input  type='number' placeholder="Phone Number" wire:model="phone" min:8 max:10 />
+            <div wire:show="role==='job_seeker'">
+            <x-input placeholder=" Your Designation" wire:model="designation" />
+            </div>
             <div wire:show="role === 'hr'">
                 <x-input placeholder="Organization Name" wire:model="organization_name" />
-                <x-input  type='number' placeholder="Phone Number" wire:model="phone" min:8 max:10 />
                 <x-file wire:model="photo" accept="image/png, image/jpeg" />
 
                 <div class="mt-2">

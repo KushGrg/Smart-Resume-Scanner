@@ -48,9 +48,13 @@ class RolesAndPermissionsSeeder extends Seeder
             Permission::create(['name' => $permission]);
         }
 
-        // Create user role and assign permissions
-        $userRole = Role::create(['name' => 'user']);
-        $userRole->givePermissionTo([
+        // // Create user role and assign permissions
+        // $userRole = Role::create(['name' => 'user']);
+        // $userRole->givePermissionTo([
+        //     'access dashboard',
+        // ]);
+        $jobseekerRole = Role::create(['name' => 'job_seeker']);
+        $jobseekerRole->givePermissionTo([
             'access dashboard',
         ]);
 
@@ -67,5 +71,6 @@ class RolesAndPermissionsSeeder extends Seeder
             'edit job posts',
             'delete job posts',
         ]);
+
     }
 } 
