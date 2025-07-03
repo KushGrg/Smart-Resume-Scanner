@@ -2,7 +2,7 @@
 
 use Livewire\Volt\Component;
 use Illuminate\Support\Facades\Auth;
-use App\Models\HrDetail;
+use App\Models\Hr\HrDetail;
 use Livewire\WithFileUploads;
 
 new class extends Component {
@@ -16,19 +16,19 @@ new class extends Component {
     public $message = '';
     public $messageType = '';
     public $organization_name;
-    public $phone;  
+    public $phone;
     public $logo;
 
     public function mount()
     {
-        
+
         $user = Auth::user();
         $this->name = $user->name;
         $this->email = $user->email;
         $this->phone = $user->phone;
-        if($user->hasRole('hr')) {
-        $this->organization_name = $user->hrDetail->organization_name ?? '';
-        $this->logo = $user->hrDetail->logo ?? '';
+        if ($user->hasRole('hr')) {
+            $this->organization_name = $user->hrDetail->organization_name ?? '';
+            $this->logo = $user->hrDetail->logo ?? '';
         }
     }
 
@@ -57,7 +57,7 @@ new class extends Component {
             'name' => $this->name,
             'email' => $this->email,
 
-            
+
         ];
 
         if ($emailChanged) {
@@ -83,7 +83,7 @@ new class extends Component {
                 $logoPath = $this->logo->store('logos', 'public');
             }
 
-            App\Models\Hr\HrDetail::updateOrCreate(
+            HrDetail::updateOrCreate(
                 ['hid' => $user->id],
                 [
                     'name' => $this->name,
@@ -93,12 +93,11 @@ new class extends Component {
                     'logo' => $logoPath,
                 ]
             );
-        }
-        else{
+        } else {
             App\Models\Job_seeker\Job_seeker_details::updateOrCreate(
                 ['jid' => $user->id],
                 [
-                    
+
                     'phone' => $this->phone,
                 ]
             );
@@ -125,43 +124,42 @@ new class extends Component {
 <div>
     <x-card title="Profile Information" subtitle="Update your account's profile information and email address.">
         <x-form wire:submit="updateProfile">
-    <x-input label="Name" wire:model="name" required />
-    <x-input label="Email" type="email" wire:model="email" required />
+            <x-input label="Name" wire:model="name" required />
+            <x-input label="Email" type="email" wire:model="email" required />
 
-    <x-badge :value="auth()->user()->hasVerifiedEmail() ? 'Verified' : 'Unverified'" 
-             :class="auth()->user()->hasVerifiedEmail() ? 'badge-success' : 'badge-warning'" />
+            <x-badge :value="auth()->user()->hasVerifiedEmail() ? 'Verified' : 'Unverified'"
+                :class="auth()->user()->hasVerifiedEmail() ? 'badge-success' : 'badge-warning'" />
 
-    @unless (auth()->user()->hasVerifiedEmail())
-        <x-button label="Resend Verification Email" wire:click="resendVerification" class="btn-ghost btn-sm" />
-    @endunless
+            @unless (auth()->user()->hasVerifiedEmail())
+                <x-button label="Resend Verification Email" wire:click="resendVerification" class="btn-ghost btn-sm" />
+            @endunless
 
-    <x-input label="Current Password" type="password" wire:model="current_password"
-             hint="Leave empty if you don't want to change your password" />
-    <x-input label="New Password" type="password" wire:model="new_password" hint="Minimum 8 characters" />
-    <x-input label="Confirm New Password" type="password" wire:model="new_password_confirmation" />
-    <x-input label="Phone Number" wire:model="phone" type="tel" />
+            <x-input label="Current Password" type="password" wire:model="current_password"
+                hint="Leave empty if you don't want to change your password" />
+            <x-input label="New Password" type="password" wire:model="new_password" hint="Minimum 8 characters" />
+            <x-input label="Confirm New Password" type="password" wire:model="new_password_confirmation" />
+            @if(!auth()->user()->hasRole('admin'))
+                <x-input label="Phone Number" wire:model="phone" type="tel" />
+            @endif
 
-   
-    @if(auth()->user()->hasRole('hr'))
-        <x-input label="Organization Name" wire:model="organization_name" />
-        
-        <x-file label="Logo" wire:model="logo" />
+            @if(auth()->user()->hasRole('hr'))
+                <x-input label="Organization Name" wire:model="organization_name" />
 
-        @if ($logo)
-            <img src="{{ $logo instanceof \Livewire\TemporaryUploadedFile ? $logo->temporaryUrl() : asset('storage/' . $logo) }}"
-                class="w-32 h-32 object-cover rounded-md mt-2">
-        @endif
-    @endif
+                <x-file label="Logo" wire:model="logo" />
 
-    @if ($message)
-        <x-alert :title="$message" 
-                 :class="$messageType === 'success' ? 'alert-success' : 'alert-error'" 
-                 icon="o-information-circle" />
-    @endif
+                @if ($logo)
+                    <img src="{{ $logo instanceof \Livewire\TemporaryUploadedFile ? $logo->temporaryUrl() : asset('storage/' . $logo) }}"
+                        class="w-32 h-32 object-cover rounded-md mt-2">
+                @endif
+            @endif
 
-    <x-button label="Save Changes" class="btn-primary mt-4" type="submit" spinner="updateProfile" />
-</x-form>
+            @if ($message)
+                <x-alert :title="$message" :class="$messageType === 'success' ? 'alert-success' : 'alert-error'"
+                    icon="o-information-circle" />
+            @endif
+
+            <x-button label="Save Changes" class="btn-primary mt-4" type="submit" spinner="updateProfile" />
+        </x-form>
 
     </x-card>
 </div>
-

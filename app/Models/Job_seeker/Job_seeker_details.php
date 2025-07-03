@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Job_seeker_details extends Model
 {
-    //
     protected $table = "job_seeker_details";
     protected $fillable = [
         'jid',
@@ -16,5 +15,5 @@ class Job_seeker_details extends Model
         'designation'
     ];
 
-    
+
 }
