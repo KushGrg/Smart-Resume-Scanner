@@ -21,22 +21,23 @@ class RolesAndPermissionsSeeder extends Seeder
             'create users',
             'edit users',
             'delete users',
-            
+            'view available jobs',
+
             // Role permissions
             'view roles',
             'create roles',
             'edit roles',
             'delete roles',
-            
+
             // Permission permissions
             'view permissions',
             'create permissions',
             'edit permissions',
             'delete permissions',
-            
+
             // Dashboard permission
             'access dashboard',
-            
+
             // HR specific permissions
             'view job posts',
             'create job posts',
@@ -56,6 +57,7 @@ class RolesAndPermissionsSeeder extends Seeder
         $jobseekerRole = Role::create(['name' => 'job_seeker']);
         $jobseekerRole->givePermissionTo([
             'access dashboard',
+            'view available jobs',
         ]);
 
         // Create admin role and assign permissions
@@ -63,7 +65,7 @@ class RolesAndPermissionsSeeder extends Seeder
         $adminRole->givePermissionTo(Permission::all());
 
 
-        $hrRole= Role::create(['name' => 'hr']);
+        $hrRole = Role::create(['name' => 'hr']);
         $hrRole->givePermissionTo([
             'access dashboard',
             'view job posts',
@@ -73,4 +75,4 @@ class RolesAndPermissionsSeeder extends Seeder
         ]);
 
     }
-} 
+}

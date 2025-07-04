@@ -44,7 +44,7 @@ new #[Layout('components.layouts.empty')] #[Title('Registration')] class extends
         $this->roles = \Spatie\Permission\Models\Role::where('name', '!=', 'admin')
             ->get()
             ->map(function ($role) {
-                return [    
+                return [
                     'id' => $role->name,
                     'name' => ucwords($role->name),
                 ];
@@ -58,24 +58,24 @@ new #[Layout('components.layouts.empty')] #[Title('Registration')] class extends
         // dd($data);
         $data['avatar'] = '/empty-user.jpg';
         $data['password'] = Hash::make($data['password']);
-        
+
 
         $user = User::create($data);
         // dd($user);
 
-      
-      //If user is job_seeker
-      if($data['role']=='job_seeker'){
-        //Save JOb seeker details
-        \APP\Models\Job_seeker\Job_seeker_details::create([
-            'jid'=>$user->id,
-            'name'=>$user->name,
-            'email'=>$user->email,
-            'phone'=>$user->phone,
-            'designation'=>$this->designation,
 
-        ]);
-      }
+        //If user is job_seeker
+        if ($data['role'] == 'job_seeker') {
+            //Save JOb seeker details
+            \APP\Models\Job_seeker\Job_seeker_details::create([
+                'jid' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'phone' => $user->phone,
+                'designation' => $this->designation,
+
+            ]);
+        }
         // Save HR Details if role is HR
         if ($data['role'] === 'hr') {
             $logoPath = null;
@@ -119,18 +119,19 @@ new #[Layout('components.layouts.empty')] #[Title('Registration')] class extends
             <x-input placeholder="E-mail" wire:model="email" icon="o-envelope" />
             <x-input placeholder="Password" wire:model="password" type="password" icon="o-key" />
             <x-input placeholder="Confirm Password" wire:model="password_confirmation" type="password" icon="o-key" />
-            <x-input  type='number' placeholder="Phone Number" wire:model="phone" min:8 max:10 />
+            <x-input type='number' placeholder="Phone Number" wire:model="phone" min:8 max:10 />
             <div wire:show="role==='job_seeker'">
-            <x-input placeholder=" Your Designation" wire:model="designation" />
+                <x-input placeholder=" Your Designation" wire:model="designation" />
             </div>
             <div wire:show="role === 'hr'">
                 <x-input placeholder="Organization Name" wire:model="organization_name" />
                 <x-file wire:model="photo" accept="image/png, image/jpeg" />
 
                 <div class="mt-2">
-                        
+
                     @if ($photo)
-                        <img src="{{ $photo->temporaryUrl() }}" alt="Uploaded Photo" class="w-full h-32 object-cover rounded-md">
+                        <img src="{{ $photo->temporaryUrl() }}" alt="Uploaded Photo"
+                            class="w-full h-32 object-cover rounded-md">
                     @endif
                 </div>
 

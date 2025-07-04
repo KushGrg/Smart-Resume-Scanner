@@ -1,6 +1,7 @@
 <?php
 
 use App\Livewire\Hr\JobPost;
+use App\Livewire\Jobseeker\AvailableJobs;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
@@ -58,8 +59,8 @@ Route::middleware('auth')->group(function () {
     Volt::route('/profile', 'profile')->name('profile');
     Volt::route('/dashboard', 'dashboard')->name('dashboard')->middleware('permission:access dashboard');
     Volt::route('/logout', 'auth.logout')->name('logout');
-    // Volt::route('/hr/jobpost', 'hr.jobpost')->name('hr.jobpost.index')->middleware('permission:manage job posts');
     Route::get('/hr/jobpost', JobPost::class)->name('hr.jobpost.index')->middleware('permission:view job posts');
+    Route::get('Available_Jobs', AvailableJobs::class)->name('job_seeker.available_jobs.index')->middleware('permission:view available jobs');
 
 });
 
