@@ -47,18 +47,16 @@
     {{-- Apply Modal --}}
     @if($applyingJob)
         <x-modal wire:model.defer="applyingJob">
-            <x-slot name="title">Apply for: {{ $selectedJob?->title }}</x-slot>
-            <div>
-                <div class="text-sm text-gray-500 mb-2">{{ $selectedJob?->type }} • {{ $selectedJob?->location }}</div>
-                <div class="text-sm mb-4">{{ $selectedJob?->description }}</div>
-
+            <x-form wire:submit="submitApplication">
+                <x-slot name="title">Apply for: {{ $selectedJob?->title }}</x-slot>
                 <div>
-                    <x-input type="file" label="Upload Resume" wire:model="resume" />
-                    @error('resume') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
-                </div>
+                    <div class="text-sm text-gray-500 mb-2">{{ $selectedJob?->type }} • {{ $selectedJob?->location }}</div>
+                    <div class="text-sm mb-4">{{ $selectedJob?->description }}</div>
+                    <x-file wire:model="resume" label="Upload Resume" />
 
-                <x-button label="Submit Application" wire:click="submitApplication" class="mt-4 btn-primary" />
-            </div>
+                    <x-button label="Submit Application" type="submit" class="mt-4 btn-primary" />
+                </div>
+            </x-form>
         </x-modal>
     @endif
 </div>

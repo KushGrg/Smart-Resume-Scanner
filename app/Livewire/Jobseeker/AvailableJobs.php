@@ -49,16 +49,21 @@ class AvailableJobs extends Component
     public function submitApplication()
     {
         $this->validate([
-            'resume' => 'required|mimes:pdf,doc,docx|max:2048'
+            'resume' => 'mimes:pdf,doc,docx|max:2048'
+        ], [
+            'resume.mimes' => 'The resume must be a file of type: pdf, doc, docx.',
+            'resume.max' => 'The resume may not be greater than 2MB in size.'
         ]);
 
         $path = $this->resume->store('resumes', 'public');
 
-        // Example: Save to database (JobApplication model assumed)
-        auth()->user()->applications()->create([
-            'job_post_id' => $this->selectedJob->id,
+        // Save to resumes table
+        auth()->user()?->jobSeekerDetail?->resumes()->create([
+            'jsid' => auth()->user()?->jobSeekerDetail?->id,
+            'jpostid' => $this->selectedJob?->id,
             'resume_path' => $path,
         ]);
+
 
         session()->flash('message', 'Application submitted successfully.');
         $this->reset(['applyingJob', 'resume']);

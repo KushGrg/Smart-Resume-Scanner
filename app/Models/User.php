@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Job_seeker\Job_seeker_details;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use \App\Models\Job_seeker;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -48,7 +50,12 @@ class User extends Authenticatable implements MustVerifyEmail
     ];
 
     public function hrDetail()
-{
-    return $this->hasOne(\App\Models\Hr\HrDetail::class, 'hid');
-}
+    {
+        return $this->hasOne(\App\Models\Hr\HrDetail::class, 'hid');
+    }
+
+    public function jobSeekerDetail()
+    {
+        return $this->hasOne(Job_seeker_details::class, 'jid', 'id'); // adjust foreign key if needed
+    }
 }
