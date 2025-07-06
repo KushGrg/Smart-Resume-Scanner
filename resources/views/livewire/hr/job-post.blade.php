@@ -11,17 +11,17 @@
 
     <!-- TABLE -->
     <x-card>
-        <x-table 
-            :headers="$headers" 
-            :rows="$jobPosts" 
-            :sort-by="$sortBy" 
-            striped 
+        <x-table
+            :headers="$headers"
+            :rows="$jobPosts"
+            :sort-by="$sortBy"
+            striped
             with-pagination
             per-page="perPage"
             :per-page-values="[5, 10, 15, 25, 50]"
         >
-            @scope('cell_status', $jobPost)
-                <x-badge :value="$jobPost->status" @class([
+            @scope('status', $jobPost)
+                <x-badge :value="ucwords($jobPost->status)" @class([
                     'badge-success' => $jobPost->status === 'active',
                     'badge-error' => $jobPost->status === 'inactive'
                 ]) />
