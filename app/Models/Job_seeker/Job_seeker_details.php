@@ -15,13 +15,9 @@ class Job_seeker_details extends Model
         'designation'
     ];
 
-    public function jobSeekerDetail()
-    {
-        return $this->hasOne(Job_Seeker_details::class, 'id'); // adjust foreign key if needed
-    }
 
     public function resumes()
     {
-        return $this->hasMany(Resume::class, 'id');
+        return $this->hasMany(Resume::class, 'jsid', 'id');
     }
 }

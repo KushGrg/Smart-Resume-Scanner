@@ -25,10 +25,14 @@ new class extends Component {
         $user = Auth::user();
         $this->name = $user->name;
         $this->email = $user->email;
-        $this->phone = $user->phone;
         if ($user->hasRole('hr')) {
             $this->organization_name = $user->hrDetail->organization_name ?? '';
             $this->logo = $user->hrDetail->logo ?? '';
+            $this->phone = $user->phone ?? '';
+        } else {
+            $jobSeekerDetail = $user->jobSeekerDetail; 
+
+            $this->phone = $jobSeekerDetail->phone ?? '';
         }
     }
 
@@ -97,7 +101,8 @@ new class extends Component {
             App\Models\Job_seeker\Job_seeker_details::updateOrCreate(
                 ['jid' => $user->id],
                 [
-
+                    'name' => $this->name,
+                    'email' => $this->email,
                     'phone' => $this->phone,
                 ]
             );

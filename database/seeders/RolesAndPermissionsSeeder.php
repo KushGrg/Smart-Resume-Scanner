@@ -22,6 +22,8 @@ class RolesAndPermissionsSeeder extends Seeder
             'edit users',
             'delete users',
             'view available jobs',
+            'view applied history',
+            'create profile',
 
             // Role permissions
             'view roles',
@@ -58,6 +60,8 @@ class RolesAndPermissionsSeeder extends Seeder
         $jobseekerRole->givePermissionTo([
             'access dashboard',
             'view available jobs',
+            'view applied history',
+            'create profile'
         ]);
 
         // Create admin role and assign permissions

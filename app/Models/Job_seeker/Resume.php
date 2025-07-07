@@ -15,13 +15,15 @@ class Resume extends Model
         'resume_path',
         'status'
     ];
-    public function job()
-    {
-        return $this->belongsTo(JobPost::class, 'jpostid');
-    }
 
     public function jobSeeker()
     {
-        return $this->belongsTo(Job_Seeker_details::class);
+        return $this->belongsTo(Job_Seeker_details::class, 'jsid', 'id');
     }
+    public function job()
+    {
+        return $this->belongsTo(JobPost::class, 'jpostid', 'id');
+    }
+
+
 }

@@ -48,6 +48,7 @@ class AvailableJobs extends Component
 
     public function submitApplication()
     {
+        // dd(auth()->user()?->jobSeekerDetail?->id);
         $this->validate([
             'resume' => 'mimes:pdf,doc,docx|max:2048'
         ], [
@@ -58,12 +59,11 @@ class AvailableJobs extends Component
         $path = $this->resume->store('resumes', 'public');
 
         // Save to resumes table
-        auth()->user()?->jobSeekerDetail?->resumes()->create([
-            'jsid' => auth()->user()?->jobSeekerDetail?->id,
-            'jpostid' => $this->selectedJob?->id,
+        auth()->user()->jobSeekerDetail->resumes()->create([
+            'jsid' => auth()->user()->jobSeekerDetail->id,
+            'jpostid' => $this->selectedJob->id,
             'resume_path' => $path,
         ]);
-
 
         session()->flash('message', 'Application submitted successfully.');
         $this->reset(['applyingJob', 'resume']);

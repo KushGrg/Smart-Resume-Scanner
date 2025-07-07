@@ -51,7 +51,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function hrDetail()
     {
-        return $this->hasOne(\App\Models\Hr\HrDetail::class, 'hid');
+        return $this->hasOne(\App\Models\Hr\HrDetail::class, 'hid', 'id');
     }
 
     public function jobSeekerDetail()
