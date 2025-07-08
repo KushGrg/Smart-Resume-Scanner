@@ -2,29 +2,81 @@
 
 namespace App\Livewire\Jobseeker;
 
-use App\Models\Hr\JobPost;
+use App\Models\Job_seeker\Resume;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 use Livewire\WithPagination;
+
 class ViewAppliedHistory extends Component
 {
     use WithPagination;
 
     public string $search = '';
     public int $perPage = 10;
+    public $selectedResume = null;
+    public bool $viewingResume = false;
 
     public function appliedJobs()
     {
-        return auth()->user()->jobSeekerDetail->resumes()
-            ->with('jobPost')
-            ->when($this->search, function ($query) {
-                $query->whereHas('jobPost', function ($q) {
-                    $q->where('title', 'like', '%' . $this->search . '%')
-                        ->orWhere('description', 'like', '%' . $this->search . '%');
-                });
-            })
-            ->latest()
-            ->paginate($this->perPage);
+        try {
+            $user = auth()->user();
+
+            if (!$user || !$user->jobSeekerDetail) {
+                return new LengthAwarePaginator([], 0, $this->perPage);
+            }
+
+            return $user->jobSeekerDetail->resumes()
+                ->with('jobPost')
+                ->when($this->search, function ($query) {
+                    $query->whereHas('jobPost', function ($q) {
+                        $q->where('title', 'like', '%' . $this->search . '%')
+                            ->orWhere('description', 'like', '%' . $this->search . '%');
+                    });
+                })
+                ->latest()
+                ->paginate($this->perPage);
+
+        } catch (\Exception $e) {
+            Log::error('Error fetching applied jobs: ' . $e->getMessage());
+            return new LengthAwarePaginator([], 0, $this->perPage);
+        }
     }
+
+    public function viewResume($resumeId)
+    {
+        try {
+            $this->selectedResume = Resume::findOrFail($resumeId);
+            $this->viewingResume = true;
+        } catch (\Exception $e) {
+            Log::error('Error viewing resume: ' . $e->getMessage());
+            $this->dispatchBrowserEvent('notify', [
+                'type' => 'error',
+                'message' => 'Failed to load resume.'
+            ]);
+        }
+    }
+    public function downloadResume($resumeId)
+    {
+        try {
+            $resume = Resume::findOrFail($resumeId);
+            $path = storage_path('app/public/' . $resume->resume_path);
+
+            if (!file_exists($path)) {
+                throw new \Exception("Resume file not found");
+            }
+
+            return response()->download($path, basename($resume->resume_path));
+        } catch (\Exception $e) {
+            Log::error('Error downloading resume: ' . $e->getMessage());
+            $this->dispatchBrowserEvent('notify', [
+                'type' => 'error',
+                'message' => 'Failed to download resume.'
+            ]);
+        }
+    }
+
+
 
     public function render()
     {

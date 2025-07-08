@@ -2,7 +2,8 @@
 
 namespace App\Models\Job_seeker;
 
-use App\Livewire\Hr\JobPost;
+// use App\Livewire\Hr\JobPost;
+use App\Models\Hr\JobPost;
 use Illuminate\Database\Eloquent\Model;
 
 class Resume extends Model
@@ -20,7 +21,7 @@ class Resume extends Model
     {
         return $this->belongsTo(Job_Seeker_details::class, 'jsid', 'id');
     }
-    public function job()
+    public function jobPost()
     {
         return $this->belongsTo(JobPost::class, 'jpostid', 'id');
     }

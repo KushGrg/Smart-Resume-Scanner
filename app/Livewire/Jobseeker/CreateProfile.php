@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Jobseeker;
 
+use App\Models\Job_seeker\JobSeekerInfo;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class CreateProfile extends Component
@@ -9,7 +11,7 @@ class CreateProfile extends Component
     public $step = 1;
 
     // Profile Info
-    public $first_name, $last_name, $designation, $phone, $email, $country, $city, $address, $summary;
+    public $name, $designation, $phone, $email, $country, $city, $address, $summary;
 
 
     // Experience (array of items)
@@ -44,6 +46,7 @@ class CreateProfile extends Component
     // Step navigation
     public function next()
     {
+        // dd("Hello");
         $this->validate($this->rules()[$this->step]);
         $this->step++;
     }
@@ -65,17 +68,16 @@ class CreateProfile extends Component
     {
         $this->validate(array_merge(...array_values($this->rules())));
 
-        $resume = Resume::create([
+        $resume = JobSeekerInfo::create([
             'user_id' => Auth::id(),
-            'first_name' => $this->first_name,
-            'last_name' => $this->last_name,
+            'name' => $this->name,
+            // 'last_name' => $this->last_name,
             'designation' => $this->designation,
             'phone' => $this->phone,
             'email' => $this->email,
             'country' => $this->country,
             'city' => $this->city,
             'address' => $this->address,
-            'summary' => $this->summary,
         ]);
 
         foreach ($this->experiences as $exp) {
@@ -98,8 +100,7 @@ class CreateProfile extends Component
     {
         return [
             1 => [
-                'first_name' => 'required|string|min:2',
-                'last_name' => 'required|string|min:2',
+                'name' => 'required|string|min:2',
                 'designation' => 'required|string',
                 'phone' => 'required|string',
                 'email' => 'required|email',

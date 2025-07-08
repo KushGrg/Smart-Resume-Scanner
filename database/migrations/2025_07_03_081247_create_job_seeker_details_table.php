@@ -22,7 +22,7 @@ return new class extends Migration {
             $table->timestamps();
 
             // $table->foreign(columns: 'jid')->references('id')->on('users');
-            $table->foreign('jid')->references('id')->on('users')->onDelete('cascade'); // FIXED
+            $table->foreign(columns: 'jid')->references('id')->on('users')->onDelete('cascade'); // FIXED
         });
     }
 

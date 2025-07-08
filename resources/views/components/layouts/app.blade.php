@@ -58,7 +58,7 @@
                         @role('job_seeker')
                         <x-menu-item title="Available_Jobs" icon="o-user" link="/Available_Jobs" />
                         <x-menu-item title="View Applied History" icon="o-user" link="/view_applied_history" />
-                        <x-menu-item title="Create_Profile" icon="o-user" link="/create profile " />
+                        <x-menu-item title="Create Resume   " icon="o-user" link="/create profile " />
 
                         @endrole
 

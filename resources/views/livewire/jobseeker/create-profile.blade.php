@@ -8,7 +8,7 @@
             <h3 class="text-lg font-semibold mb-3">Profile Information</h3>
 
             <div class="grid grid-cols-2 gap-4">
-                <x-input label="Name" wire:model.defer="first_name" />
+                <x-input label="Name" wire:model.defer="name" />
                 {{-- <x-input label="Last Name" wire:model.defer="last_name" /> --}}
                 <x-input label="Designation" wire:model.defer="designation" />
                 <x-input label="Phone" wire:model.defer="phone" />
@@ -32,14 +32,14 @@
                         <x-input label="Start Date" wire:model.defer="experiences.{{ $index }}.start_date" type="date" />
                         <x-input label="End Date" wire:model.defer="experiences.{{ $index }}.end_date" type="date" />
                         <div class="flex items-end">
-                            <x-button flat icon="trash" @click="$wire.experiences.splice({{ $index }}, 1)" label="Remove" />
+                            <x-button flat icon="" @click="$wire.experiences.splice({{ $index }}, 1)" label="Remove" />
                         </div>
                     </div>
                     <x-textarea label="Work Summary" wire:model.defer="experiences.{{ $index }}.work_summary" class="mt-2" />
                 </div>
             @endforeach
 
-            <x-button outline wire:click="addExperience" label="Add Two Experience Fields" icon="plus" />
+            <x-button outline wire:click="addExperience" label="Add Two Experience Fields" icon="" />
         @endif
 
         {{-- STEP 3: Education --}}
@@ -78,7 +78,7 @@
             <ul class="list-disc ml-6 mt-2">
                 @foreach ($skills as $i => $skill)
                     <li>{{ $skill }}
-                        <x-button flat icon="x" @click="$wire.skills.splice({{ $i }}, 1)" />
+                        <x-button flat icon="" @click="$wire.skills.splice({{ $i }}, 1)" />
                     </li>
                 @endforeach
             </ul>
@@ -90,7 +90,7 @@
         @if($step === 5)
             <h3 class="text-lg font-semibold mb-3">Review Resume</h3>
 
-            <p><strong>Name:</strong> {{ $first_name }} {{ $last_name }}</p>
+            <p><strong>Name:</strong> {{ $name }} </p>
             <p><strong>Designation:</strong> {{ $designation }}</p>
             <p><strong>Contact:</strong> {{ $email }} | {{ $phone }}</p>
             <p><strong>Location:</strong> {{ $city }}, {{ $country }}</p>

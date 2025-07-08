@@ -2,6 +2,7 @@
 
 namespace App\Models\Hr;
 
+use App\Models\Job_seeker\Resume;
 use Illuminate\Database\Eloquent\Model;
 
 class JobPost extends Model
@@ -18,4 +19,8 @@ class JobPost extends Model
         'experience',
         'status'
     ];
+    public function resumes()
+    {
+        return $this->hasMany(Resume::class, 'jpostid', 'id');
+    }
 }
