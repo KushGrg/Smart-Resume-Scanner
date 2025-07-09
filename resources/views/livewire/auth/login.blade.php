@@ -8,8 +8,8 @@ use Livewire\Volt\Component;
 new
 #[Layout('components.layouts.empty')]
 #[Title('Login')]
-class extends Component {
-
+class extends Component
+{
     #[Rule('required|email')]
     public string $email = '';
 
@@ -30,16 +30,22 @@ class extends Component {
 
         if (auth()->attempt($credentials)) {
             $user = auth()->user();
-            
+
             request()->session()->regenerate();
 
+            // Log successful login
+            \App\Models\AuditLog::logSuccessfulLogin($user);
+
             // If email is not verified, redirect to verification page
-            if (!$user->hasVerifiedEmail()) {
+            if (! $user->hasVerifiedEmail()) {
                 return redirect()->route('verification.notice');
             }
-            
+
             return redirect()->intended('/');
         }
+
+        // Log failed login attempt
+        \App\Models\AuditLog::logFailedLogin($this->email);
 
         $this->addError('email', 'The provided credentials do not match our records.');
     }
