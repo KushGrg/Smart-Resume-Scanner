@@ -2,9 +2,12 @@
 
 namespace App\Models;
 
-use App\Models\JobSeeker\JobSeekerDetails;
+use App\Models\Hr\HrDetail;
+use App\Models\JobSeeker\JobSeekerDetail;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -46,20 +49,59 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'previously_verified' => 'boolean',
     ];
 
-    public function hrDetail()
+    // Relationships
+    public function hrDetail(): HasOne
     {
-        return $this->hasOne(\App\Models\Hr\HrDetail::class, 'user_id', 'id');
+        return $this->hasOne(HrDetail::class, 'user_id');
     }
 
-    public function jobSeekerDetail()
+    public function jobSeekerDetail(): HasOne
     {
-        return $this->hasOne(JobSeekerDetails::class, 'user_id', 'id');
+        return $this->hasOne(JobSeekerDetail::class, 'user_id');
     }
 
-    public function jobPosts()
+    public function jobPosts(): HasMany
     {
-        return $this->hasMany(\App\Models\Hr\JobPost::class, 'user_id', 'id');
+        return $this->hasMany(\App\Models\Hr\JobPost::class, 'user_id');
+    }
+
+    // Role helper methods
+    public function isHr(): bool
+    {
+        return $this->hasRole('hr');
+    }
+
+    public function isJobSeeker(): bool
+    {
+        return $this->hasRole('job_seeker');
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->hasRole(['admin', 'super_admin']);
+    }
+
+    // Profile helper methods
+    public function getProfileAttribute()
+    {
+        if ($this->isHr()) {
+            return $this->hrDetail;
+        }
+
+        if ($this->isJobSeeker()) {
+            return $this->jobSeekerDetail;
+        }
+
+        return null;
+    }
+
+    public function hasCompleteProfile(): bool
+    {
+        $profile = $this->profile;
+
+        return $profile !== null && $profile->name && $profile->email && $profile->phone;
     }
 }
