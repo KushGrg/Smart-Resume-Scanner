@@ -49,12 +49,25 @@ class JobSeekerDetails extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'jid',
+        'user_id',
         'name',
         'email',
         'phone',
-        'designation',
+        'current_designation',
+        'experience_years',
+        'skills',
+        'summary',
     ];
+
+    /**
+     * Get the user that owns this job seeker detail.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo(\App\Models\User::class, 'user_id');
+    }
 
     /**
      * Get all resumes submitted by this job seeker.
@@ -66,6 +79,6 @@ class JobSeekerDetails extends Model
      */
     public function resumes(): HasMany
     {
-        return $this->hasMany(Resume::class, 'jsid', 'id');
+        return $this->hasMany(Resume::class, 'job_seeker_detail_id', 'id');
     }
 }
