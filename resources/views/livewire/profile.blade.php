@@ -1,30 +1,61 @@
 <?php
 
-use Livewire\Volt\Component;
+use App\Models\Hr\HrDetail;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Volt\Component;
+use Livewire\WithFileUploads;
 
-new class extends Component {
+new class extends Component
+{
+    use WithFileUploads;
+
     public $name;
+
     public $email;
+
     public $current_password = '';
+
     public $new_password = '';
+
     public $new_password_confirmation = '';
+
     public $message = '';
+
     public $messageType = '';
+
+    public $organization_name;
+
+    public $phone;
+
+    public $logo;
 
     public function mount()
     {
-        $this->name = Auth::user()->name;
-        $this->email = Auth::user()->email;
+
+        $user = Auth::user();
+        $this->name = $user->name;
+        $this->email = $user->email;
+        if ($user->hasRole('hr')) {
+            $this->organization_name = $user->hrDetail->organization_name ?? '';
+            $this->logo = $user->hrDetail->logo ?? '';
+            $this->phone = $user->phone ?? '';
+        } else {
+            $jobSeekerDetail = $user->jobSeekerDetail;
+
+            $this->phone = $jobSeekerDetail->phone ?? '';
+        }
     }
 
     protected function rules()
     {
         return [
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . Auth::id(),
+            'email' => 'required|string|email|max:255|unique:users,email,'.Auth::id(),
             'current_password' => 'required_with:new_password|current_password',
             'new_password' => 'nullable|min:8|confirmed',
+            'organization_name' => 'nullable|string|max:255',
+            'phone' => 'nullable|string|max:20',
+            'logo' => 'nullable|max:2048', // 2MB max
         ];
     }
 
@@ -35,13 +66,13 @@ new class extends Component {
         $user = Auth::user();
         $emailChanged = $user->email !== $this->email;
 
-        // Update user information
+        // Update user basic info
         $updateData = [
             'name' => $this->name,
             'email' => $this->email,
+
         ];
 
-        // If email is changed, mark it as unverified and update previously_verified
         if ($emailChanged) {
             $wasVerified = $user->hasVerifiedEmail();
             $updateData['email_verified_at'] = null;
@@ -50,17 +81,46 @@ new class extends Component {
 
         $user->update($updateData);
 
-        // Update password if provided
+        // Update password if needed
         if ($this->new_password) {
             $user->update([
                 'password' => bcrypt($this->new_password),
             ]);
         }
 
-        // Send verification email and redirect if email was changed
+        // HR-specific info
+        if ($user->hasRole('hr')) {
+            $logoPath = $user->hrDetail->logo ?? null;
+
+            if ($this->logo && is_object($this->logo)) {
+                $logoPath = $this->logo->store('logos', 'public');
+            }
+
+            HrDetail::updateOrCreate(
+                ['hid' => $user->id],
+                [
+                    'name' => $this->name,
+                    'email' => $this->email,
+                    'orgainzation_name' => $this->organization_name,
+                    'phone' => $this->phone,
+                    'logo' => $logoPath,
+                ]
+            );
+        } else {
+            App\Models\JobSeeker\JobSeekerDetails::updateOrCreate(
+                ['jid' => $user->id],
+                [
+                    'name' => $this->name,
+                    'email' => $this->email,
+                    'phone' => $this->phone,
+                ]
+            );
+        }
+
         if ($emailChanged) {
             $user->sendEmailVerificationNotification();
         }
+
         $this->message = 'Profile updated successfully!';
         $this->messageType = 'success';
         $this->reset(['current_password', 'new_password', 'new_password_confirmation']);
@@ -73,32 +133,47 @@ new class extends Component {
         $this->messageType = 'success';
     }
 };
-
 ?>
+
 <div>
     <x-card title="Profile Information" subtitle="Update your account's profile information and email address.">
         <x-form wire:submit="updateProfile">
             <x-input label="Name" wire:model="name" required />
-
             <x-input label="Email" type="email" wire:model="email" required />
 
-            <x-badge :value="auth()->user()->hasVerifiedEmail() ? 'Verified' : 'Unverified'" :class="auth()->user()->hasVerifiedEmail() ? 'badge-success' : 'badge-warning'" />
+            <x-badge :value="auth()->user()->hasVerifiedEmail() ? 'Verified' : 'Unverified'"
+                :class="auth()->user()->hasVerifiedEmail() ? 'badge-success' : 'badge-warning'" />
 
             @unless (auth()->user()->hasVerifiedEmail())
                 <x-button label="Resend Verification Email" wire:click="resendVerification" class="btn-ghost btn-sm" />
             @endunless
+
             <x-input label="Current Password" type="password" wire:model="current_password"
                 hint="Leave empty if you don't want to change your password" />
-
             <x-input label="New Password" type="password" wire:model="new_password" hint="Minimum 8 characters" />
-
             <x-input label="Confirm New Password" type="password" wire:model="new_password_confirmation" />
-
-            @if ($message)
-                <x-alert :title="$message" :class="$messageType === 'success' ? 'alert-success' : 'alert-error'" icon="o-information-circle" />
+            @if(!auth()->user()->hasRole('admin'))
+                <x-input label="Phone Number" wire:model="phone" type="tel" />
             @endif
 
-            <x-button label="Save Changes" class="btn-primary" type="submit" spinner="updateProfile" />
+            @if(auth()->user()->hasRole('hr'))
+                <x-input label="Organization Name" wire:model="organization_name" />
+
+                <x-file label="Logo" wire:model="logo" />
+
+                @if ($logo)
+                    <img src="{{ $logo instanceof \Livewire\TemporaryUploadedFile ? $logo->temporaryUrl() : asset('storage/' . $logo) }}"
+                        class="w-32 h-32 object-cover rounded-md mt-2">
+                @endif
+            @endif
+
+            @if ($message)
+                <x-alert :title="$message" :class="$messageType === 'success' ? 'alert-success' : 'alert-error'"
+                    icon="o-information-circle" />
+            @endif
+
+            <x-button label="Save Changes" class="btn-primary mt-4" type="submit" spinner="updateProfile" />
         </x-form>
+
     </x-card>
 </div>

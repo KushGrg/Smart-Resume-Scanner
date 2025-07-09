@@ -1,0 +1,31 @@
+parameters:
+    level: 5
+    paths:
+        - app
+        - database
+        - routes
+    excludePaths:
+        - vendor
+        - bootstrap/cache
+        - storage
+        - node_modules
+    checkMissingIterableValueType: false
+    checkGenericClassInNonGenericObjectType: false
+    ignoreErrors:
+        # Ignore errors for auto-generated files
+        - '#Unsafe usage of new static#'
+        - '#Property .* does not accept#'
+        # Laravel specific ignores
+        - '#Method Illuminate\\.*#'
+        - '#Call to an undefined method Illuminate\\.*#'
+        # Livewire specific ignores
+        - '#Livewire\\Component::.*#'
+        # Mary UI ignores
+        - '#Mary\\.*#'
+    stubFiles:
+        - stubs/livewire.stub
+        - stubs/mary.stub
+    scanDirectories:
+        - vendor/livewire/livewire/src
+        - vendor/robsontenorio/mary/src
+    reportUnmatchedIgnoredErrors: false

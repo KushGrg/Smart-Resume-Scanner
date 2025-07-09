@@ -1,17 +1,20 @@
 <?php
 
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Rule;
 use Livewire\Attributes\Title;
 use Livewire\Volt\Component;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Http;
+use Livewire\WithFileUploads;
 
-new
-#[Layout('components.layouts.empty')]
-#[Title('Registration')]
-class extends Component {
+new App\Models\Hr\HrDetail;
+new App\Models\JobSeeker\JobSeekerDetails;
+
+new #[Layout('components.layouts.empty')] #[Title('Registration')] class extends Component
+{
+    use WithFileUploads;
+
     #[Rule('required')]
     public string $name = '';
 
@@ -24,24 +27,78 @@ class extends Component {
     #[Rule('required')]
     public string $password_confirmation = '';
 
+    public $roles = [];
+
+    public $photo;
+
+    public $phone;
+
+    public $organization_name;
+
+    public $designation;
+
+    #[Rule('required')]
+    public $role = 'user';
+
     public function mount()
     {
         // It is logged in
         if (auth()->user()) {
             return redirect('/');
         }
+        // Load roles using Spatie's Role model
+        $this->roles = \Spatie\Permission\Models\Role::where('name', '!=', 'admin')
+            ->get()
+            ->map(function ($role) {
+                return [
+                    'id' => $role->name,
+                    'name' => ucwords($role->name),
+                ];
+            })
+            ->toArray();
     }
 
     public function register()
     {
         $data = $this->validate();
-
+        // dd($data);
         $data['avatar'] = '/empty-user.jpg';
         $data['password'] = Hash::make($data['password']);
 
         $user = User::create($data);
+        // dd($user);
 
-        $user->assignRole('user');
+        // If user is job_seeker
+        if ($data['role'] == 'job_seeker') {
+            // Save JOb seeker details
+            \App\Models\JobSeeker\JobSeekerDetails::create([
+                'jid' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'phone' => $user->phone,
+                'designation' => $this->designation,
+
+            ]);
+        }
+        // Save HR Details if role is HR
+        if ($data['role'] === 'hr') {
+            $logoPath = null;
+            if ($this->photo) {
+                $logoPath = $this->photo->store('logos', 'public');
+            }
+
+            \App\Models\Hr\HrDetail::create([
+                'hid' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'orgainzation_name' => $this->organization_name,
+                'phone' => $user->phone,
+                'logo' => $logoPath,
+            ]);
+        }
+
+        // Assign the selected role to the user
+        $user->syncRoles([$data['role']]);
 
         auth()->login($user);
 
@@ -58,18 +115,38 @@ class extends Component {
     <div class="mb-10">
         <x-app-brand />
     </div>
- 
+
     <x-card title="Register" subtitle="Create a new account to get started">
         <x-form wire:submit="register">
+            <x-radio label="Select Role" wire:model="role" :options="$roles" inline />
             <x-input placeholder="Name" wire:model="name" icon="o-user" />
             <x-input placeholder="E-mail" wire:model="email" icon="o-envelope" />
             <x-input placeholder="Password" wire:model="password" type="password" icon="o-key" />
             <x-input placeholder="Confirm Password" wire:model="password_confirmation" type="password" icon="o-key" />
-    
-            <x-slot:actions>
-                <x-button label="Already registered?" class="btn-ghost" link="/login" />
-                <x-button label="Register" type="submit" icon="o-paper-airplane" class="btn-primary" spinner="register" />
-            </x-slot:actions>
-        </x-form>
-    </x-card>
+            <x-input type='number' placeholder="Phone Number" wire:model="phone" min:8 max:10 />
+            <div wire:show="role==='job_seeker'">
+                <x-input placeholder=" Your Designation" wire:model="designation" />
+            </div>
+            <div wire:show="role === 'hr'">
+                <x-input placeholder="Organization Name" wire:model="organization_name" />
+                <x-file wire:model="photo" accept="image/png, image/jpeg" />
+
+                <div class="mt-2">
+
+                    @if ($photo)
+                        <img src="{{ $photo->temporaryUrl() }}" alt="Uploaded Photo"
+                            class="w-full h-32 object-cover rounded-md">
+                    @endif
+                </div>
+
+            </div>
+
+</div>
+
+<x-slot:actions>
+    <x-button label="Already registered?" class="btn-ghost" link="/login" />
+    <x-button label="Register" type="submit" icon="o-paper-airplane" class="btn-primary" spinner="register" />
+</x-slot:actions>
+</x-form>
+</x-card>
 </div>

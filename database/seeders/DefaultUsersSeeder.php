@@ -21,13 +21,31 @@ class DefaultUsersSeeder extends Seeder
         $admin->assignRole('admin');
 
         // Create regular user
-        $user = User::create([
+        $job_seeker = User::create([
             'name' => 'Regular User',
-            'email' => 'user@example.com',
+            'email' => 'user@gmail.com',
             'password' => Hash::make('password'),
             'email_verified_at' => now(),
             'previously_verified' => true,
         ]);
-        $user->assignRole('user');
+        $job_seeker->assignRole('job_seeker');
+
+        $hr = User::create(attributes: [
+            'name' => 'Hr',
+            'email' => 'hr@gmail.com',
+            'password' => Hash::make('password'),
+            'email_verified_at' => now(),
+            'previously_verified' => true,
+        ]);
+        $hr->assignRole('hr');
+
+        //  $job_seeker = User::create(attributes: [
+        //     'name' => 'Job_seeker',
+        //     'email' => 'jobseeker@gmail.com',
+        //     'password' => Hash::make('password'),
+        //     'email_verified_at' => now(),
+        //     'previously_verified' => true,
+        // ]);
+        // $job_seeker->assignRole('job_seeker');
     }
-} 
+}
