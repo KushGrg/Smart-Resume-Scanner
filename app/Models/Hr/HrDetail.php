@@ -14,16 +14,16 @@ class HrDetail extends Model
     protected $table = 'hr_details';
 
     protected $fillable = [
-        'hid',
+        'user_id',
         'name',
         'email',
         'phone',
-        'orgainzation_name',
+        'organization_name',
         'logo',
     ];
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'hid');
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

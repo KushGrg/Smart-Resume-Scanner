@@ -50,11 +50,16 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function hrDetail()
     {
-        return $this->hasOne(\App\Models\Hr\HrDetail::class, 'hid', 'id');
+        return $this->hasOne(\App\Models\Hr\HrDetail::class, 'user_id', 'id');
     }
 
     public function jobSeekerDetail()
     {
-        return $this->hasOne(JobSeekerDetails::class, 'jid', 'id'); // adjust foreign key if needed
+        return $this->hasOne(JobSeekerDetails::class, 'user_id', 'id');
+    }
+
+    public function jobPosts()
+    {
+        return $this->hasMany(\App\Models\Hr\JobPost::class, 'user_id', 'id');
     }
 }
