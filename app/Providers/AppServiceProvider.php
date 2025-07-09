@@ -24,7 +24,21 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // Register Resume Processing Services
+        $this->app->singleton(\App\Services\ResumeRanker::class, function ($app) {
+            return new \App\Services\ResumeRanker;
+        });
+
+        $this->app->singleton(\App\Services\TextExtractionService::class, function ($app) {
+            return new \App\Services\TextExtractionService;
+        });
+
+        $this->app->singleton(\App\Services\BatchResumeProcessor::class, function ($app) {
+            return new \App\Services\BatchResumeProcessor(
+                $app->make(\App\Services\ResumeRanker::class),
+                $app->make(\App\Services\TextExtractionService::class)
+            );
+        });
     }
 
     /**
