@@ -12,23 +12,23 @@ return new class extends Migration
     public function up(): void
     {
         //
-        // Schema::create('job_seeker_info', function (Blueprint $table) {
-        //     $table->id();
-        //     // $table->foreignId('user_id')->constrained()->onDelete('cascade');
-        //     $table->unsignedBigInteger('job_seeker_id');
-        //     $table->string('name');
-        //     $table->string('designation');
-        //     $table->string('phone');
-        //     $table->string('email');
-        //     $table->string('country');
-        //     $table->string('city');
-        //     $table->text('address');
-        //     $table->text('summary');
-        //     $table->timestamps();
+        Schema::create('job_seeker_infos', function (Blueprint $table) {
+            $table->id();
+            // $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->unsignedBigInteger('job_seeker_id');
+            $table->string('name');
+            $table->string('designation');
+            $table->string('phone');
+            $table->string('email');
+            $table->string('country');
+            $table->string('city');
+            $table->text('address');
+            $table->text('summary');
+            $table->timestamps();
 
-        //     $table->foreign('jid')->references('id')->on('users')->onDelete('cascade'); // FIXED
+            $table->foreign('job_seeker_id')->references('id')->on('users')->onDelete('cascade'); // FIXED
 
-        // });
+        });
     }
 
     /**
@@ -36,7 +36,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('job_seeker_infos');
     }
 
     //

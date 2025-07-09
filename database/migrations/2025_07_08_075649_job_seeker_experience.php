@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('experience', function (Blueprint $table) {
+        Schema::create('job_seeker_experiences', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger(column: 'jid');
+            $table->unsignedBigInteger(column: 'job_seeker_id');
 
             // $table->foreignId('job_seeker_info_id')->constrained()->onDelete('cascade');
             $table->string('job_title');
@@ -22,10 +22,9 @@ return new class extends Migration
             $table->date('start_date');
             $table->date('end_date')->nullable();
             $table->text('work_summary')->nullable();
-
             $table->timestamps();
 
-            $table->foreign(columns: 'jid')->references(columns: 'id')->on('users')->onDelete('cascade'); // FIXED
+            $table->foreign(columns: 'job_seeker_id')->references(columns: 'id')->on('users')->onDelete('cascade'); // FIXED
 
         });
         //
@@ -36,7 +35,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('experiences');
+        Schema::dropIfExists('job_seeker_experiences');
         //
     }
 };

@@ -12,18 +12,23 @@ return new class extends Migration
     public function up(): void
     {
         // //
-        // Schema::create('educations', function (Blueprint $table) {
-        //     $table->id();
-        //     $table->foreignId('job_seeker_info_id')->constrained()->onDelete('cascade');
-        //     $table->string('school_name');
-        //     $table->string('location');
-        //     $table->string('degree');
-        //     $table->string('field_of_study');
-        //     $table->date('start_date');
-        //     $table->date('end_date')->nullable();
-        //     $table->text('description')->nullable();
-        //     $table->timestamps();
-        // });
+        Schema::create('job_seeker_educations', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('job_seeker_id');
+
+            // $table->foreignId('job_seeker_info_id')->constrained()->onDelete('cascade');
+            $table->string('school_name');
+            $table->string('location');
+            $table->string('degree');
+            $table->string('field_of_study');
+            $table->date('start_date');
+            $table->date('end_date')->nullable();
+            $table->text('description')->nullable();
+            $table->timestamps();
+
+            $table->foreign('job_seeker_id')->references('id')->on('users')->onDelete('cascade'); // FIXED
+
+        });
     }
 
     /**
@@ -32,7 +37,7 @@ return new class extends Migration
     public function down(): void
     {
         //
-        Schema::dropIfExists('educations');
+        Schema::dropIfExists('job_seeker_educations');
 
     }
 };

@@ -2,7 +2,7 @@
 
 use App\Livewire\Hr\JobPost;
 use App\Livewire\JobSeeker\AvailableJobs;
-use App\Livewire\JobSeeker\CreateProfile;
+use App\Livewire\Jobseeker\CreateProfile;
 use App\Livewire\JobSeeker\ViewAppliedHistory;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Auth;
