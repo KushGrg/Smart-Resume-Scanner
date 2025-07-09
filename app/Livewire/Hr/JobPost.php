@@ -13,19 +13,30 @@ class JobPost extends Component
     use Toast, WithPagination;
 
     public string $search = '';
+
     public bool $drawer = false;
+
     public array $sortBy = ['column' => 'title', 'direction' => 'asc'];
+
     public int $perPage = 10;
-    
+
     // Form properties
     public ?int $editing_id = null;
+
     public string $title = '';
+
     public string $description = '';
+
     public string $location = '';
+
     public string $type = 'full-time';
+
     public string $deadline = '';
+
     public string $requirement = '';
+
     public string $experience = '';
+
     public string $status = 'active';
 
     public array $jobTypes = [
@@ -38,12 +49,12 @@ class JobPost extends Component
         ['id' => 'active', 'name' => 'Active'],
         ['id' => 'inactive', 'name' => 'Inactive'],
     ];
-    
+
     public function mount()
     {
         $this->authorize('view job posts');
     }
-    
+
     public function headers(): array
     {
         return [
@@ -72,7 +83,7 @@ class JobPost extends Component
     public function edit(JobPosts $jobPost): void
     {
         $this->authorize('edit job posts');
-        
+
         $this->editing_id = $jobPost->id;
         $this->title = $jobPost->title;
         $this->description = $jobPost->description;
@@ -82,14 +93,14 @@ class JobPost extends Component
         $this->requirement = $jobPost->requirement;
         $this->experience = $jobPost->experience;
         $this->status = $jobPost->status;
-        
+
         $this->drawer = true;
     }
 
     public function create(): void
     {
         $this->authorize('create job posts');
-        
+
         $this->editing_id = null;
         $this->title = '';
         $this->description = '';
@@ -99,7 +110,7 @@ class JobPost extends Component
         $this->requirement = '';
         $this->experience = '';
         $this->status = 'active';
-        
+
         $this->drawer = true;
     }
 
@@ -115,28 +126,27 @@ class JobPost extends Component
             'experience' => 'nullable|string',
             'status' => 'required|string|in:active,inactive',
         ]);
-        
 
         if ($this->editing_id) {
             $this->authorize('edit job posts');
-            
+
             $jobPost = JobPosts::find($this->editing_id);
             $jobPost->update($data);
             $this->success('Job post updated successfully');
         } else {
             $this->authorize('create job posts');
-            
+
             JobPosts::create(array_merge($data, ['hid' => Auth::id()]));
             $this->success('Job post created successfully');
         }
-        
+
         $this->drawer = false;
     }
 
     public function delete(JobPosts $jobPost): void
     {
         $this->authorize('delete job posts');
-        
+
         $jobPost->delete();
         $this->success('Job post deleted successfully');
     }
@@ -145,7 +155,7 @@ class JobPost extends Component
     {
         return view('livewire.hr.job-post', [
             'jobPosts' => $this->jobPosts(),
-            'headers' => $this->headers()
+            'headers' => $this->headers(),
         ]);
     }
 }

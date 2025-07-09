@@ -1,22 +1,32 @@
 <?php
 
-use Livewire\Volt\Component;
-use Illuminate\Support\Facades\Auth;
 use App\Models\Hr\HrDetail;
+use Illuminate\Support\Facades\Auth;
+use Livewire\Volt\Component;
 use Livewire\WithFileUploads;
 
-new class extends Component {
+new class extends Component
+{
     use WithFileUploads;
 
     public $name;
+
     public $email;
+
     public $current_password = '';
+
     public $new_password = '';
+
     public $new_password_confirmation = '';
+
     public $message = '';
+
     public $messageType = '';
+
     public $organization_name;
+
     public $phone;
+
     public $logo;
 
     public function mount()
@@ -30,7 +40,7 @@ new class extends Component {
             $this->logo = $user->hrDetail->logo ?? '';
             $this->phone = $user->phone ?? '';
         } else {
-            $jobSeekerDetail = $user->jobSeekerDetail; 
+            $jobSeekerDetail = $user->jobSeekerDetail;
 
             $this->phone = $jobSeekerDetail->phone ?? '';
         }
@@ -40,7 +50,7 @@ new class extends Component {
     {
         return [
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . Auth::id(),
+            'email' => 'required|string|email|max:255|unique:users,email,'.Auth::id(),
             'current_password' => 'required_with:new_password|current_password',
             'new_password' => 'nullable|min:8|confirmed',
             'organization_name' => 'nullable|string|max:255',
@@ -60,7 +70,6 @@ new class extends Component {
         $updateData = [
             'name' => $this->name,
             'email' => $this->email,
-
 
         ];
 
@@ -98,7 +107,7 @@ new class extends Component {
                 ]
             );
         } else {
-            App\Models\Job_seeker\Job_seeker_details::updateOrCreate(
+            App\Models\JobSeeker\JobSeekerDetails::updateOrCreate(
                 ['jid' => $user->id],
                 [
                     'name' => $this->name,

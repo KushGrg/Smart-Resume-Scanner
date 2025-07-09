@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Models\Job_seeker;
+namespace App\Models\JobSeeker;
 
 use Illuminate\Database\Eloquent\Model;
 
 class JobSeekerExperiences extends Model
 {
     //
-    public $table = "experience";
+    public $table = 'experience';
+
     protected $fillable = [
         'job_seeker_info_id',
         'job_title',
@@ -15,7 +16,7 @@ class JobSeekerExperiences extends Model
         'location',
         'start_date',
         'end_date',
-        'work_summary'
+        'work_summary',
     ];
 
     public function jobSeekerInfo()

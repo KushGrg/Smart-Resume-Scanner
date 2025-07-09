@@ -3,9 +3,8 @@
 namespace App\Models\Hr;
 
 use App\Models\User;
-use Illuminate\Database\Eloquent\Model;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class HrDetail extends Model
 {
@@ -14,7 +13,7 @@ class HrDetail extends Model
 
     protected $table = 'hr_details';
 
-     protected $fillable = [
+    protected $fillable = [
         'hid',
         'name',
         'email',
@@ -23,7 +22,7 @@ class HrDetail extends Model
         'logo',
     ];
 
-      public function user()
+    public function user()
     {
         return $this->belongsTo(User::class, 'hid');
     }

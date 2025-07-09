@@ -3,8 +3,8 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 use Spatie\Permission\PermissionRegistrar;
 
 class RolesAndPermissionsSeeder extends Seeder
@@ -61,13 +61,12 @@ class RolesAndPermissionsSeeder extends Seeder
             'access dashboard',
             'view available jobs',
             'view applied history',
-            'create profile'
+            'create profile',
         ]);
 
         // Create admin role and assign permissions
         $adminRole = Role::create(['name' => 'admin']);
         $adminRole->givePermissionTo(Permission::all());
-
 
         $hrRole = Role::create(['name' => 'hr']);
         $hrRole->givePermissionTo([

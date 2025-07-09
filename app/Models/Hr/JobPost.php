@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class JobPost extends Model
 {
-    protected $table = "job_posts";
+    protected $table = 'job_posts';
+
     protected $fillable = [
         'hid',
         'title',
@@ -17,8 +18,9 @@ class JobPost extends Model
         'deadline',
         'requirement',
         'experience',
-        'status'
+        'status',
     ];
+
     public function resumes()
     {
         return $this->hasMany(Resume::class, 'jpostid', 'id');

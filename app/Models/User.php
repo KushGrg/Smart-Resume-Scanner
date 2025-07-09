@@ -2,19 +2,18 @@
 
 namespace App\Models;
 
-use App\Models\Job_seeker\Job_seeker_details;
+use App\Models\JobSeeker\JobSeekerDetails;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
-use \App\Models\Job_seeker;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasApiTokens, HasFactory, Notifiable, HasRoles;
+    use HasApiTokens, HasFactory, HasRoles, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -56,6 +55,6 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function jobSeekerDetail()
     {
-        return $this->hasOne(Job_seeker_details::class, 'jid', 'id'); // adjust foreign key if needed
+        return $this->hasOne(JobSeekerDetails::class, 'jid', 'id'); // adjust foreign key if needed
     }
 }

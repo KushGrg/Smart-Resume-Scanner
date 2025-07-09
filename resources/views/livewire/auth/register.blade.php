@@ -1,18 +1,20 @@
 <?php
 
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Rule;
 use Livewire\Attributes\Title;
 use Livewire\Volt\Component;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Http;
 use Livewire\WithFileUploads;
-new App\Models\Hr\HrDetail;
-new App\Models\Job_seeker\Job_seeker_details;
 
-new #[Layout('components.layouts.empty')] #[Title('Registration')] class extends Component {
+new App\Models\Hr\HrDetail;
+new App\Models\JobSeeker\JobSeekerDetails;
+
+new #[Layout('components.layouts.empty')] #[Title('Registration')] class extends Component
+{
     use WithFileUploads;
+
     #[Rule('required')]
     public string $name = '';
 
@@ -26,9 +28,13 @@ new #[Layout('components.layouts.empty')] #[Title('Registration')] class extends
     public string $password_confirmation = '';
 
     public $roles = [];
+
     public $photo;
+
     public $phone;
+
     public $organization_name;
+
     public $designation;
 
     #[Rule('required')]
@@ -59,15 +65,13 @@ new #[Layout('components.layouts.empty')] #[Title('Registration')] class extends
         $data['avatar'] = '/empty-user.jpg';
         $data['password'] = Hash::make($data['password']);
 
-
         $user = User::create($data);
         // dd($user);
 
-
-        //If user is job_seeker
+        // If user is job_seeker
         if ($data['role'] == 'job_seeker') {
-            //Save JOb seeker details
-            \APP\Models\Job_seeker\Job_seeker_details::create([
+            // Save JOb seeker details
+            \App\Models\JobSeeker\JobSeekerDetails::create([
                 'jid' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,

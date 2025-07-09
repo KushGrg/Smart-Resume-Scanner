@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Livewire\Jobseeker;
+namespace App\Livewire\JobSeeker;
 
-use App\Models\Job_seeker\JobSeekerInfo;
+use App\Models\JobSeeker\JobSeekerInfo;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
@@ -11,8 +11,21 @@ class CreateProfile extends Component
     public $step = 1;
 
     // Profile Info
-    public $name, $designation, $phone, $email, $country, $city, $address, $summary;
+    public $name;
 
+    public $designation;
+
+    public $phone;
+
+    public $email;
+
+    public $country;
+
+    public $city;
+
+    public $address;
+
+    public $summary;
 
     // Experience (array of items)
     public $experiences = [
@@ -23,7 +36,7 @@ class CreateProfile extends Component
             'start_date' => '',
             'end_date' => '',
             'work_summary' => '',
-        ]
+        ],
     ];
 
     // Education (array of items)
@@ -36,11 +49,12 @@ class CreateProfile extends Component
             'start_date' => '',
             'end_date' => '',
             'description' => '',
-        ]
+        ],
     ];
 
     // Skills
     public $skills = [];
+
     public $newSkill = '';
 
     // Step navigation
@@ -58,7 +72,7 @@ class CreateProfile extends Component
 
     public function addSkill()
     {
-        if (!empty($this->newSkill)) {
+        if (! empty($this->newSkill)) {
             $this->skills[] = $this->newSkill;
             $this->newSkill = '';
         }
@@ -93,6 +107,7 @@ class CreateProfile extends Component
         }
 
         session()->flash('success', 'Resume created successfully!');
+
         return redirect()->route('resume.preview', $resume->id);
     }
 
@@ -128,8 +143,9 @@ class CreateProfile extends Component
             ],
         ];
     }
+
     public function render()
     {
-        return view('livewire.jobseeker.create-profile');
+        return view('livewire.job-seeker.create-profile');
     }
 }

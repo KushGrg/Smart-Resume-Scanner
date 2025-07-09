@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Job_seeker;
+namespace App\Models\JobSeeker;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -16,7 +16,7 @@ class JobSeekerInfo extends Model
         'country',
         'city',
         'address',
-        'summary'
+        'summary',
     ];
 
     public function experiences()

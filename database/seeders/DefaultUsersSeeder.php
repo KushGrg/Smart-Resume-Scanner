@@ -30,7 +30,7 @@ class DefaultUsersSeeder extends Seeder
         ]);
         $job_seeker->assignRole('job_seeker');
 
-         $hr = User::create(attributes: [
+        $hr = User::create(attributes: [
             'name' => 'Hr',
             'email' => 'hr@gmail.com',
             'password' => Hash::make('password'),
@@ -48,4 +48,4 @@ class DefaultUsersSeeder extends Seeder
         // ]);
         // $job_seeker->assignRole('job_seeker');
     }
-} 
+}
