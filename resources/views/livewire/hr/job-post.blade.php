@@ -52,8 +52,8 @@
             />
             
             <x-datepicker label="Deadline" wire:model="deadline" />
-            <x-textarea label="Requirements" wire:model="requirement" rows="3" />
-            <x-input label="Experience" wire:model="experience" />
+            <x-textarea label="Requirements" wire:model="requirements" rows="3" />
+            <x-input label="Experience Level" wire:model="experience_level" />
             
             <x-select 
                 label="Status" 

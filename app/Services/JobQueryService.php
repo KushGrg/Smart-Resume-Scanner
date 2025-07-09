@@ -33,7 +33,7 @@ class JobQueryService
                 ->with(['resumes' => function ($query) {
                     $query->where('processed', true)
                         ->orderByDesc('similarity_score')
-                        ->select(['id', 'jsid', 'jpostid', 'similarity_score', 'resume_path']);
+                        ->select(['id', 'job_seeker_detail_id', 'job_post_id', 'similarity_score', 'file_path']);
                 }])
                 ->where('status', $status)
                 ->when($search, function (Builder $query) use ($search) {
@@ -65,7 +65,7 @@ class JobQueryService
             return Resume::query()
                 ->with(['jobPost:id,title,description,location,type,status'])
                 ->whereHas('jobSeekerDetail', function (Builder $query) use ($userId) {
-                    $query->where('jid', $userId);
+                    $query->where('user_id', $userId);
                 })
                 ->when($search, function (Builder $query) use ($search) {
                     $query->whereHas('jobPost', function (Builder $q) use ($search) {
@@ -73,7 +73,7 @@ class JobQueryService
                             ->orWhere('description', 'like', "%{$search}%");
                     });
                 })
-                ->select(['id', 'jsid', 'jpostid', 'resume_path', 'similarity_score', 'processed', 'created_at'])
+                ->select(['id', 'job_seeker_detail_id', 'job_post_id', 'file_path', 'similarity_score', 'processed', 'created_at'])
                 ->latest('created_at')
                 ->paginate($perPage);
         });
@@ -90,7 +90,7 @@ class JobQueryService
 
         return Cache::remember($cacheKey, 600, function () use ($jobPostId) {
             $stats = DB::table('resumes')
-                ->where('jpostid', $jobPostId)
+                ->where('job_post_id', $jobPostId)
                 ->where('processed', true)
                 ->whereNotNull('similarity_score')
                 ->selectRaw('

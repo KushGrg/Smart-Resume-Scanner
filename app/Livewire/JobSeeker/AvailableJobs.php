@@ -154,15 +154,15 @@ class AvailableJobs extends Component
 
             // Save to resumes table
             auth()->user()->jobSeekerDetail->resumes()->create([
-                'jsid' => auth()->user()->jobSeekerDetail->id,
-                'jpostid' => $this->selectedJob->id,
-                'resume_path' => $path,
+                'job_seeker_detail_id' => auth()->user()->jobSeekerDetail->id,
+                'job_post_id' => $this->selectedJob->id,
+                'file_path' => $path,
             ]);
 
             Log::info('Job application submitted successfully', [
                 'job_id' => $this->selectedJob->id,
                 'user_id' => auth()->id(),
-                'resume_path' => $path,
+                'file_path' => $path,
             ]);
 
             $this->toast(

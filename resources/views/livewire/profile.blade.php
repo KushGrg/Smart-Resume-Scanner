@@ -97,18 +97,18 @@ new class extends Component
             }
 
             HrDetail::updateOrCreate(
-                ['hid' => $user->id],
+                ['user_id' => $user->id],
                 [
                     'name' => $this->name,
                     'email' => $this->email,
-                    'orgainzation_name' => $this->organization_name,
+                    'organization_name' => $this->organization_name,
                     'phone' => $this->phone,
                     'logo' => $logoPath,
                 ]
             );
         } else {
-            App\Models\JobSeeker\JobSeekerDetails::updateOrCreate(
-                ['jid' => $user->id],
+            App\Models\JobSeeker\JobSeekerDetail::updateOrCreate(
+                ['user_id' => $user->id],
                 [
                     'name' => $this->name,
                     'email' => $this->email,

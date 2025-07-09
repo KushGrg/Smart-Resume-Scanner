@@ -65,13 +65,13 @@ class ViewAppliedHistory extends Component
     {
         try {
             $resume = Resume::findOrFail($resumeId);
-            $path = storage_path('app/public/'.$resume->resume_path);
+            $path = storage_path('app/public/'.$resume->file_path);
 
             if (! file_exists($path)) {
                 throw new \Exception('Resume file not found');
             }
 
-            return response()->download($path, basename($resume->resume_path));
+            return response()->download($path, basename($resume->file_path));
         } catch (\Exception $e) {
             Log::error('Error downloading resume: '.$e->getMessage());
             $this->dispatchBrowserEvent('notify', [

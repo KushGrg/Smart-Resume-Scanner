@@ -33,9 +33,9 @@ class JobPost extends Component
 
     public string $deadline = '';
 
-    public string $requirement = '';
+    public string $requirements = '';
 
-    public string $experience = '';
+    public string $experience_level = '';
 
     public string $status = 'active';
 
@@ -71,7 +71,7 @@ class JobPost extends Component
     public function jobPosts()
     {
         return JobPosts::query()
-            ->where('hid', Auth::id())
+            ->where('user_id', Auth::id())
             ->when($this->search, function ($query) {
                 $query->where('title', 'like', '%'.$this->search.'%')
                     ->orWhere('description', 'like', '%'.$this->search.'%');
@@ -90,8 +90,8 @@ class JobPost extends Component
         $this->location = $jobPost->location;
         $this->type = $jobPost->type;
         $this->deadline = $jobPost->deadline;
-        $this->requirement = $jobPost->requirement;
-        $this->experience = $jobPost->experience;
+        $this->requirements = $jobPost->requirements;
+        $this->experience_level = $jobPost->experience_level;
         $this->status = $jobPost->status;
 
         $this->drawer = true;
@@ -107,8 +107,8 @@ class JobPost extends Component
         $this->location = '';
         $this->type = 'full-time';
         $this->deadline = '';
-        $this->requirement = '';
-        $this->experience = '';
+        $this->requirements = '';
+        $this->experience_level = '';
         $this->status = 'active';
 
         $this->drawer = true;
@@ -122,8 +122,8 @@ class JobPost extends Component
             'location' => 'required|string|max:255',
             'type' => 'required|string',
             'deadline' => 'nullable|date',
-            'requirement' => 'nullable|string',
-            'experience' => 'nullable|string',
+            'requirements' => 'nullable|string',
+            'experience_level' => 'nullable|string',
             'status' => 'required|string|in:active,inactive',
         ]);
 
@@ -136,7 +136,7 @@ class JobPost extends Component
         } else {
             $this->authorize('create job posts');
 
-            JobPosts::create(array_merge($data, ['hid' => Auth::id()]));
+            JobPosts::create(array_merge($data, ['user_id' => Auth::id()]));
             $this->success('Job post created successfully');
         }
 

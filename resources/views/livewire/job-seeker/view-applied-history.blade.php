@@ -47,15 +47,15 @@
         <x-modal wire:model.defer="viewingResume" max-width="4xl">
             <x-slot name="title">Your Resume</x-slot>
             <div class="h-[80vh]">
-                @if(pathinfo($selectedResume->resume_path, PATHINFO_EXTENSION) === 'pdf')
-                    <iframe src="{{ asset('storage/' . $selectedResume->resume_path) }}" class="w-full h-full"
+                @if(pathinfo($selectedResume->file_path, PATHINFO_EXTENSION) === 'pdf')
+                    <iframe src="{{ asset('storage/' . $selectedResume->file_path) }}" class="w-full h-full"
                         frameborder="0"></iframe>
                 @else
                     <div class="flex items-center justify-center h-full">
                         <x-icon name="o-document" class="w-16 h-16 text-gray-400" />
                         <div class="ml-4">
                             <p class="text-lg">Download your resume to view it:</p>
-                            <a href="{{ asset('storage/' . $selectedResume->resume_path) }}" download
+                            <a href="{{ asset('storage/' . $selectedResume->file_path) }}" download
                                 class="btn btn-primary mt-2">
                                 Download Resume
                             </a>
