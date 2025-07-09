@@ -62,8 +62,8 @@ Route::middleware('auth')->group(function () {
     Volt::route('/dashboard', 'dashboard')->name('dashboard')->middleware('permission:access dashboard');
     Volt::route('/logout', 'auth.logout')->name('logout');
     Route::get('/hr/jobpost', JobPost::class)->name('hr.jobpost.index')->middleware('permission:view job posts');
-    Route::get('Available_Jobs', AvailableJobs::class)->name('job_seeker.available_jobs.index')->middleware('permission:view available jobs');
-    Route::get('view_applied_history', ViewAppliedHistory::class)->name('view_applied_history.index')->middleware('permission:view applied history');
+    Route::get('available-jobs', AvailableJobs::class)->name('job_seeker.available_jobs.index')->middleware('permission:view available jobs');
+    Route::get('view-applied-history', ViewAppliedHistory::class)->name('view_applied_history.index')->middleware('permission:view applied history');
     Route::get('create-profile', CreateProfile::class)->name('create_profile.index')->middleware('permission:create profile');
 
 });

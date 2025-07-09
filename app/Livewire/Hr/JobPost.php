@@ -158,12 +158,4 @@ class JobPost extends Component
             'headers' => $this->headers(),
         ]);
     }
-
-    /**
-     * Handle the incoming request.
-     */
-    public function __invoke()
-    {
-        return $this->render();
-    }
 }

@@ -244,11 +244,4 @@ class CreateProfile extends Component
         return view('livewire.job-seeker.create-profile');
     }
 
-    /**
-     * Handle the incoming request.
-     */
-    public function __invoke()
-    {
-        return $this->render();
-    }
 }
