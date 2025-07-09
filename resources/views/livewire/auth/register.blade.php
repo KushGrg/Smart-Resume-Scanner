@@ -9,9 +9,12 @@ use Livewire\Volt\Component;
 use Livewire\WithFileUploads;
 
 new App\Models\Hr\HrDetail;
-new App\Models\JobSeeker\JobSeekerDetails;
+new App\Models\JobSeeker\JobSeekerDetail;
 
-new #[Layout('components.layouts.empty')] #[Title('Registration')] class extends Component
+new
+#[Layout('components.layouts.empty')]
+#[Title('Registration')]
+class extends Component
 {
     use WithFileUploads;
 
@@ -70,14 +73,13 @@ new #[Layout('components.layouts.empty')] #[Title('Registration')] class extends
 
         // If user is job_seeker
         if ($data['role'] == 'job_seeker') {
-            // Save JOb seeker details
-            \App\Models\JobSeeker\JobSeekerDetails::create([
-                'jid' => $user->id,
+            // Save Job seeker details
+            \App\Models\JobSeeker\JobSeekerDetail::create([
+                'user_id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
                 'phone' => $user->phone,
-                'designation' => $this->designation,
-
+                'current_designation' => $this->designation,
             ]);
         }
         // Save HR Details if role is HR
@@ -88,10 +90,10 @@ new #[Layout('components.layouts.empty')] #[Title('Registration')] class extends
             }
 
             \App\Models\Hr\HrDetail::create([
-                'hid' => $user->id,
+                'user_id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
-                'orgainzation_name' => $this->organization_name,
+                'organization_name' => $this->organization_name,
                 'phone' => $user->phone,
                 'logo' => $logoPath,
             ]);

@@ -4,5 +4,7 @@ use Livewire\Volt\Volt;
 
 it('renders the register component', function () {
     Volt::test('auth.register')
-        ->assertSee('Expected content in the register component');
+        ->assertSee('Registration')
+        ->assertSee('Phone Number')
+        ->assertSee('Create Account');
 });
