@@ -87,4 +87,12 @@ class ViewAppliedHistory extends Component
             'applications' => $this->appliedJobs(),
         ]);
     }
+
+    /**
+     * Handle the incoming request.
+     */
+    public function __invoke()
+    {
+        return $this->render();
+    }
 }

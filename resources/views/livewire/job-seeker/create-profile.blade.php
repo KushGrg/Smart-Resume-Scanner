@@ -39,7 +39,7 @@
                 </div>
             @endforeach
 
-            <x-button outline wire:click="addExperience" label="Add Two Experience Fields" icon="" />
+            <x-button outline wire:click="addExperience" label="Add Experience" icon="" />
         @endif
 
         {{-- STEP 3: Education --}}
@@ -61,7 +61,7 @@
                 </div>
             @endforeach
 
-            <x-button outline wire:click="$push('educations', [])" label="Add Education" icon="" />
+            <x-button outline wire:click="addEducation" label="Add Education" icon="" />
         @endif
 
         {{-- STEP 4: Skills + Summary --}}

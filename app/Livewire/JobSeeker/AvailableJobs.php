@@ -211,4 +211,12 @@ class AvailableJobs extends Component
             'jobs' => $this->availableJobs(),
         ]);
     }
+
+    /**
+     * Handle the incoming request.
+     */
+    public function __invoke()
+    {
+        return $this->render();
+    }
 }

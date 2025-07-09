@@ -2,7 +2,11 @@
 
 namespace App\Livewire\JobSeeker;
 
+use App\Models\JobSeeker\JobSeekerEducation;
+use App\Models\JobSeeker\JobSeekerExperience;
 use App\Models\JobSeeker\JobSeekerInfo;
+use App\Models\JobSeeker\JobSeekerSkillAndSummary;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
@@ -57,10 +61,17 @@ class CreateProfile extends Component
 
     public $newSkill = '';
 
+    public function mount()
+    {
+        // Pre-fill with user data if available
+        $user = Auth::user();
+        $this->name = $user->name;
+        $this->email = $user->email;
+    }
+
     // Step navigation
     public function next()
     {
-        // dd("Hello");
         $this->validate($this->rules()[$this->step]);
         $this->step++;
     }
@@ -78,37 +89,121 @@ class CreateProfile extends Component
         }
     }
 
+    public function removeSkill($index)
+    {
+        unset($this->skills[$index]);
+        $this->skills = array_values($this->skills);
+    }
+
+    public function addExperience()
+    {
+        $this->experiences[] = [
+            'job_title' => '',
+            'employer' => '',
+            'location' => '',
+            'start_date' => '',
+            'end_date' => '',
+            'work_summary' => '',
+        ];
+    }
+
+    public function removeExperience($index)
+    {
+        unset($this->experiences[$index]);
+        $this->experiences = array_values($this->experiences);
+    }
+
+    public function addEducation()
+    {
+        $this->educations[] = [
+            'school_name' => '',
+            'location' => '',
+            'degree' => '',
+            'field_of_study' => '',
+            'start_date' => '',
+            'end_date' => '',
+            'description' => '',
+        ];
+    }
+
+    public function removeEducation($index)
+    {
+        unset($this->educations[$index]);
+        $this->educations = array_values($this->educations);
+    }
+
     public function submit()
     {
         $this->validate(array_merge(...array_values($this->rules())));
 
-        $resume = JobSeekerInfo::create([
-            'user_id' => Auth::id(),
+        // Store main profile info
+        $jobSeekerInfo = JobSeekerInfo::create([
+            'job_seeker_id' => Auth::id(),
             'name' => $this->name,
-            // 'last_name' => $this->last_name,
             'designation' => $this->designation,
             'phone' => $this->phone,
             'email' => $this->email,
             'country' => $this->country,
             'city' => $this->city,
             'address' => $this->address,
+            'summary' => $this->summary,
         ]);
 
+        // Store experiences
         foreach ($this->experiences as $exp) {
-            $resume->experiences()->create($exp);
+            if (! empty($exp['job_title'])) {
+                $exp['job_seeker_id'] = Auth::id();
+                JobSeekerExperience::create($exp);
+            }
         }
 
+        // Store educations
         foreach ($this->educations as $edu) {
-            $resume->educations()->create($edu);
+            if (! empty($edu['school_name'])) {
+                $edu['job_seeker_id'] = Auth::id();
+                JobSeekerEducation::create($edu);
+            }
         }
 
-        foreach ($this->skills as $skill) {
-            $resume->skills()->create(['name' => $skill]);
+        // Store skills and summary
+        if (! empty($this->skills)) {
+            JobSeekerSkillAndSummary::create([
+                'job_seeker_id' => Auth::id(),
+                'skills' => json_encode($this->skills),
+                'summary' => $this->summary,
+            ]);
         }
 
-        session()->flash('success', 'Resume created successfully!');
+        // Generate PDF resume
+        $filePath = $this->generateResumePdf($jobSeekerInfo);
 
-        return redirect()->route('resume.preview', $resume->id);
+        // Flash success message and download PDF
+        session()->flash('success', 'Resume created and PDF generated successfully!');
+
+        return response()->download(storage_path('app/public/'.$filePath));
+    }
+
+    // Generate PDF using a Blade template and store it
+    public function generateResumePdf($jobSeekerInfo)
+    {
+        // Ensure resumes directory exists
+        if (! file_exists(storage_path('app/public/resumes'))) {
+            mkdir(storage_path('app/public/resumes'), 0755, true);
+        }
+
+        $data = [
+            'jobSeekerInfo' => $jobSeekerInfo,
+            'experiences' => $this->experiences,
+            'educations' => $this->educations,
+            'skills' => $this->skills,
+            'summary' => $this->summary,
+        ];
+
+        $pdf = Pdf::loadView('pdf.resume-template', $data);
+        $fileName = 'resume_'.$jobSeekerInfo->id.'_'.time().'.pdf';
+        $pdf->save(storage_path('app/public/resumes/'.$fileName));
+
+        return 'resumes/'.$fileName;
     }
 
     public function rules()
@@ -147,5 +242,13 @@ class CreateProfile extends Component
     public function render()
     {
         return view('livewire.job-seeker.create-profile');
+    }
+
+    /**
+     * Handle the incoming request.
+     */
+    public function __invoke()
+    {
+        return $this->render();
     }
 }
