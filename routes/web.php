@@ -5,6 +5,7 @@ use App\Livewire\JobSeeker\AvailableJobs;
 use App\Livewire\JobSeeker\CreateProfile;
 use App\Livewire\JobSeeker\ViewAppliedHistory;
 use App\Livewire\Jobseeker\ViewCreatedResume;
+use App\Models\User;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -22,7 +23,7 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::get('/email/verify/{id}/{hash}', function (\Illuminate\Http\Request $request, $id, $hash) {
-    $user = \App\Models\User::findOrFail($id);
+    $user = User::findOrFail($id);
 
     if (!hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
         throw new AuthorizationException;

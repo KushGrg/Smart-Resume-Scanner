@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Hr\HrDetail as HrDetails;
+use App\Models\JobSeeker\JobSeekerDetail as JobSeekerDetails;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Attributes\Layout;
@@ -74,7 +76,7 @@ class extends Component
         // If user is job_seeker
         if ($data['role'] == 'job_seeker') {
             // Save Job seeker details
-            \App\Models\JobSeeker\JobSeekerDetail::create([
+            JobSeekerDetails::create([
                 'user_id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
@@ -89,7 +91,7 @@ class extends Component
                 $logoPath = $this->photo->store('logos', 'public');
             }
 
-            \App\Models\Hr\HrDetail::create([
+            HrDetails::create([
                 'user_id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,

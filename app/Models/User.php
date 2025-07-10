@@ -65,7 +65,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function jobPosts(): HasMany
     {
-        return $this->hasMany(\App\Models\Hr\JobPost::class, 'user_id');
+        return $this->hasMany(Hr\JobPost::class, 'user_id');
     }
 
     // Role helper methods

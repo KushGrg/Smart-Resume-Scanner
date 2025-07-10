@@ -53,8 +53,8 @@ class ViewAppliedHistory extends Component
             $this->selectedResume = Resume::findOrFail($resumeId);
             $this->viewingResume = true;
         } catch (\Exception $e) {
-            Log::error('Error viewing resume: ' . $e->getMessage());
-            $this->dispatchBrowserEvent('notify', [
+            Log::error('Error viewing resume: '.$e->getMessage());
+            $this->dispatch('notify', [
                 'type' => 'error',
                 'message' => 'Failed to load resume.',
             ]);
@@ -73,8 +73,8 @@ class ViewAppliedHistory extends Component
 
             return response()->download($path, basename($resume->file_path));
         } catch (\Exception $e) {
-            Log::error('Error downloading resume: ' . $e->getMessage());
-            $this->dispatchBrowserEvent('notify', [
+            Log::error('Error downloading resume: '.$e->getMessage());
+            $this->dispatch('notify', [
                 'type' => 'error',
                 'message' => 'Failed to download resume.',
             ]);
