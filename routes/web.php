@@ -1,6 +1,7 @@
 <?php
 
 use App\Livewire\Hr\JobPost;
+use App\Livewire\Hr\ViewApplications;
 use App\Livewire\JobSeeker\AvailableJobs;
 use App\Livewire\JobSeeker\CreateProfile;
 use App\Livewire\JobSeeker\ViewAppliedHistory;
@@ -64,6 +65,7 @@ Route::middleware('auth')->group(function () {
     Volt::route('/dashboard', 'dashboard')->name('dashboard')->middleware('permission:access dashboard');
     Volt::route('/logout', 'auth.logout')->name('logout');
     Route::get('/hr/jobpost', JobPost::class)->name('hr.jobpost.index')->middleware('permission:view job posts');
+    Route::get('/hr/applications', ViewApplications::class)->name('hr.applications.index')->middleware('permission:view job posts');
     Route::get('available-jobs', AvailableJobs::class)->name('job_seeker.available_jobs.index')->middleware('permission:view available jobs');
     Route::get('view-applied-history', ViewAppliedHistory::class)->name('view_applied_history.index')->middleware('permission:view applied history');
     Route::get('create-profile', CreateProfile::class)->name('create_profile.index')->middleware('permission:create profile');

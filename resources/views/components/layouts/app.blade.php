@@ -67,6 +67,7 @@
                         {{-- HR Menu --}}
                         @role('hr')
                         <x-menu-item title="Job Post" icon="o-briefcase" link="/hr/jobpost" />
+                        <x-menu-item title="View Applications" icon="o-document-text" link="/hr/applications" />
                         @endrole
 
                         {{-- If not verified --}}
