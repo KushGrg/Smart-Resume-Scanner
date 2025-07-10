@@ -59,6 +59,8 @@
                         <x-menu-item title="Available Jobs" icon="o-user" link="/available-jobs" />
                         <x-menu-item title="View Applied History" icon="o-user" link="/view-applied-history" />
                         <x-menu-item title="Create Resume" icon="o-user" link="/create-profile" />
+                        <x-menu-item title="View Created Resume List" icon="o-document-magnifying-glass"
+                            link="/view-created-resume-list " />
 
                         @endrole
 

@@ -79,6 +79,7 @@ class AvailableJobs extends Component
     public function viewJob($id)
     {
         try {
+            
             $this->selectedJob = JobPost::findOrFail($id);
             $this->viewingJob = true;
             $this->applyingJob = false;
@@ -105,6 +106,7 @@ class AvailableJobs extends Component
      */
     public function applyJob($id)
     {
+        
         try {
             $this->selectedJob = JobPost::findOrFail($id);
             $this->applyingJob = true;
