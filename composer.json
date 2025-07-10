@@ -1,6 +1,6 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "kushgrg/mary-ui-starter-kit",
+    "name": "kushgrg/smart-resume-scanner",
     "type": "project",
     "description": "Laravel Volt, Mary UI project starter kit with Auth and Roles",
     "keywords": [
@@ -19,6 +19,20 @@
         "ui-kit"
     ],
     "license": "MIT",
+    "support": {
+        "email": "kushg514@gmail.com",
+        "issues": "https://github.com/KushGrg/Smart-Resume-Scanner/issue",
+        "source": "https://github.com/KushGrg/Smart-Resume-Scanner"
+    },
+    "homepage": "https://github.com/KushGrg/Smart-Resume-Scanner",
+    "authors": [
+        {
+            "name": "Kush Gurung",
+            "email": "kushg514@gmail.com",
+            "homepage": "https://www.kushgurung.com.np",
+            "role": "Developer"
+        }
+    ],
     "require": {
         "php": "^8.2",
         "barryvdh/laravel-dompdf": "^3.1",

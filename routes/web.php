@@ -70,7 +70,6 @@ Route::middleware('auth')->group(function () {
     Route::get('view-applied-history', ViewAppliedHistory::class)->name('view_applied_history.index')->middleware('permission:view applied history');
     Route::get('create-profile', CreateProfile::class)->name('create_profile.index')->middleware('permission:create profile');
     Route::get('view-created-resume-list', ViewCreatedResume::class)->name('view_created_resume.index')->middleware('permission:view applied resume job posts');
-
 });
 
 // Protected routes requiring email verification

@@ -1,4 +1,8 @@
 # Mary UI Starter Kit for Laravel
+
+
+A production-ready Laravel starter kit combining the power of [Laravel Volt](https://livewire.laravel.com/docs/volt) with [Mary UI](https://github.com/robsontenorio/mary). This package provides a complete authentication system and role-based authorization powered by Spatie's Laravel Permission package.
+
 ## Features
 
 - **Laravel 12+** - Built with the latest Laravel version
@@ -18,22 +22,12 @@
 
 You can create a new Mary UI Starter Kit project via laravel installer:
 
-```bash
-laravel new my-app --using=KushGrg/mary-ui-starter-kit
-```
-
-or using composer
-
-```bash
-composer create-project KushGrg/mary-ui-starter-kit
-```
-
 Or clone the repository manually:
 
 ```bash
 # Clone the repository
 git clone https://github.com/KushGrg/Smart-Resume-Scanner.git
-cd mary-ui-starter-kit
+cd Smart-Resume-Scanner
 
 # Install PHP dependencies
 composer install
@@ -80,7 +74,7 @@ After running the migrations and seeders, you can login with the following crede
 | Role  | Email             | Password |
 |-------|-------------------|----------|
 | Admin | admin@example.com | password |
-| User  | user@example.com  | password |
+| User  | user@gmail.com  | password |
 
 ## Requirements
 
@@ -94,8 +88,8 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## Security Vulnerabilities
 
-If you discover a security vulnerability within this starter kit, please send an e-mail to Kush Gurung via [kushg514@gmail.com](mailto:kushg514@gmail.com). All security vulnerabilities will be promptly addressed.
+If you discover a security vulnerability within this starter kit, please send an e-mail to Kush Gurung via [kushg514@gmail.com](mailto:). All security vulnerabilities will be promptly addressed.
 
 ## License
 
-The Mary UI Starter Kit is open-source software licensed under the [MIT license](https://raw.githubusercontent.com/KushGrg/mary-ui-starter-kit/refs/heads/main/LICENSE).
+The Mary UI Starter Kit is open-source software licensed under the [MIT license](https://raw.githubusercontent.com/KushGrg/Smart-Resume-Scanner/refs/heads/main/LICENSE).
