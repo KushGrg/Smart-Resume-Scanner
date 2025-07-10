@@ -20,7 +20,7 @@ A production-ready Laravel starter kit combining the power of [Laravel Volt](htt
 
 ## Installation
 
-You can create a new Mary UI Starter Kit project via laravel installer:
+You can create a new Smart Resume Scanner project via laravel installer:
 
 Or clone the repository manually:
 
