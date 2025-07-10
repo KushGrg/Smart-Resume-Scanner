@@ -25,20 +25,20 @@ A production-ready Laravel starter kit combining the power of [Laravel Volt](htt
 You can create a new Mary UI Starter Kit project via laravel installer:
 
 ```bash
-laravel new my-app --using=chandanshakya/mary-ui-starter-kit
+laravel new my-app --using=KushGrg/mary-ui-starter-kit
 ```
 
 or using composer
 
 ```bash
-composer create-project chandanshakya/mary-ui-starter-kit
+composer create-project KushGrg/mary-ui-starter-kit
 ```
 
 Or clone the repository manually:
 
 ```bash
 # Clone the repository
-git clone https://github.com/ChandanShakya/mary-ui-starter-kit.git
+git clone https://github.com/KushGrg/Smart-Resume-Scanner.git
 cd mary-ui-starter-kit
 
 # Install PHP dependencies
