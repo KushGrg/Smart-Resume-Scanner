@@ -8,8 +8,8 @@ test('complete SRS workflow - HR job posting, job seeker registration, and appli
     $this->browse(function (Browser $browser) {
         // Login as HR
         $browser->visit('/login')
-            ->type('email', 'hr@gmail.com')
-            ->type('password', 'password')
+            ->type('input[wire\:model="email"]', 'hr@gmail.com')
+            ->type('input[wire\:model="password"]', 'password')
             ->press('Login')
             ->assertPathIs('/dashboard')
             ->assertSee('Dashboard');
@@ -39,8 +39,8 @@ test('complete SRS workflow - HR job posting, job seeker registration, and appli
         // Register as Job Seeker
         $browser->visit('/register')
             ->type('name', 'John Developer')
-            ->type('email', 'john@developer.com')
-            ->type('password', 'password')
+            ->type('input[wire\:model="email"]', 'john@developer.com')
+            ->type('input[wire\:model="password"]', 'password')
             ->type('password_confirmation', 'password')
             ->radio('role', 'job_seeker')
             ->press('Register')
@@ -52,8 +52,8 @@ test('complete SRS workflow - HR job posting, job seeker registration, and appli
 
         // Login as the verified job seeker
         $browser->visit('/login')
-            ->type('email', 'john@developer.com')
-            ->type('password', 'password')
+            ->type('input[wire\:model="email"]', 'john@developer.com')
+            ->type('input[wire\:model="password"]', 'password')
             ->press('Login')
             ->assertPathIs('/dashboard');
 
@@ -65,7 +65,7 @@ test('complete SRS workflow - HR job posting, job seeker registration, and appli
         $browser->type('name', 'John Developer')
             ->type('designation', 'Senior Laravel Developer')
             ->type('phone', '+1-555-123-4567')
-            ->type('email', 'john@developer.com')
+            ->type('input[wire\:model="email"]', 'john@developer.com')
             ->type('country', 'United States')
             ->type('city', 'New York')
             ->type('address', '123 Tech Street, New York, NY 10001')
@@ -205,8 +205,8 @@ startxref
     $this->browse(function (Browser $browser) {
         // Login back as HR
         $browser->visit('/login')
-            ->type('email', 'hr@gmail.com')
-            ->type('password', 'password')
+            ->type('input[wire\:model="email"]', 'hr@gmail.com')
+            ->type('input[wire\:model="password"]', 'password')
             ->press('Login')
             ->assertPathIs('/dashboard');
 
@@ -230,8 +230,8 @@ startxref
     $this->browse(function (Browser $browser) {
         // Login back as Job Seeker
         $browser->visit('/login')
-            ->type('email', 'john@developer.com')
-            ->type('password', 'password')
+            ->type('input[wire\:model="email"]', 'john@developer.com')
+            ->type('input[wire\:model="password"]', 'password')
             ->press('Login')
             ->assertPathIs('/dashboard');
 
@@ -253,8 +253,8 @@ test('HR job posting workflow', function () {
     $this->browse(function (Browser $browser) {
         // Login as HR
         $browser->visit('/login')
-            ->type('email', 'hr@gmail.com')
-            ->type('password', 'password')
+            ->type('input[wire\:model="email"]', 'hr@gmail.com')
+            ->type('input[wire\:model="password"]', 'password')
             ->press('Login')
             ->assertPathIs('/dashboard');
 
@@ -292,8 +292,8 @@ test('job seeker resume creation workflow', function () {
         $user->assignRole('job_seeker');
 
         $browser->visit('/login')
-            ->type('email', 'test.seeker@example.com')
-            ->type('password', 'password')
+            ->type('input[wire\:model="email"]', 'test.seeker@example.com')
+            ->type('input[wire\:model="password"]', 'password')
             ->press('Login')
             ->assertPathIs('/dashboard');
 
@@ -303,7 +303,7 @@ test('job seeker resume creation workflow', function () {
             ->type('name', 'Test User')
             ->type('designation', 'Software Engineer')
             ->type('phone', '+1-555-987-6543')
-            ->type('email', 'test.seeker@example.com')
+            ->type('input[wire\:model="email"]', 'test.seeker@example.com')
             ->type('country', 'Canada')
             ->type('city', 'Toronto')
             ->press('Next')
@@ -357,16 +357,16 @@ test('authentication and navigation', function () {
             ->assertSee('Login');
 
         // Test invalid login
-        $browser->type('email', 'invalid@example.com')
-            ->type('password', 'wrongpassword')
+        $browser->type('input[wire\:model="email"]', 'invalid@example.com')
+            ->type('input[wire\:model="password"]', 'wrongpassword')
             ->press('Login')
             ->assertSee('These credentials do not match our records');
 
         // Test valid HR login
         $browser->clear('email')
             ->clear('password')
-            ->type('email', 'hr@gmail.com')
-            ->type('password', 'password')
+            ->type('input[wire\:model="email"]', 'hr@gmail.com')
+            ->type('input[wire\:model="password"]', 'password')
             ->press('Login')
             ->assertPathIs('/dashboard')
             ->assertSee('Dashboard');

@@ -8,8 +8,8 @@ test('resume ranking algorithm test with TF-IDF cosine similarity', function () 
     $this->browse(function (Browser $browser) {
         // Setup: Create HR user and login
         $browser->visit('/login')
-            ->type('email', 'hr@gmail.com')
-            ->type('password', 'password')
+            ->type('input[wire\:model="email"]', 'hr@gmail.com')
+            ->type('input[wire\:model="password"]', 'password')
             ->press('Login')
             ->assertPathIs('/dashboard');
 
@@ -34,8 +34,8 @@ test('resume ranking algorithm test with TF-IDF cosine similarity', function () 
         // Create first candidate with high matching skills
         $browser->visit('/register')
             ->type('name', 'Alice PHP Expert')
-            ->type('email', 'alice@phpexpert.com')
-            ->type('password', 'password')
+            ->type('input[wire\:model="email"]', 'alice@phpexpert.com')
+            ->type('input[wire\:model="password"]', 'password')
             ->type('password_confirmation', 'password')
             ->radio('role', 'job_seeker')
             ->press('Register');
@@ -45,8 +45,8 @@ test('resume ranking algorithm test with TF-IDF cosine similarity', function () 
         $alice->markEmailAsVerified();
 
         $browser->visit('/login')
-            ->type('email', 'alice@phpexpert.com')
-            ->type('password', 'password')
+            ->type('input[wire\:model="email"]', 'alice@phpexpert.com')
+            ->type('input[wire\:model="password"]', 'password')
             ->press('Login')
             ->visit('/create-profile');
 
@@ -54,7 +54,7 @@ test('resume ranking algorithm test with TF-IDF cosine similarity', function () 
         $browser->type('name', 'Alice PHP Expert')
             ->type('designation', 'Senior PHP Laravel Developer')
             ->type('phone', '+1-555-111-1111')
-            ->type('email', 'alice@phpexpert.com')
+            ->type('input[wire\:model="email"]', 'alice@phpexpert.com')
             ->type('country', 'United States')
             ->type('city', 'Remote')
             ->press('Next');
@@ -103,8 +103,8 @@ test('resume ranking algorithm test with TF-IDF cosine similarity', function () 
         // Create second candidate with partial matching skills
         $browser->visit('/register')
             ->type('name', 'Bob Frontend Dev')
-            ->type('email', 'bob@frontend.com')
-            ->type('password', 'password')
+            ->type('input[wire\:model="email"]', 'bob@frontend.com')
+            ->type('input[wire\:model="password"]', 'password')
             ->type('password_confirmation', 'password')
             ->radio('role', 'job_seeker')
             ->press('Register');
@@ -113,8 +113,8 @@ test('resume ranking algorithm test with TF-IDF cosine similarity', function () 
         $bob->markEmailAsVerified();
 
         $browser->visit('/login')
-            ->type('email', 'bob@frontend.com')
-            ->type('password', 'password')
+            ->type('input[wire\:model="email"]', 'bob@frontend.com')
+            ->type('input[wire\:model="password"]', 'password')
             ->press('Login')
             ->visit('/create-profile');
 
@@ -122,7 +122,7 @@ test('resume ranking algorithm test with TF-IDF cosine similarity', function () 
         $browser->type('name', 'Bob Frontend Dev')
             ->type('designation', 'Frontend Developer')
             ->type('phone', '+1-555-222-2222')
-            ->type('email', 'bob@frontend.com')
+            ->type('input[wire\:model="email"]', 'bob@frontend.com')
             ->type('country', 'United States')
             ->type('city', 'Remote')
             ->press('Next');
@@ -164,8 +164,8 @@ test('resume ranking algorithm test with TF-IDF cosine similarity', function () 
 
         // Apply both candidates to the job
         $browser->visit('/login')
-            ->type('email', 'alice@phpexpert.com')
-            ->type('password', 'password')
+            ->type('input[wire\:model="email"]', 'alice@phpexpert.com')
+            ->type('input[wire\:model="password"]', 'password')
             ->press('Login')
             ->visit('/available-jobs');
 
@@ -200,8 +200,8 @@ trailer<</Size 5/Root 1 0 R>>startxref 450 %%EOF');
 
         // Apply Bob to the same job
         $browser->visit('/login')
-            ->type('email', 'bob@frontend.com')
-            ->type('password', 'password')
+            ->type('input[wire\:model="email"]', 'bob@frontend.com')
+            ->type('input[wire\:model="password"]', 'password')
             ->press('Login')
             ->visit('/available-jobs');
 
@@ -238,8 +238,8 @@ trailer<</Size 5/Root 1 0 R>>startxref 430 %%EOF');
 
         // Login as HR and verify ranking results
         $browser->visit('/login')
-            ->type('email', 'hr@gmail.com')
-            ->type('password', 'password')
+            ->type('input[wire\:model="email"]', 'hr@gmail.com')
+            ->type('input[wire\:model="password"]', 'password')
             ->press('Login')
             ->visit('/hr/applications')
             ->pause(5000); // Allow processing time
@@ -260,8 +260,8 @@ test('resume text extraction and processing', function () {
         $user->assignRole('job_seeker');
 
         $browser->visit('/login')
-            ->type('email', 'test.extraction@example.com')
-            ->type('password', 'password')
+            ->type('input[wire\:model="email"]', 'test.extraction@example.com')
+            ->type('input[wire\:model="password"]', 'password')
             ->press('Login')
             ->visit('/create-profile');
 
@@ -269,7 +269,7 @@ test('resume text extraction and processing', function () {
         $browser->type('name', 'Text Extraction Test')
             ->type('designation', 'Test Engineer')
             ->type('phone', '+1-555-000-0000')
-            ->type('email', 'test.extraction@example.com')
+            ->type('input[wire\:model="email"]', 'test.extraction@example.com')
             ->type('country', 'Test Country')
             ->type('city', 'Test City')
             ->press('Next');
@@ -312,8 +312,8 @@ test('algorithm performance with multiple resumes', function () {
     $this->browse(function (Browser $browser) {
         // Login as HR and create a job
         $browser->visit('/login')
-            ->type('email', 'hr@gmail.com')
-            ->type('password', 'password')
+            ->type('input[wire\:model="email"]', 'hr@gmail.com')
+            ->type('input[wire\:model="password"]', 'password')
             ->press('Login')
             ->visit('/hr/jobpost')
             ->waitFor('[wire\\:click="$toggle(\'drawer\')"]', 10)
@@ -342,8 +342,8 @@ test('algorithm performance with multiple resumes', function () {
         foreach ($candidates as $index => $candidate) {
             $browser->visit('/register')
                 ->type('name', $candidate['name'])
-                ->type('email', $candidate['email'])
-                ->type('password', 'password')
+                ->type('input[wire\:model="email"]', $candidate['email'])
+                ->type('input[wire\:model="password"]', 'password')
                 ->type('password_confirmation', 'password')
                 ->radio('role', 'job_seeker')
                 ->press('Register');
@@ -352,8 +352,8 @@ test('algorithm performance with multiple resumes', function () {
             $user->markEmailAsVerified();
 
             $browser->visit('/login')
-                ->type('email', $candidate['email'])
-                ->type('password', 'password')
+                ->type('input[wire\:model="email"]', $candidate['email'])
+                ->type('input[wire\:model="password"]', 'password')
                 ->press('Login')
                 ->visit('/create-profile');
 
@@ -361,7 +361,7 @@ test('algorithm performance with multiple resumes', function () {
             $browser->type('name', $candidate['name'])
                 ->type('designation', 'Software Engineer')
                 ->type('phone', '+1-555-'.str_pad($index, 3, '0').'-0000')
-                ->type('email', $candidate['email'])
+                ->type('input[wire\:model="email"]', $candidate['email'])
                 ->type('country', 'Tech Country')
                 ->type('city', 'Tech City')
                 ->press('Next');
@@ -399,8 +399,8 @@ test('algorithm performance with multiple resumes', function () {
 
         // Login as HR and check applications
         $browser->visit('/login')
-            ->type('email', 'hr@gmail.com')
-            ->type('password', 'password')
+            ->type('input[wire\:model="email"]', 'hr@gmail.com')
+            ->type('input[wire\:model="password"]', 'password')
             ->press('Login')
             ->visit('/hr/applications')
             ->pause(5000)
