@@ -7,9 +7,45 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Mary\Traits\Toast;
 
 class ViewAppliedHistory extends Component
 {
+    use Toast; // Mary UI toast notifications
+
+    public bool $confirmingDelete = false;
+
+    public $resumeToDelete = null;
+
+    /**
+     * Prompt for delete confirmation
+     */
+    public function confirmDelete($resumeId)
+    {
+        $this->resumeToDelete = $resumeId;
+        $this->confirmingDelete = true;
+    }
+
+    /**
+     * Actually delete the resume after confirmation
+     */
+    public function deleteResume()
+    {
+        try {
+            $resume = Resume::findOrFail($this->resumeToDelete);
+            $this->authorize('delete', $resume);
+            $resume->delete();
+            $this->success('Resume deleted successfully.');
+        } catch (\Exception $e) {
+            \Log::error('Error deleting resume: '.$e->getMessage());
+            $this->error('Failed to delete resume.');
+        }
+        $this->confirmingDelete = false;
+        $this->resumeToDelete = null;
+        $this->selectedResume = null;
+        $this->viewingResume = false;
+    }
+
     use WithPagination;
 
     public string $search = '';
@@ -85,6 +121,8 @@ class ViewAppliedHistory extends Component
     {
         return view('livewire.job-seeker.view-applied-history', [
             'applications' => $this->appliedJobs(),
+            'confirmingDelete' => $this->confirmingDelete,
+            'resumeToDelete' => $this->resumeToDelete,
         ]);
     }
 }

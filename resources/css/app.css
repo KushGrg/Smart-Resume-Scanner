@@ -37,6 +37,6 @@
     @apply bg-primary text-base-100
 }
 
-.mary-table-pagination butto     {
+.mary-table-pagination button {
     @apply cursor-pointer
 }

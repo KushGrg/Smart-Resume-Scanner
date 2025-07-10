@@ -26,28 +26,24 @@ class JobQueryService
      */
     public function getJobPostsWithResumes(string $search = '', int $perPage = 10, string $status = 'active'): LengthAwarePaginator
     {
-        $cacheKey = "job_posts_{$status}_".md5($search)."_{$perPage}";
-
-        return Cache::remember($cacheKey, 300, function () use ($search, $perPage, $status) {
-            return JobPost::query()
-                ->with(['resumes' => function ($query) {
-                    $query->where('processed', true)
-                        ->orderByDesc('similarity_score')
-                        ->select(['id', 'job_seeker_detail_id', 'job_post_id', 'similarity_score', 'file_path']);
-                }])
-                ->where('status', $status)
-                ->when($search, function (Builder $query) use ($search) {
-                    $query->where(function (Builder $q) use ($search) {
-                        $q->where('title', 'like', "%{$search}%")
-                            ->orWhere('description', 'like', "%{$search}%")
-                            ->orWhere('location', 'like', "%{$search}%")
-                            ->orWhere('requirements', 'like', "%{$search}%");
-                    });
-                })
-                ->select(['id', 'title', 'description', 'location', 'type', 'experience_level', 'created_at'])
-                ->latest('created_at')
-                ->paginate($perPage);
-        });
+        return JobPost::query()
+            ->with(['resumes' => function ($query) {
+                $query->where('processed', true)
+                    ->orderByDesc('similarity_score')
+                    ->select(['id', 'job_seeker_detail_id', 'job_post_id', 'similarity_score', 'file_path']);
+            }])
+            ->where('status', $status)
+            ->when($search, function (Builder $query) use ($search) {
+                $query->where(function (Builder $q) use ($search) {
+                    $q->where('title', 'like', "%{$search}%")
+                        ->orWhere('description', 'like', "%{$search}%")
+                        ->orWhere('location', 'like', "%{$search}%")
+                        ->orWhere('requirements', 'like', "%{$search}%");
+                });
+            })
+            ->select(['id', 'title', 'description', 'location', 'type', 'experience_level', 'created_at', 'deadline'])
+            ->latest('created_at')
+            ->paginate($perPage);
     }
 
     /**

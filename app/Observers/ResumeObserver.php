@@ -6,6 +6,7 @@ use App\Jobs\CalculateResumeSimilarity;
 use App\Jobs\ProcessResumeText;
 use App\Models\JobSeeker\Resume;
 use Illuminate\Support\Facades\Log;
+use Storage;
 
 class ResumeObserver
 {
@@ -24,7 +25,7 @@ class ResumeObserver
         // Dispatch text extraction job if file exists and text hasn't been extracted
         if ($resume->file_path && ! $resume->text_extracted) {
             // In a real application, you would dispatch a job here
-            // ProcessResumeText::dispatch($resume);
+            ProcessResumeText::dispatch($resume);
             Log::info('Text extraction job would be dispatched for resume', ['resume_id' => $resume->id]);
         }
     }
@@ -37,7 +38,7 @@ class ResumeObserver
         // If text was extracted, calculate similarity
         if ($resume->wasChanged('text_extracted') && $resume->text_extracted && ! $resume->processed) {
             // In a real application, you would dispatch a job here
-            // CalculateResumeSimilarity::dispatch($resume);
+            CalculateResumeSimilarity::dispatch($resume);
             Log::info('Similarity calculation job would be dispatched for resume', ['resume_id' => $resume->id]);
         }
 
@@ -71,7 +72,7 @@ class ResumeObserver
         ]);
 
         // In a real application, you might want to delete the physical file
-        // Storage::delete($resume->file_path);
+        Storage::delete($resume->file_path);
     }
 
     /**
@@ -95,6 +96,6 @@ class ResumeObserver
         ]);
 
         // In a real application, you would definitely delete the physical file here
-        // Storage::delete($resume->file_path);
+        Storage::delete($resume->file_path);
     }
 }

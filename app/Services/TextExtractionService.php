@@ -50,21 +50,14 @@ class TextExtractionService
     private function extractFromPdf(string $filePath): string
     {
         try {
-            // For basic PDF text extraction, we'll use a simple approach
-            // In production, consider using smalot/pdfparser for better PDF support
-
-            $content = file_get_contents($filePath);
-            $text = '';
-
-            // Basic PDF text extraction using regular expressions
-            if (preg_match_all('/\(([^)]*)\)/', $content, $matches)) {
-                $text = implode(' ', $matches[1]);
+            // Use smalot/pdfparser for robust PDF text extraction
+            if (! class_exists('Smalot\\PdfParser\\Parser')) {
+                throw new \Exception('smalot/pdfparser is not installed. Run: composer require smalot/pdfparser');
             }
 
-            // Alternative approach: extract readable text chunks
-            if (empty($text)) {
-                $text = $this->extractReadableTextFromPdf($content);
-            }
+            $parser = new \Smalot\PdfParser\Parser;
+            $pdf = $parser->parseFile($filePath);
+            $text = $pdf->getText();
 
             return $text ?: 'Unable to extract text from PDF';
 

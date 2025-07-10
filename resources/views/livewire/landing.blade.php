@@ -7,7 +7,8 @@ use Livewire\Volt\Component;
 new
 #[Layout('components.layouts.empty')]
 #[Title('Welcome')]
-class extends Component {
+class extends Component
+{
     public function mount()
     {
         // No additional logic needed for now
@@ -16,8 +17,9 @@ class extends Component {
 
 <div class="min-h-screen flex flex-col items-center justify-center p-4">
     <div class="text-center mb-8">
-        <h1 class="text-4xl font-bold mb-4">Welcome to Our Platform</h1>
-        <p class="text-lg text-gray-600">Get started with your journey today</p>
+        <h1 class="text-4xl font-bold mb-4">Smart Resume Scanner</h1>
+        <p class="text-lg text-gray-600">Automate resume screening with AI-powered TF-IDF ranking</p>
+        <p class="text-sm text-gray-500 mt-2">Streamline your recruitment process with intelligent resume analysis</p>
         @if (session('verified'))
             <div class="mt-4">
                 <x-alert title="{{ session('verified') }}" class="alert-success" icon="o-check" />

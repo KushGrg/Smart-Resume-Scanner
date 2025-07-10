@@ -89,7 +89,7 @@ class JobPost extends Component
         $this->description = $jobPost->description;
         $this->location = $jobPost->location;
         $this->type = $jobPost->type;
-        $this->deadline = $jobPost->deadline;
+        $this->deadline = $jobPost->deadline ? $jobPost->deadline->format('Y-m-d') : '';
         $this->requirements = $jobPost->requirements;
         $this->experience_level = $jobPost->experience_level;
         $this->status = $jobPost->status;

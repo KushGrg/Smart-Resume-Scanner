@@ -24,6 +24,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'view available jobs',
             'view applied history',
             'create profile',
+            'view applied resume job posts',
 
             // Role permissions
             'view roles',
@@ -62,6 +63,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'view available jobs',
             'view applied history',
             'create profile',
+            'view applied resume job posts',
         ]);
 
         // Create admin role and assign permissions

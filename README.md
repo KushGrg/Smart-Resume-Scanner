@@ -1,7 +1,5 @@
 # Mary UI Starter Kit for Laravel
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/kushgurung/Smart-Resume-Scanner)](https://packagist.org/packages/kushgurung/mary-ui-starter-kit)
-[![Total Downloads](https://img.shields.io/packagist/dt/kushgurung/mary-ui-starter-kit)](https://packagist.org/packages/kushgurung/mary-ui-starter-kit/stats)
 
 A production-ready Laravel starter kit combining the power of [Laravel Volt](https://livewire.laravel.com/docs/volt) with [Mary UI](https://github.com/robsontenorio/mary). This package provides a complete authentication system and role-based authorization powered by Spatie's Laravel Permission package.
 
@@ -76,7 +74,7 @@ After running the migrations and seeders, you can login with the following crede
 | Role  | Email             | Password |
 |-------|-------------------|----------|
 | Admin | admin@example.com | password |
-| User  | user@example.com  | password |
+| User  | user@gmail.com  | password |
 
 ## Requirements
 
