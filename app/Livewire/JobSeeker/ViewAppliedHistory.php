@@ -25,7 +25,7 @@ class ViewAppliedHistory extends Component
         try {
             $user = auth()->user();
 
-            if (!$user || !$user->jobSeekerDetail) {
+            if (! $user || ! $user->jobSeekerDetail) {
                 return new LengthAwarePaginator([], 0, $this->perPage);
             }
 
@@ -33,15 +33,15 @@ class ViewAppliedHistory extends Component
                 ->with('jobPost')
                 ->when($this->search, function ($query) {
                     $query->whereHas('jobPost', function ($q) {
-                        $q->where('title', 'like', '%' . $this->search . '%')
-                            ->orWhere('description', 'like', '%' . $this->search . '%');
+                        $q->where('title', 'like', '%'.$this->search.'%')
+                            ->orWhere('description', 'like', '%'.$this->search.'%');
                     });
                 })
                 ->latest()
                 ->paginate($this->perPage);
 
         } catch (\Exception $e) {
-            Log::error('Error fetching applied jobs: ' . $e->getMessage());
+            Log::error('Error fetching applied jobs: '.$e->getMessage());
 
             return new LengthAwarePaginator([], 0, $this->perPage);
         }
@@ -55,7 +55,6 @@ class ViewAppliedHistory extends Component
         } catch (\Exception $e) {
             Log::error('Error viewing resume: '.$e->getMessage());
             $this->dispatch('notify', [
-
                 'type' => 'error',
                 'message' => 'Failed to load resume.',
             ]);
@@ -66,9 +65,9 @@ class ViewAppliedHistory extends Component
     {
         try {
             $resume = Resume::findOrFail($resumeId);
-            $path = storage_path('app/public/' . $resume->file_path);
+            $path = storage_path('app/public/'.$resume->file_path);
 
-            if (!file_exists($path)) {
+            if (! file_exists($path)) {
                 throw new \Exception('Resume file not found');
             }
 

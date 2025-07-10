@@ -4,9 +4,8 @@ use App\Livewire\Hr\JobPost;
 use App\Livewire\JobSeeker\AvailableJobs;
 use App\Livewire\JobSeeker\CreateProfile;
 use App\Livewire\JobSeeker\ViewAppliedHistory;
-use App\Livewire\Jobseeker\ViewCreatedResume;
+use App\Livewire\JobSeeker\ViewCreatedResume;
 use App\Models\User;
-use App\Livewire\Jobseeker\ViewCreatedResume;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -26,7 +25,7 @@ Route::middleware('guest')->group(function () {
 Route::get('/email/verify/{id}/{hash}', function (\Illuminate\Http\Request $request, $id, $hash) {
     $user = User::findOrFail($id);
 
-    if (!hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
+    if (! hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
         throw new AuthorizationException;
     }
 
@@ -38,15 +37,15 @@ Route::get('/email/verify/{id}/{hash}', function (\Illuminate\Http\Request $requ
     $user->previously_verified = true;
     $user->save();
 
-    if (!Auth::check()) {
+    if (! Auth::check()) {
         $message = $user->previously_verified
             ? 'Welcome back! Your new email address has been verified.'
             : 'Email verification completed successfully!';
         Auth::login($user);
     } else {
         $message = $user->previously_verified
-            ? 'New Email address has been verified for ' . $user->name . '.'
-            : 'Email verification completed successfully for ' . $user->name . '.';
+            ? 'New Email address has been verified for '.$user->name.'.'
+            : 'Email verification completed successfully for '.$user->name.'.';
     }
 
     $user->sendEmailVerificationNotification();

@@ -45,5 +45,5 @@
     </div>
 
     {{-- Resume Details Modal (Livewire event-driven, can use Mary UI modal) --}}
-    <livewire:jobseeker.resume-details-modal />
+    <livewire:job-seeker.resume-details-modal />
 </div>
