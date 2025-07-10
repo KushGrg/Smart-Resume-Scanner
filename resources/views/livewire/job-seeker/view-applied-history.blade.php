@@ -26,6 +26,16 @@
                                 {{ ucfirst($application->application_status) }}
                             </span>
                         </div>
+                        <div class="mt-2 text-sm">
+                            <span class="font-medium">Score:</span>
+                            @if(isset($application->similarity_score) && $application->similarity_score !== null)
+                                <span class="badge badge-info">
+                                    {{ number_format($application->similarity_score * 100, 1) }}%
+                                </span>
+                            @else
+                                <span class="text-gray-400">N/A</span>
+                            @endif
+                        </div>
                         <div class="mt-3 flex gap-2">
                             <x-button label="View Resume" wire:click="viewResume({{ $application->id }})" sm />
                             <x-button label="Download Resume" wire:click="downloadResume({{ $application->id }})" sm />

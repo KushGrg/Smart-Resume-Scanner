@@ -43,6 +43,7 @@
         "livewire/livewire": "^3.6",
         "livewire/volt": "^1.7",
         "robsontenorio/mary": "^2.0",
+        "smalot/pdfparser": "^2.12",
         "spatie/laravel-permission": "^6.16",
         "symfony/brevo-mailer": "^7.3",
         "symfony/http-client": "^7.3"
