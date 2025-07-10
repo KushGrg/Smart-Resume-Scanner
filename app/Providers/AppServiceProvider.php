@@ -35,8 +35,7 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton(\App\Services\BatchResumeProcessor::class, function ($app) {
             return new \App\Services\BatchResumeProcessor(
-                $app->make(\App\Services\ResumeRanker::class),
-                $app->make(\App\Services\TextExtractionService::class)
+                $app->make(\App\Services\ResumeRanker::class)
             );
         });
     }

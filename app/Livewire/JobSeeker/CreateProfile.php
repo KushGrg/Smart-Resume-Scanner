@@ -243,5 +243,4 @@ class CreateProfile extends Component
     {
         return view('livewire.job-seeker.create-profile');
     }
-
 }
