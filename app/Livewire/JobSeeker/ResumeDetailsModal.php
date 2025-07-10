@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Livewire\Jobseeker;
+namespace App\Livewire\JobSeeker;
 
-use App\Models\Job_seeker\JobSeekerEducations;
-use App\Models\Job_seeker\JobSeekerExperiences;
-use App\Models\Job_seeker\JobSeekerInfo;
-use App\Models\Job_seeker\JobSeekerSkillAndSummary;
+use App\Models\JobSeeker\JobSeekerEducation;
+use App\Models\JobSeeker\JobSeekerExperience;
+use App\Models\JobSeeker\JobSeekerInfo;
+use App\Models\JobSeeker\JobSeekerSkillAndSummary;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
@@ -31,8 +31,8 @@ class ResumeDetailsModal extends Component
     {
         $this->resumeId = $id;
         $this->resume = JobSeekerInfo::where('job_seeker_id', Auth::id())->findOrFail($id);
-        $this->experiences = JobSeekerExperiences::where('job_seeker_id', Auth::id())->get()->toArray();
-        $this->educations = JobSeekerEducations::where('job_seeker_id', Auth::id())->get()->toArray();
+        $this->experiences = JobSeekerExperience::where('job_seeker_id', Auth::id())->get()->toArray();
+        $this->educations = JobSeekerEducation::where('job_seeker_id', Auth::id())->get()->toArray();
         $skillSummary = JobSeekerSkillAndSummary::where('job_seeker_id', Auth::id())->first();
         $this->skills = $skillSummary ? json_decode($skillSummary->skills, true) : [];
         $this->summary = $skillSummary ? $skillSummary->summary : '';

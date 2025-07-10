@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Jobseeker;
+namespace App\Livewire\JobSeeker;
 
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
