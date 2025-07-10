@@ -62,7 +62,7 @@ class JobPost extends Model
     {
         return $this->belongsTo(HrDetail::class, 'user_id', 'user_id');
     }
-
+    
     public function resumes(): HasMany
     {
         return $this->hasMany(Resume::class, 'job_post_id');

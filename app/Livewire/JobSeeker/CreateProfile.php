@@ -15,23 +15,9 @@ class CreateProfile extends Component
     public $step = 1;
 
     // Profile Info
-    public $name;
+    public $name, $designation, $phone, $email, $country, $city, $address, $summary;
 
-    public $designation;
-
-    public $phone;
-
-    public $email;
-
-    public $country;
-
-    public $city;
-
-    public $address;
-
-    public $summary;
-
-    // Experience (array of items)
+    // Experience
     public $experiences = [
         [
             'job_title' => '',
@@ -43,7 +29,7 @@ class CreateProfile extends Component
         ],
     ];
 
-    // Education (array of items)
+    // Education
     public $educations = [
         [
             'school_name' => '',
@@ -58,18 +44,17 @@ class CreateProfile extends Component
 
     // Skills
     public $skills = [];
-
     public $newSkill = '';
 
     public function mount()
     {
-        // Pre-fill with user data if available
         $user = Auth::user();
-        $this->name = $user->name;
-        $this->email = $user->email;
+        $this->name = $user->name ?? '';
+        $this->email = $user->email ?? '';
+        $this->phone = $user->phone ?? '';  
     }
 
-    // Step navigation
+    // Navigation
     public function next()
     {
         $this->validate($this->rules()[$this->step]);
@@ -81,9 +66,10 @@ class CreateProfile extends Component
         $this->step--;
     }
 
+    // Skills
     public function addSkill()
     {
-        if (! empty($this->newSkill)) {
+        if (!empty($this->newSkill)) {
             $this->skills[] = $this->newSkill;
             $this->newSkill = '';
         }
@@ -95,6 +81,7 @@ class CreateProfile extends Component
         $this->skills = array_values($this->skills);
     }
 
+    // Experience
     public function addExperience()
     {
         $this->experiences[] = [
@@ -113,6 +100,7 @@ class CreateProfile extends Component
         $this->experiences = array_values($this->experiences);
     }
 
+    // Education
     public function addEducation()
     {
         $this->educations[] = [
@@ -132,11 +120,12 @@ class CreateProfile extends Component
         $this->educations = array_values($this->educations);
     }
 
+    // Form Submission
     public function submit()
     {
         $this->validate(array_merge(...array_values($this->rules())));
 
-        // Store main profile info
+        // Store profile
         $jobSeekerInfo = JobSeekerInfo::create([
             'job_seeker_id' => Auth::id(),
             'name' => $this->name,
@@ -151,7 +140,7 @@ class CreateProfile extends Component
 
         // Store experiences
         foreach ($this->experiences as $exp) {
-            if (! empty($exp['job_title'])) {
+            if (!empty($exp['job_title'])) {
                 $exp['job_seeker_id'] = Auth::id();
                 JobSeekerExperience::create($exp);
             }
@@ -159,14 +148,14 @@ class CreateProfile extends Component
 
         // Store educations
         foreach ($this->educations as $edu) {
-            if (! empty($edu['school_name'])) {
+            if (!empty($edu['school_name'])) {
                 $edu['job_seeker_id'] = Auth::id();
                 JobSeekerEducation::create($edu);
             }
         }
 
         // Store skills and summary
-        if (! empty($this->skills)) {
+        if (!empty($this->skills)) {
             JobSeekerSkillAndSummary::create([
                 'job_seeker_id' => Auth::id(),
                 'skills' => json_encode($this->skills),
@@ -174,21 +163,20 @@ class CreateProfile extends Component
             ]);
         }
 
-        // Generate PDF resume
+        // Generate PDF
         $filePath = $this->generateResumePdf($jobSeekerInfo);
 
-        // Flash success message and download PDF
         session()->flash('success', 'Resume created and PDF generated successfully!');
-
-        return response()->download(storage_path('app/public/'.$filePath));
+        return response()->download(storage_path('app/public/' . $filePath));
     }
 
-    // Generate PDF using a Blade template and store it
+    // Generate PDF
     public function generateResumePdf($jobSeekerInfo)
     {
-        // Ensure resumes directory exists
-        if (! file_exists(storage_path('app/public/resumes'))) {
-            mkdir(storage_path('app/public/resumes'), 0755, true);
+        $pdfDirectory = storage_path('app/public/resumes');
+
+        if (!file_exists($pdfDirectory)) {
+            mkdir($pdfDirectory, 0755, true);
         }
 
         $data = [
@@ -200,12 +188,13 @@ class CreateProfile extends Component
         ];
 
         $pdf = Pdf::loadView('pdf.resume-template', $data);
-        $fileName = 'resume_'.$jobSeekerInfo->id.'_'.time().'.pdf';
-        $pdf->save(storage_path('app/public/resumes/'.$fileName));
+        $fileName = 'resume_' . $jobSeekerInfo->id . '_' . time() . '.pdf';
+        $pdf->save($pdfDirectory . '/' . $fileName);
 
-        return 'resumes/'.$fileName;
+        return 'resumes/' . $fileName;
     }
 
+    // Validation Rules
     public function rules()
     {
         return [
@@ -243,5 +232,4 @@ class CreateProfile extends Component
     {
         return view('livewire.job-seeker.create-profile');
     }
-
 }

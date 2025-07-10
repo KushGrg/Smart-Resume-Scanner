@@ -99,7 +99,7 @@
 
             <h4 class="mt-4 font-semibold">Skills</h4>
             <ul class="list-disc ml-6">
-                @foreach ($skills as $skill)
+                @foreach ($skills as $skill)    
                     <li>{{ $skill }}</li>
                 @endforeach
             </ul>

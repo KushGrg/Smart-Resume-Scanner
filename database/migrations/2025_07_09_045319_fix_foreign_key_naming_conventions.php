@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -148,8 +147,8 @@ return new class extends Migration
 
             // Add enhanced resume fields
             $table->string('file_name')->after('job_post_id');
-            $table->string('file_type', 10)->after('file_name'); // pdf, doc, docx
-            $table->integer('file_size')->after('file_type'); // in bytes
+            $table->string('file_type', 10)->after('file_name')->nullable(); // pdf, doc, docx
+            $table->integer('file_size')->after('file_type')->nullable(); // in bytes
             $table->decimal('similarity_score', 5, 4)->nullable()->after('processed_at'); // 0.0000 to 1.0000
             $table->timestamp('applied_at')->useCurrent()->after('similarity_score');
             $table->enum('application_status', ['pending', 'reviewed', 'shortlisted', 'rejected'])
