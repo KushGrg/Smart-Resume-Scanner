@@ -69,7 +69,7 @@ Route::middleware('auth')->group(function () {
     Route::get('available-jobs', AvailableJobs::class)->name('job_seeker.available_jobs.index')->middleware('permission:view available jobs');
     Route::get('view-applied-history', ViewAppliedHistory::class)->name('view_applied_history.index')->middleware('permission:view applied history');
     Route::get('create-profile', CreateProfile::class)->name('create_profile.index')->middleware('permission:create profile');
-    Route::get('view-created-resume-list', ViewCreatedResume::class)->name('create_profile.index')->middleware('permission:view applied resume job posts');
+    Route::get('view-created-resume-list', ViewCreatedResume::class)->name('view_created_resume.index')->middleware('permission:view applied resume job posts');
 
 });
 

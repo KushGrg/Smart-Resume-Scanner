@@ -204,7 +204,7 @@ class ViewApplications extends Component
         return view('livewire.hr.view-applications', [
             'applications' => $this->applications(),
             'headers' => $this->headers(),
-            'jobPosts' => $this->jobPostsProperty,
+            'jobPosts' => $this->getJobPostsProperty(),
         ]);
     }
 }

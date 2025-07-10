@@ -152,8 +152,4 @@ When implementing the core ranking feature:
 4. Use Laravel queues for background processing: `php artisan queue:work`
 5. Display ranked results in HR dashboard using Mary UI tables
 
-Whenever you run a command in the terminal, pipe stdout and stderr to a temp file, then cat it, and finally echo a newline. For example:
-
-{ your-command; } > output.txt 2>&1
-cat output.txt
-echo ""
+after the terminal command is successfully executed close the open terminal window

@@ -59,7 +59,7 @@ class ViewCreatedResume extends Component
 
     public function downloadResume($id)
     {
-        $resume = \App\Models\JobSeeker\JobSeekerInfo::where('  job_seeker_id', Auth::id())->findOrFail($id);
+        $resume = \App\Models\JobSeeker\JobSeekerInfo::where('job_seeker_id', Auth::id())->findOrFail($id);
         if (! $resume->pdf_path) {
             $this->error('PDF not found.');
 
