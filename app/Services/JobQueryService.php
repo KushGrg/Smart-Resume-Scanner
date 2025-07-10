@@ -41,7 +41,7 @@ class JobQueryService
                         ->orWhere('requirements', 'like', "%{$search}%");
                 });
             })
-            ->select(['id', 'title', 'description', 'location', 'type', 'experience_level', 'created_at'])
+            ->select(['id', 'title', 'description', 'location', 'type', 'experience_level', 'created_at', 'deadline'])
             ->latest('created_at')
             ->paginate($perPage);
     }
