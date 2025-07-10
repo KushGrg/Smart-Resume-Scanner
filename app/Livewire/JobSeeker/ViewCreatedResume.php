@@ -2,23 +2,21 @@
 
 namespace App\Livewire\Jobseeker;
 
-use Livewire\Component;
-use App\Models\Job_seeker\JobSeekerInfo;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Component;
 use Mary\Traits\Toast;
-use Illuminate\Support\Str;
-// use \App\Models\JobSeeker;
 
+// use \App\Models\JobSeeker;
 
 class ViewCreatedResume extends Component
 {
     use Toast;
 
     public $search = '';
+
     public $showTrashed = false;
 
     protected $queryString = ['search', 'showTrashed'];
-
 
     public function getResumesProperty()
     {
@@ -27,9 +25,9 @@ class ViewCreatedResume extends Component
 
         if ($this->search) {
             $query->where(function ($q) {
-                $q->where('name', 'like', '%' . $this->search . '%')
-                    ->orWhere('designation', 'like', '%' . $this->search . '%')
-                    ->orWhere('summary', 'like', '%' . $this->search . '%');
+                $q->where('name', 'like', '%'.$this->search.'%')
+                    ->orWhere('designation', 'like', '%'.$this->search.'%')
+                    ->orWhere('summary', 'like', '%'.$this->search.'%');
             });
         }
 
@@ -62,11 +60,13 @@ class ViewCreatedResume extends Component
     public function downloadResume($id)
     {
         $resume = \App\Models\JobSeeker\JobSeekerInfo::where('  job_seeker_id', Auth::id())->findOrFail($id);
-        if (!$resume->pdf_path) {
+        if (! $resume->pdf_path) {
             $this->error('PDF not found.');
+
             return;
         }
-        return response()->download(storage_path('app/public/' . $resume->pdf_path));
+
+        return response()->download(storage_path('app/public/'.$resume->pdf_path));
     }
 
     public function copyShareLink($id)

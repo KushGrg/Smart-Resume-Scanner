@@ -79,7 +79,7 @@ class AvailableJobs extends Component
     public function viewJob($id)
     {
         try {
-            
+
             $this->selectedJob = JobPost::findOrFail($id);
             $this->viewingJob = true;
             $this->applyingJob = false;
@@ -106,7 +106,7 @@ class AvailableJobs extends Component
      */
     public function applyJob($id)
     {
-        
+
         try {
             $this->selectedJob = JobPost::findOrFail($id);
             $this->applyingJob = true;
@@ -137,22 +137,22 @@ class AvailableJobs extends Component
             // ✅ Validate user authentication and job seeker profile
             $jobSeekerDetail = auth()->user()?->jobSeekerDetail;
 
-            if (!auth()->user() || !$jobSeekerDetail) {
+            if (! auth()->user() || ! $jobSeekerDetail) {
                 throw new \Exception('Job seeker profile not found.');
             }
 
             // ✅ Validate resume file
             $this->validate([
-                'resume' => 'mimes:pdf,doc,docx|max:2048'
+                'resume' => 'mimes:pdf,doc,docx|max:2048',
             ], [
                 'resume.mimes' => 'The resume must be a file of type: pdf, doc, docx.',
-                'resume.max' => 'The resume may not be greater than 2MB in size.'
+                'resume.max' => 'The resume may not be greater than 2MB in size.',
             ]);
 
             // ✅ Store resume file
             $path = $this->resume->store('resumes', 'public');
 
-            if (!$path) {
+            if (! $path) {
                 throw new \Exception('Failed to store resume file.');
             }
 
@@ -187,7 +187,6 @@ class AvailableJobs extends Component
         } catch (\Illuminate\Validation\ValidationException $e) {
             // Let Livewire handle validation errors
             throw $e;
-
         } catch (\Exception $e) {
             Log::error('Application submission failed', [
                 'job_id' => $this->selectedJob?->id,
@@ -385,7 +384,7 @@ class AvailableJobs extends Component
     //         'file_name' => $this->resume->getClientOriginalName()
     //     ]);
 
-    //     $this->toast(       
+    //     $this->toast(
     //         type: 'error',
     //         title: 'Already Applied',
     //         description: 'You have already applied for this job.',

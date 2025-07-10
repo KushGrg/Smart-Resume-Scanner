@@ -30,6 +30,20 @@ class DefaultUsersSeeder extends Seeder
         ]);
         $job_seeker->assignRole('job_seeker');
 
+        $job_seeker->jobSeekerDetail()->create([
+            'name' => $job_seeker->name,
+            'email' => $job_seeker->email,
+            'phone' => fake()->phoneNumber(),
+            'current_designation' => fake()->jobTitle(),
+            'experience_years' => fake()->randomElement(['0-1', '1-3', '3-5', '5-10', '10+']),
+            'skills' => fake()->randomElements([
+                'PHP', 'Laravel', 'JavaScript', 'Vue.js', 'React', 'Python', 'Java', 'C++',
+                'HTML', 'CSS', 'MySQL', 'PostgreSQL', 'MongoDB', 'Git', 'Docker', 'AWS',
+                'Node.js', 'TypeScript', 'Angular', 'Bootstrap', 'Tailwind CSS', 'Redis',
+            ], fake()->numberBetween(3, 8)),
+            'summary' => fake()->paragraph(3),
+        ]);
+
         $hr = User::create(attributes: [
             'name' => 'Hr',
             'email' => 'hr@gmail.com',

@@ -2,21 +2,27 @@
 
 namespace App\Livewire\Jobseeker;
 
-use Livewire\Component;
-use App\Models\Job_seeker\JobSeekerInfo;
-use App\Models\Job_seeker\JobSeekerExperiences;
 use App\Models\Job_seeker\JobSeekerEducations;
+use App\Models\Job_seeker\JobSeekerExperiences;
+use App\Models\Job_seeker\JobSeekerInfo;
 use App\Models\Job_seeker\JobSeekerSkillAndSummary;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Component;
 
 class ResumeDetailsModal extends Component
 {
     public $show = false;
+
     public $resumeId;
+
     public $resume;
+
     public $experiences = [];
+
     public $educations = [];
+
     public $skills = [];
+
     public $summary = '';
 
     protected $listeners = ['showResumeDetails' => 'showModal'];
