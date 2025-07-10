@@ -54,7 +54,7 @@ class ViewAppliedHistory extends Component
             $this->viewingResume = true;
         } catch (\Exception $e) {
             Log::error('Error viewing resume: '.$e->getMessage());
-            $this->dispatchBrowserEvent('notify', [
+            $this->dispatch('notify', [
                 'type' => 'error',
                 'message' => 'Failed to load resume.',
             ]);
@@ -74,7 +74,7 @@ class ViewAppliedHistory extends Component
             return response()->download($path, basename($resume->file_path));
         } catch (\Exception $e) {
             Log::error('Error downloading resume: '.$e->getMessage());
-            $this->dispatchBrowserEvent('notify', [
+            $this->dispatch('notify', [
                 'type' => 'error',
                 'message' => 'Failed to download resume.',
             ]);

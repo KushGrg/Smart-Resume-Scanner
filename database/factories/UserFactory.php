@@ -51,7 +51,7 @@ class UserFactory extends Factory
      */
     public function hr(): self
     {
-        return $this->afterCreating(function (\App\Models\User $user) {
+        return $this->afterCreating(function (User $user) {
             $user->assignRole('hr');
             $user->hrDetail()->create([
                 'name' => $user->name,
@@ -68,7 +68,7 @@ class UserFactory extends Factory
      */
     public function jobSeeker(): self
     {
-        return $this->afterCreating(function (\App\Models\User $user) {
+        return $this->afterCreating(function (User $user) {
             $user->assignRole('job_seeker');
             $user->jobSeekerDetail()->create([
                 'name' => $user->name,
@@ -91,7 +91,7 @@ class UserFactory extends Factory
      */
     public function admin(): self
     {
-        return $this->afterCreating(function (\App\Models\User $user) {
+        return $this->afterCreating(function (User $user) {
             $user->assignRole('admin');
         });
     }

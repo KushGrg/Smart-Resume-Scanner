@@ -1,42 +1,40 @@
 <?php
 
 use Livewire\Volt\Volt;
-use function Pest\Laravel\{get, post};
 
 it('renders the landing component', function () {
-    // Simulate a request to the landing page
-    $response = get('/');
-
-    // Assert that the response status is 200 (OK)
-    $response->assertStatus(200);
-
-    // Assert that the landing component is rendered
-    $response->assertSeeLivewire('landing');
-
-    // Assert that specific content is visible on the page
-    $response->assertSee('Welcome to Our Platform');
-    $response->assertSee('Get started with your journey today');
-    $response->assertSee('Login');
-    $response->assertSee('Register');
+    // Test the Volt component directly
+    Volt::test('pages.landing')
+        ->assertSee('Welcome to Our Platform')
+        ->assertSee('Get started with your journey today')
+        ->assertSee('Login')
+        ->assertSee('Register');
 });
 
 it('checks if login button works', function () {
-    $response = get('/');
-    $response->assertSee('Login');
-    $response->assertSee('Register');
-
-    // Simulate clicking the login button
-    $response = get('/login');
-    $response->assertStatus(200);
-    $response->assertSee('Enter your credentials to access your account');
+    // Test navigation to login from landing component
+    Volt::test('pages.landing')
+        ->assertSee('Login')
+        ->call('goToLogin')
+        ->assertRedirect('/login');
 });
 
 it('checks if register button works', function () {
-    $response = get('/');
-    $response->assertSee('Register');
+    // Test navigation to register from landing component
+    Volt::test('pages.landing')
+        ->assertSee('Register')
+        ->call('goToRegister')
+        ->assertRedirect('/register');
+});
 
-    // Simulate clicking the register button
-    $response = get('/register');
-    $response->assertStatus(200);
-    $response->assertSee('Create a new account to get started');
+it('renders login component when navigated', function () {
+    // Test the login component directly
+    Volt::test('pages.auth.login')
+        ->assertSee('Enter your credentials to access your account');
+});
+
+it('renders register component when navigated', function () {
+    // Test the register component directly
+    Volt::test('pages.auth.register')
+        ->assertSee('Create a new account to get started');
 });

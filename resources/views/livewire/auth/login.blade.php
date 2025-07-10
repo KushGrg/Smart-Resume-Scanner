@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\AuditLog;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Rule;
 use Livewire\Attributes\Title;
@@ -34,7 +35,7 @@ class extends Component
             request()->session()->regenerate();
 
             // Log successful login
-            \App\Models\AuditLog::logSuccessfulLogin($user);
+            AuditLog::logSuccessfulLogin($user);
 
             // If email is not verified, redirect to verification page
             if (! $user->hasVerifiedEmail()) {
@@ -45,7 +46,7 @@ class extends Component
         }
 
         // Log failed login attempt
-        \App\Models\AuditLog::logFailedLogin($this->email);
+        AuditLog::logFailedLogin($this->email);
 
         $this->addError('email', 'The provided credentials do not match our records.');
     }
