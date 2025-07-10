@@ -26,9 +26,13 @@
                                 {{ ucfirst($application->application_status) }}
                             </span>
                         </div>
-                        <div class="mt-3">
+                        <div class="mt-3 flex gap-2">
                             <x-button label="View Resume" wire:click="viewResume({{ $application->id }})" sm />
                             <x-button label="Download Resume" wire:click="downloadResume({{ $application->id }})" sm />
+                            <x-button label="Delete" class="btn-error" icon="o-trash"
+                                wire:click="confirmDelete({{ $application->id }})"
+                                tooltip="Delete this resume"
+                                sm />
                         </div>
                     </x-card>
                 @endforeach
@@ -67,6 +71,21 @@
                         </div>
                     </div>
                 @endif
+            </div>
+        </x-modal>
+    @endif
+
+    {{-- Delete Confirmation Modal --}}
+    @if($confirmingDelete)
+        <x-modal wire:model="confirmingDelete" max-width="md" title="Delete Resume" persistent>
+            <div class="py-6 text-center">
+                <x-icon name="o-trash" class="w-12 h-12 text-error mx-auto mb-4" />
+                <div class="text-lg font-semibold mb-2">Are you sure you want to delete this resume?</div>
+                <div class="text-gray-500 mb-4">This action cannot be undone.</div>
+                <div class="flex justify-center gap-4 mt-6">
+                    <x-button label="Cancel" @click="$wire.confirmingDelete = false" />
+                    <x-button label="Delete" class="btn-error" icon="o-trash" wire:click="deleteResume" spinner />
+                </div>
             </div>
         </x-modal>
     @endif

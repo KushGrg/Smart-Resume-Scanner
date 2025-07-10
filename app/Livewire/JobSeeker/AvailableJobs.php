@@ -165,6 +165,7 @@ class AvailableJobs extends Component
                 [
                     'file_path' => $path,
                     'file_name' => $this->resume->getClientOriginalName(),
+                    'file_type' => $this->resume->getClientOriginalExtension(),
                 ]
             );
 
