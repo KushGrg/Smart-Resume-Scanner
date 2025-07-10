@@ -6,6 +6,7 @@ use App\Livewire\JobSeeker\CreateProfile;
 use App\Livewire\JobSeeker\ViewAppliedHistory;
 use App\Livewire\Jobseeker\ViewCreatedResume;
 use App\Models\User;
+use App\Livewire\Jobseeker\ViewCreatedResume;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;

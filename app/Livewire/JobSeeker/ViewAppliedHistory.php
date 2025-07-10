@@ -55,6 +55,7 @@ class ViewAppliedHistory extends Component
         } catch (\Exception $e) {
             Log::error('Error viewing resume: '.$e->getMessage());
             $this->dispatch('notify', [
+
                 'type' => 'error',
                 'message' => 'Failed to load resume.',
             ]);
