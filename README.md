@@ -1,7 +1,7 @@
 # Mary UI Starter Kit for Laravel
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/chandanshakya/mary-ui-starter-kit)](https://packagist.org/packages/ChandanShakya/mary-ui-starter-kit)
-[![Total Downloads](https://img.shields.io/packagist/dt/ChandanShakya/mary-ui-starter-kit)](https://packagist.org/packages/chandanshakya/mary-ui-starter-kit/stats)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/kushgurung/mary-ui-starter-kit)](https://packagist.org/packages/kushgurung/mary-ui-starter-kit)
+[![Total Downloads](https://img.shields.io/packagist/dt/kushgurung/mary-ui-starter-kit)](https://packagist.org/packages/kushgurung/mary-ui-starter-kit/stats)
 
 A production-ready Laravel starter kit combining the power of [Laravel Volt](https://livewire.laravel.com/docs/volt) with [Mary UI](https://github.com/robsontenorio/mary). This package provides a complete authentication system and role-based authorization powered by Spatie's Laravel Permission package.
 
@@ -24,22 +24,12 @@ A production-ready Laravel starter kit combining the power of [Laravel Volt](htt
 
 You can create a new Mary UI Starter Kit project via laravel installer:
 
-```bash
-laravel new my-app --using=chandanshakya/mary-ui-starter-kit
-```
-
-or using composer
-
-```bash
-composer create-project chandanshakya/mary-ui-starter-kit
-```
-
 Or clone the repository manually:
 
 ```bash
 # Clone the repository
-git clone https://github.com/ChandanShakya/mary-ui-starter-kit.git
-cd mary-ui-starter-kit
+git clone https://github.com/KushGrg/Smart-Resume-Scanner.git
+cd Smart-Resume-Scanner
 
 # Install PHP dependencies
 composer install
@@ -100,8 +90,8 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## Security Vulnerabilities
 
-If you discover a security vulnerability within this starter kit, please send an e-mail to Chandan Shakya via [email@chandanshakya.com.np](mailto:email@chandanshakya.com.np). All security vulnerabilities will be promptly addressed.
+If you discover a security vulnerability within this starter kit, please send an e-mail to Kush Gurung via [kushg514@gmail.com](mailto:). All security vulnerabilities will be promptly addressed.
 
 ## License
 
-The Mary UI Starter Kit is open-source software licensed under the [MIT license](https://raw.githubusercontent.com/ChandanShakya/mary-ui-starter-kit/refs/heads/main/LICENSE).
+The Mary UI Starter Kit is open-source software licensed under the [MIT license](https://raw.githubusercontent.com/KushGrg/Smart-Resume-Scanner/refs/heads/main/LICENSE).
