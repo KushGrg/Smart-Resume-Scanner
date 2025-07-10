@@ -27,7 +27,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreign('job_seeker_id')->references('id')->on('users')->onDelete('cascade'); // FIXED
-
+            $table->softDeletes();
         });
     }
 
