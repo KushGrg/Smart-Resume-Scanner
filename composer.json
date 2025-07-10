@@ -1,6 +1,6 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "chandanshakya/mary-ui-starter-kit",
+    "name": "kushgrg/mary-ui-starter-kit",
     "type": "project",
     "description": "Laravel Volt, Mary UI project starter kit with Auth and Roles",
     "keywords": [
@@ -19,20 +19,6 @@
         "ui-kit"
     ],
     "license": "MIT",
-    "support": {
-        "email": "email@chandanshakya.com.np",
-        "issues": "https://github.com/ChandanShakya/mary-ui-starter-kit/issues",
-        "source": "https://github.com/ChandanShakya/mary-ui-starter-kit"
-    },
-    "homepage": "https://github.com/chandanshakya/mary-ui-starter-kit",
-    "authors": [
-        {
-            "name": "Chandan Shakya",
-            "email": "email@chandanshakya.com.np",
-            "homepage": "https://chandanshakya.com.np",
-            "role": "Developer"
-        }
-    ],
     "require": {
         "php": "^8.2",
         "barryvdh/laravel-dompdf": "^3.1",

@@ -1,10 +1,4 @@
 # Mary UI Starter Kit for Laravel
-
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/chandanshakya/mary-ui-starter-kit)](https://packagist.org/packages/ChandanShakya/mary-ui-starter-kit)
-[![Total Downloads](https://img.shields.io/packagist/dt/ChandanShakya/mary-ui-starter-kit)](https://packagist.org/packages/chandanshakya/mary-ui-starter-kit/stats)
-
-A production-ready Laravel starter kit combining the power of [Laravel Volt](https://livewire.laravel.com/docs/volt) with [Mary UI](https://github.com/robsontenorio/mary). This package provides a complete authentication system and role-based authorization powered by Spatie's Laravel Permission package.
-
 ## Features
 
 - **Laravel 12+** - Built with the latest Laravel version
@@ -100,8 +94,8 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## Security Vulnerabilities
 
-If you discover a security vulnerability within this starter kit, please send an e-mail to Chandan Shakya via [email@chandanshakya.com.np](mailto:email@chandanshakya.com.np). All security vulnerabilities will be promptly addressed.
+If you discover a security vulnerability within this starter kit, please send an e-mail to Kush Gurung via [kushg514@gmail.com](mailto:kushg514@gmail.com). All security vulnerabilities will be promptly addressed.
 
 ## License
 
-The Mary UI Starter Kit is open-source software licensed under the [MIT license](https://raw.githubusercontent.com/ChandanShakya/mary-ui-starter-kit/refs/heads/main/LICENSE).
+The Mary UI Starter Kit is open-source software licensed under the [MIT license](https://raw.githubusercontent.com/KushGrg/mary-ui-starter-kit/refs/heads/main/LICENSE).
