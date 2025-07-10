@@ -22,8 +22,8 @@
                         <div class="mt-2 text-sm">
                             <span class="font-medium">Status:</span>
                             <span
-                                class="badge badge-{{ $application->status === 'pending' ? 'warning' : ($application->status === 'accepted' ? 'success' : 'error') }}">
-                                {{ ucfirst($application->status) }}
+                                class="badge badge-{{ $application->application_status === 'pending' ? 'warning' : ($application->application_status === 'accepted' ? 'success' : 'error') }}">
+                                {{ ucfirst($application->application_status) }}
                             </span>
                         </div>
                         <div class="mt-3">
