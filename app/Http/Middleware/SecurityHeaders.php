@@ -34,7 +34,7 @@ class SecurityHeaders
             "connect-src 'self'",
             "media-src 'self'",
             "object-src 'none'",
-            "child-src 'none'",
+            "child-src 'self'",
             "worker-src 'none'",
             "form-action 'self'",
             "base-uri 'self'",

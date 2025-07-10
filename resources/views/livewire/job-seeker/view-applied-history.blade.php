@@ -44,12 +44,17 @@
 
     {{-- Resume View Modal --}}
     @if($viewingResume)
-        <x-modal wire:model.defer="viewingResume" max-width="4xl">
+        <x-modal wire:model="viewingResume" max-width="4xl">
             <x-slot name="title">Your Resume</x-slot>
             <div class="h-[80vh]">
                 @if(pathinfo($selectedResume->file_path, PATHINFO_EXTENSION) === 'pdf')
-                    <iframe src="{{ asset('storage/' . $selectedResume->file_path) }}" class="w-full h-full"
-                        frameborder="0"></iframe>
+                    <iframe 
+                        src="{{ asset('storage/' . $selectedResume->file_path) }}"
+                        class="w-full h-full" frameborder="0"
+                        allowfullscreen>
+                        This browser does not support PDF viewing. <a href="{{ asset('storage/' . $selectedResume->file_path) }}" target="_blank" class="underline">Click here to download the PDF</a>.
+                    </iframe>
+                    <div class="text-xs text-gray-400 text-center mt-2">If the preview does not load, <a href="{{ asset('storage/' . $selectedResume->file_path) }}" target="_blank" class="underline">click here to download the PDF</a>.</div>
                 @else
                     <div class="flex items-center justify-center h-full">
                         <x-icon name="o-document" class="w-16 h-16 text-gray-400" />
