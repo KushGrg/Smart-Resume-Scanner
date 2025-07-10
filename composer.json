@@ -1,6 +1,6 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "kushgrg/smart-resume-scanner",
+    "name": "kushgurung/smart-resume-scanner",
     "type": "project",
     "description": "Laravel Volt, Mary UI project starter kit with Auth and Roles",
     "keywords": [

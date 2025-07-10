@@ -1,6 +1,6 @@
 # Mary UI Starter Kit for Laravel
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/kushgurung/mary-ui-starter-kit)](https://packagist.org/packages/kushgurung/mary-ui-starter-kit)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/kushgurung/Smart-Resume-Scanner)](https://packagist.org/packages/kushgurung/mary-ui-starter-kit)
 [![Total Downloads](https://img.shields.io/packagist/dt/kushgurung/mary-ui-starter-kit)](https://packagist.org/packages/kushgurung/mary-ui-starter-kit/stats)
 
 A production-ready Laravel starter kit combining the power of [Laravel Volt](https://livewire.laravel.com/docs/volt) with [Mary UI](https://github.com/robsontenorio/mary). This package provides a complete authentication system and role-based authorization powered by Spatie's Laravel Permission package.
@@ -22,7 +22,7 @@ A production-ready Laravel starter kit combining the power of [Laravel Volt](htt
 
 ## Installation
 
-You can create a new Mary UI Starter Kit project via laravel installer:
+You can create a new Smart Resume Scanner project via laravel installer:
 
 Or clone the repository manually:
 
