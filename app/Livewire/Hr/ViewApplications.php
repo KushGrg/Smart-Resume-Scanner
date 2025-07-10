@@ -15,20 +15,27 @@ class ViewApplications extends Component
     use Toast, WithPagination;
 
     public string $search = '';
+
     public int $perPage = 10;
+
     public array $sortBy = ['column' => 'similarity_score', 'direction' => 'desc'];
-    
+
     // Filter properties
     public ?int $selectedJobPost = null;
+
     public string $statusFilter = 'all';
+
     public float $minScore = 0.0;
-    
+
     // Modal/drawer properties
     public bool $viewingResume = false;
+
     public bool $statusModal = false;
+
     public ?Resume $selectedResume = null;
+
     public string $newStatus = '';
-    
+
     // Status options
     public array $statusOptions = [
         ['id' => 'pending', 'name' => 'Pending'],
@@ -61,7 +68,7 @@ class ViewApplications extends Component
             ->select('id', 'title')
             ->orderBy('title')
             ->get()
-            ->prepend((object)['id' => null, 'title' => 'All Job Posts']);
+            ->prepend((object) ['id' => null, 'title' => 'All Job Posts']);
     }
 
     public function applications()
@@ -76,10 +83,10 @@ class ViewApplications extends Component
                     $q->whereHas('jobPost', function ($subQ) {
                         $subQ->where('title', 'like', '%'.$this->search.'%');
                     })
-                    ->orWhereHas('jobSeekerDetail.user', function ($subQ) {
-                        $subQ->where('name', 'like', '%'.$this->search.'%')
-                             ->orWhere('email', 'like', '%'.$this->search.'%');
-                    });
+                        ->orWhereHas('jobSeekerDetail.user', function ($subQ) {
+                            $subQ->where('name', 'like', '%'.$this->search.'%')
+                                ->orWhere('email', 'like', '%'.$this->search.'%');
+                        });
                 });
             })
             ->when($this->selectedJobPost, function ($query) {
@@ -95,13 +102,13 @@ class ViewApplications extends Component
         // Apply sorting
         if ($this->sortBy['column'] === 'job_post.title') {
             $query->join('job_posts', 'resumes.job_post_id', '=', 'job_posts.id')
-                  ->orderBy('job_posts.title', $this->sortBy['direction'])
-                  ->select('resumes.*');
+                ->orderBy('job_posts.title', $this->sortBy['direction'])
+                ->select('resumes.*');
         } elseif ($this->sortBy['column'] === 'job_seeker_detail.user.name') {
             $query->join('job_seeker_details', 'resumes.job_seeker_detail_id', '=', 'job_seeker_details.id')
-                  ->join('users', 'job_seeker_details.user_id', '=', 'users.id')
-                  ->orderBy('users.name', $this->sortBy['direction'])
-                  ->select('resumes.*');
+                ->join('users', 'job_seeker_details.user_id', '=', 'users.id')
+                ->orderBy('users.name', $this->sortBy['direction'])
+                ->select('resumes.*');
         } else {
             $query->orderBy($this->sortBy['column'], $this->sortBy['direction']);
         }
@@ -127,7 +134,7 @@ class ViewApplications extends Component
             $this->authorize('download', $resume);
             $path = storage_path('app/public/'.$resume->file_path);
 
-            if (!file_exists($path)) {
+            if (! file_exists($path)) {
                 throw new \Exception('Resume file not found');
             }
 
@@ -150,19 +157,19 @@ class ViewApplications extends Component
     {
         try {
             $this->authorize('changeStatus', $this->selectedResume);
-            
+
             $this->validate([
-                'newStatus' => 'required|in:pending,reviewed,shortlisted,rejected'
+                'newStatus' => 'required|in:pending,reviewed,shortlisted,rejected',
             ]);
 
             $this->selectedResume->update([
-                'application_status' => $this->newStatus
+                'application_status' => $this->newStatus,
             ]);
 
             $this->success('Application status updated successfully.');
             $this->statusModal = false;
             $this->selectedResume = null;
-            
+
         } catch (\Exception $e) {
             Log::error('Error updating status: '.$e->getMessage());
             $this->error('Failed to update status.');
@@ -180,8 +187,10 @@ class ViewApplications extends Component
 
     public function getScoreColorClass($score): string
     {
-        if ($score === null) return 'text-gray-400';
-        
+        if ($score === null) {
+            return 'text-gray-400';
+        }
+
         return match (true) {
             $score >= 0.8 => 'text-green-600 font-bold',
             $score >= 0.6 => 'text-blue-600 font-semibold',
