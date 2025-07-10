@@ -27,11 +27,11 @@ class SecurityHeaders
         // Content Security Policy
         $csp = [
             "default-src 'self'",
-            "script-src 'self' 'unsafe-inline' 'unsafe-eval' cdn.jsdelivr.net unpkg.com",
-            "style-src 'self' 'unsafe-inline' fonts.googleapis.com cdn.jsdelivr.net",
+            "script-src 'self' 'unsafe-inline' 'unsafe-eval' cdn.jsdelivr.net unpkg.com".(app()->environment('local') ? ' 127.0.0.1:5173 localhost:5173' : ''),
+            "style-src 'self' 'unsafe-inline' fonts.googleapis.com cdn.jsdelivr.net".(app()->environment('local') ? ' 127.0.0.1:5173 localhost:5173' : ''),
             "img-src 'self' data: http: blob:",
             "font-src 'self' fonts.gstatic.com",
-            "connect-src 'self' data:",
+            "connect-src 'self' data:".(app()->environment('local') ? ' ws://127.0.0.1:5173 ws://localhost:5173 127.0.0.1:5173 localhost:5173' : ''),
             "media-src 'self'",
             "object-src 'none'",
             "child-src 'self'",
