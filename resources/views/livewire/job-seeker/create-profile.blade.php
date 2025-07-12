@@ -1,5 +1,5 @@
 <div>
-    <div class="max-w-4xl mx-auto p-6 bg-white shadow rounded">
+    <div class="max-w-4xl mx-auto p-6 shadow rounded">
         <h2 class="text-xl font-bold mb-4">Step {{ $step }} of 5</h2>
         <progress class="w-full mb-6" max="5" value="{{ $step }}"></progress>
 
@@ -99,7 +99,7 @@
 
             <h4 class="mt-4 font-semibold">Skills</h4>
             <ul class="list-disc ml-6">
-                @foreach ($skills as $skill)    
+                @foreach ($skills as $skill)
                     <li>{{ $skill }}</li>
                 @endforeach
             </ul>

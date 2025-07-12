@@ -10,7 +10,7 @@
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         @forelse($resumes as $resume)
-            <div class="bg-white shadow rounded-lg p-5 flex flex-col justify-between relative">
+            <div class=" shadow rounded-lg p-5 flex flex-col justify-between relative">
                 <div>
                     <h3 class="text-lg font-bold mb-1">{{ $resume->name }}</h3>
                     <div class="text-sm text-gray-500 mb-2">{{ $resume->designation }}</div>
