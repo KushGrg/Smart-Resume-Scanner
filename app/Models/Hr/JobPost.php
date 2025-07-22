@@ -130,15 +130,15 @@ class JobPost extends Model
     // Accessors
     public function getSalaryRangeAttribute(): ?string
     {
-        if (! $this->salary_min && ! $this->salary_max) {
+        if (!$this->salary_min && !$this->salary_max) {
             return null;
         }
 
         if ($this->salary_min && $this->salary_max) {
-            return 'NPR '.number_format((float) $this->salary_min, 2).' - '.number_format((float) $this->salary_max, 2);
+            return 'NPR ' . number_format((float) $this->salary_min, 2) . ' - ' . number_format((float) $this->salary_max, 2);
         }
 
-        return $this->salary_min ? 'NPR '.number_format((float) $this->salary_min, 2).'+' : 'Up to NPR '.number_format((float) $this->salary_max, 2);
+        return $this->salary_min ? 'NPR ' . number_format((float) $this->salary_min, 2) . '+' : 'Up to NPR ' . number_format((float) $this->salary_max, 2);
     }
 
     public function getIsExpiredAttribute(): bool
@@ -153,7 +153,7 @@ class JobPost extends Model
 
     public function getDaysRemainingAttribute(): ?int
     {
-        if (! $this->deadline) {
+        if (!$this->deadline) {
             return null;
         }
 
@@ -170,5 +170,13 @@ class JobPost extends Model
             'closed' => 'neutral',
             default => 'neutral'
         };
+    }
+    public function getStatusAttribute($value)
+    {
+        if ($this->deadline && \Carbon\Carbon::parse($this->deadline)->isPast()) {
+            return 'inactive';
+        }
+
+        return $value;
     }
 }

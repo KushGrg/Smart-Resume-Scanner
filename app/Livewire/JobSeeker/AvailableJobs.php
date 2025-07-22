@@ -137,7 +137,7 @@ class AvailableJobs extends Component
             // ✅ Validate user authentication and job seeker profile
             $jobSeekerDetail = auth()->user()?->jobSeekerDetail;
 
-            if (! auth()->user() || ! $jobSeekerDetail) {
+            if (!auth()->user() || !$jobSeekerDetail) {
                 throw new \Exception('Job seeker profile not found.');
             }
 
@@ -152,7 +152,7 @@ class AvailableJobs extends Component
             // ✅ Store resume file
             $path = $this->resume->store('resumes', 'public');
 
-            if (! $path) {
+            if (!$path) {
                 throw new \Exception('Failed to store resume file.');
             }
 

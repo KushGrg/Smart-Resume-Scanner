@@ -73,11 +73,18 @@ class JobPost extends Component
         return JobPosts::query()
             ->where('user_id', Auth::id())
             ->when($this->search, function ($query) {
-                $query->where('title', 'like', '%'.$this->search.'%')
-                    ->orWhere('description', 'like', '%'.$this->search.'%');
+                $query->where('title', 'like', '%' . $this->search . '%')
+                    ->orWhere('description', 'like', '%' . $this->search . '%');
             })
             ->orderBy(...array_values($this->sortBy))
-            ->paginate($this->perPage);
+            ->paginate($this->perPage)
+            ->through(function ($jobPost) {
+                // Override status for display if deadline has passed
+                if ($jobPost->deadline && $jobPost->deadline->isPast()) {
+                    $jobPost->status = 'inactive';
+                }
+                return $jobPost;
+            });
     }
 
     public function edit(JobPosts $jobPost): void
