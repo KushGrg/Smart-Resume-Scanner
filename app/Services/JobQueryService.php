@@ -27,17 +27,20 @@ class JobQueryService
     public function getJobPostsWithResumes(string $search = '', int $perPage = 10, string $status = 'active'): LengthAwarePaginator
     {
         return JobPost::query()
-            ->with(['resumes' => function ($query) {
-                $query->where('processed', true)
-                    ->orderByDesc('similarity_score')
-                    ->select(['id', 'job_seeker_detail_id', 'job_post_id', 'similarity_score', 'file_path']);
-            }])
+            ->with([
+                'resumes' => function ($query) {
+                    $query->where('processed', true)
+                        ->orderByDesc('similarity_score')
+                        ->select(['id', 'job_seeker_detail_id', 'job_post_id', 'similarity_score', 'file_path']);
+                }
+            ])
             ->where('status', $status)
             ->when($search, function (Builder $query) use ($search) {
                 $query->where(function (Builder $q) use ($search) {
                     $q->where('title', 'like', "%{$search}%")
                         ->orWhere('description', 'like', "%{$search}%")
                         ->orWhere('location', 'like', "%{$search}%")
+                        ->orwhere('experience_level', 'like,"%{$search}%"')
                         ->orWhere('requirements', 'like', "%{$search}%");
                 });
             })
@@ -55,7 +58,7 @@ class JobQueryService
      */
     public function getUserAppliedJobs(int $userId, string $search = '', int $perPage = 10): LengthAwarePaginator
     {
-        $cacheKey = "user_applied_jobs_{$userId}_".md5($search)."_{$perPage}";
+        $cacheKey = "user_applied_jobs_{$userId}_" . md5($search) . "_{$perPage}";
 
         return Cache::remember($cacheKey, 120, function () use ($userId, $search, $perPage) {
             return Resume::query()
@@ -66,7 +69,10 @@ class JobQueryService
                 ->when($search, function (Builder $query) use ($search) {
                     $query->whereHas('jobPost', function (Builder $q) use ($search) {
                         $q->where('title', 'like', "%{$search}%")
-                            ->orWhere('description', 'like', "%{$search}%");
+                            ->orWhere('description', 'like', "%{$search}%")
+                            ->orwhere('experience_level', 'like,"%{$search}%"')
+                            ->orWhere('requirements', 'like', "%{$search}%")
+                            ->orWhere('location', 'like', "%{$search}%");
                     });
                 })
                 ->select(['id', 'job_seeker_detail_id', 'job_post_id', 'file_path', 'similarity_score', 'processed', 'created_at'])

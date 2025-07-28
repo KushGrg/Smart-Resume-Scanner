@@ -80,7 +80,10 @@ class AvailableJobs extends Component
     {
         try {
 
+
             $this->selectedJob = JobPost::findOrFail($id);
+            // dd($this->selectedJob->requirements);
+            // dd($this->availableJobs()->requirements->get());
             $this->viewingJob = true;
             $this->applyingJob = false;
         } catch (\Exception $e) {
@@ -109,6 +112,7 @@ class AvailableJobs extends Component
 
         try {
             $this->selectedJob = JobPost::findOrFail($id);
+
             $this->applyingJob = true;
             $this->viewingJob = false;
         } catch (\Exception $e) {

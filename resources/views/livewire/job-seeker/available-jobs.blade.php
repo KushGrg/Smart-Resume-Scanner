@@ -18,6 +18,10 @@
                         <div class="mt-3 text-xs text-gray-400">
                             Deadline: {{ $job->deadline?->format('Y-m-d') ?? 'N/A' }}
                         </div>
+                        {{-- <div class="mt-3 text-xs text-gray-400">
+                            Requirements:{{$job->requirements}}
+                            dd($job->requirements)
+                        </div> --}}
 
                         <div class="mt-4 flex gap-2">
                             <x-button label="View" wire:click="viewJob({{ $job->id }})" sm />
@@ -42,7 +46,12 @@
             <div>
                 <div class="text-sm text-gray-500 mb-2">{{ $selectedJob?->type }} • {{ $selectedJob?->location }}</div>
                 <div class="text-sm">{{ $selectedJob?->description }}</div>
-                <div class="mt-4 text-xs text-gray-400">Deadline: {{ $selectedJob?->deadline?->format('Y-m-d') ?? 'N/A' }}</div>
+                <div class="mt-4 text-xs text-gray-400">Deadline: {{ $selectedJob?->deadline?->format('Y-m-d') ?? 'N/A' }}
+                </div>
+                <div class="mt-4 text-sm ">
+                    Requirements:{{$selectedJob->requirements}}
+                    {{-- dd($job->requirements) --}}
+                </div>
             </div>
         </x-modal>
     @endif

@@ -60,6 +60,7 @@ class JobPost extends Component
         return [
             ['key' => 'id', 'label' => '#', 'class' => 'w-1'],
             ['key' => 'title', 'label' => 'Title', 'sortable' => true],
+            // ['key' => 'reqirements', 'label' => 'Requirements', 'sortable' => true],
             ['key' => 'location', 'label' => 'Location', 'sortable' => true],
             ['key' => 'type', 'label' => 'Type', 'sortable' => true],
             ['key' => 'deadline', 'label' => 'Deadline', 'sortable' => true],
