@@ -39,6 +39,8 @@ class JobPost extends Model
         'salary_max' => 'decimal:2',
     ];
 
+    protected $dates = ['deadline'];
+
     /**
      * Define searchable fields for the Searchable trait.
      *
@@ -71,7 +73,8 @@ class JobPost extends Model
     // Scopes
     public function scopeActive($query): Builder
     {
-        return $query->where('status', 'active');
+        return $query->where('status', 'active')
+            ->where('deadline', '>=', now());
     }
 
     public function scopeOpen($query): Builder

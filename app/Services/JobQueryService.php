@@ -35,12 +35,13 @@ class JobQueryService
                 }
             ])
             ->where('status', $status)
+            ->where('deadline', '>=', now()) // Only show jobs with future deadlines
             ->when($search, function (Builder $query) use ($search) {
                 $query->where(function (Builder $q) use ($search) {
                     $q->where('title', 'like', "%{$search}%")
                         ->orWhere('description', 'like', "%{$search}%")
                         ->orWhere('location', 'like', "%{$search}%")
-                        ->orwhere('experience_level', 'like,"%{$search}%"')
+                        ->orWhere('experience_level', 'like', "%{$search}%")
                         ->orWhere('requirements', 'like', "%{$search}%");
                 });
             })
@@ -62,7 +63,9 @@ class JobQueryService
 
         return Cache::remember($cacheKey, 120, function () use ($userId, $search, $perPage) {
             return Resume::query()
-                ->with(['jobPost:id,title,description,location,type,status'])
+                ->with(['jobPost' => function($query) {
+                    $query->select(['id', 'title', 'description', 'location', 'type', 'status', 'deadline']);
+                }])
                 ->whereHas('jobSeekerDetail', function (Builder $query) use ($userId) {
                     $query->where('user_id', $userId);
                 })
@@ -70,7 +73,7 @@ class JobQueryService
                     $query->whereHas('jobPost', function (Builder $q) use ($search) {
                         $q->where('title', 'like', "%{$search}%")
                             ->orWhere('description', 'like', "%{$search}%")
-                            ->orwhere('experience_level', 'like,"%{$search}%"')
+                            ->orWhere('experience_level', 'like', "%{$search}%")
                             ->orWhere('requirements', 'like', "%{$search}%")
                             ->orWhere('location', 'like', "%{$search}%");
                     });

@@ -19,64 +19,185 @@ class ResumeRanker
     }
 
     /**
-     * Calculate similarity between resume and job description
+     * Calculate similarity with enhanced matching
      */
     public function calculateSimilarity(Resume $resume, JobPost $jobPost): float
     {
-        if (! $resume->text_extracted || ! $resume->extracted_text) {
+        if (!$resume->text_extracted || !$resume->extracted_text) {
             throw new \Exception('Resume text not extracted yet');
         }
 
         $resumeText = $resume->extracted_text;
-        $jobDescription = $this->getJobPostFullText($jobPost);
+        $skillsText = $this->extractSkillsSection($resumeText);
 
-        return $this->calculateTextSimilarity($resumeText, $jobDescription);
+        // Enhanced weights with skill boost
+        $weights = [
+            'title_description' => 0.25,
+            'requirements' => 0.45,  // Increased weight
+            'experience' => 0.2,
+            'type' => 0.1,
+            'exact_skills' => 0.3  // New exact match bonus
+        ];
+
+        $scores = [
+            'title_description' => $this->calculateTextSimilarity(
+                $resumeText,
+                $jobPost->title . ' ' . $jobPost->description
+            ),
+            'requirements' => $this->calculateTextSimilarity(
+                $skillsText . ' ' . $resumeText,
+                $jobPost->requirements ?? ''
+            ),
+            'experience' => $this->calculateTextSimilarity(
+                $resumeText,
+                $jobPost->experience_level ?? ''
+            ),
+            'type' => $this->calculateTextSimilarity(
+                $resumeText,
+                $jobPost->type ?? ''
+            ),
+            'exact_skills' => $this->calculateExactSkillMatch(
+                $skillsText,
+                $jobPost->requirements ?? ''
+            )
+        ];
+
+        // Debug logging
+        Log::debug('Resume similarity scores', [
+            'resume_id' => $resume->id,
+            'scores' => $scores,
+            'weights' => $weights
+        ]);
+
+        // Calculate weighted average (sum can exceed 1.0 due to bonus)
+        $totalScore = 0;
+        foreach ($scores as $field => $score) {
+            $totalScore += $score * $weights[$field];
+        }
+
+        return min(1.0, $totalScore); // Cap at 1.0
+    }
+
+    /**
+     * Calculate exact skill matches (not just TF-IDF)
+     */
+    private function calculateExactSkillMatch(string $skillsText, string $requirements): float
+    {
+        $requiredSkills = $this->extractSkillsFromRequirements($requirements);
+        $resumeSkills = $this->extractSkillsFromText($skillsText);
+
+        if (empty($requiredSkills))
+            return 0;
+
+        $matches = 0;
+        foreach ($requiredSkills as $skill) {
+            if (in_array($skill, $resumeSkills)) {
+                $matches++;
+            }
+        }
+
+        return $matches / count($requiredSkills);
+    }
+
+    /**
+     * Extract skills from requirements text
+     */
+    private function extractSkillsFromRequirements(string $text): array
+    {
+        $skills = config('resume_matcher.skills', []);
+        $pattern = $this->buildSkillsPattern($skills);
+        preg_match_all($pattern, $text, $matches);
+
+        return array_unique(array_map('strtolower', $matches[0]));
+    }
+
+    /**
+     * Extract skills from resume text
+     */
+    private function extractSkillsFromText(string $text): array
+    {
+        $skills = config('resume_matcher.skills', []);
+        $pattern = $this->buildSkillsPattern($skills);
+        preg_match_all($pattern, $text, $matches);
+
+        return array_unique(array_map('strtolower', $matches[0]));
+    }
+
+    /**
+     * Build regex pattern for skills matching
+     */
+    private function buildSkillsPattern(array $skills): string
+    {
+        $patterns = [];
+        foreach ($skills as $skill => $aliases) {
+            $patterns[] = $skill;
+            $patterns = array_merge($patterns, $aliases);
+        }
+
+        return '/\b(' . implode('|', array_map('preg_quote', $patterns)) . ')\b/i';
+    }
+
+    /**
+     * Extract skills section from resume text
+     */
+    private function extractSkillsSection(string $resumeText): string
+    {
+        // Look for common skills section headers
+        $skillsKeywords = ['technical skills', 'skills', 'competencies'];
+        $lines = explode("\n", $resumeText);
+
+        $skillsText = '';
+        $inSkillsSection = false;
+
+        foreach ($lines as $line) {
+            $line = strtolower(trim($line));
+
+            // Check if line contains skills header
+            foreach ($skillsKeywords as $keyword) {
+                if (str_contains($line, $keyword)) {
+                    $inSkillsSection = true;
+                    continue 2;
+                }
+            }
+
+            if ($inSkillsSection) {
+                // Stop at next section header
+                if (preg_match('/^[a-z\s]+:$/', $line)) {
+                    break;
+                }
+                $skillsText .= ' ' . $line;
+            }
+        }
+
+        return $skillsText;
     }
 
     /**
      * Calculate similarity for multiple resumes against a job post (uses TF-IDF)
+     * Now aggregates scores from all relevant fields
      */
     public function calculateSimilarityBatch(array $resumes, JobPost $jobPost): array
     {
-        $jobDescription = $this->getJobPostFullText($jobPost);
-
-        // Create corpus with job description and all resume texts
-        $corpus = [$jobDescription];
-        $resumeTexts = [];
-
-        foreach ($resumes as $resume) {
-            if ($resume->text_extracted && $resume->extracted_text) {
-                $resumeTexts[] = $resume->extracted_text;
-                $corpus[] = $resume->extracted_text;
-            }
-        }
-
-        if (count($corpus) < 2) {
-            // Fall back to simple TF similarity if not enough documents
-            $results = [];
-            foreach ($resumes as $resume) {
-                $results[$resume->id] = $this->calculateTextSimilarity(
-                    $resume->extracted_text ?? '',
-                    $jobDescription
-                );
-            }
-
-            return $results;
-        }
-
-        // Use TF-IDF for larger corpus
-        $jobVector = $this->calculateTFIDFVector($jobDescription, $corpus);
+        $mainText = $jobPost->title . ' ' . $jobPost->description;
+        $requirementsText = $jobPost->requirements ?? '';
+        $experienceText = $jobPost->experience_level ?? '';
+        $typeText = $jobPost->type ?? '';
 
         $results = [];
-        $index = 0;
         foreach ($resumes as $resume) {
             if ($resume->text_extracted && $resume->extracted_text) {
-                $resumeVector = $this->calculateTFIDFVector($resume->extracted_text, $corpus);
-                $results[$resume->id] = $this->cosineSimilarity($resumeVector, $jobVector);
+                $resumeText = $resume->extracted_text;
+
+                $mainScore = $this->calculateTextSimilarity($resumeText, $mainText);
+                $requirementsScore = $this->calculateTextSimilarity($resumeText, $requirementsText);
+                $experienceScore = $this->calculateTextSimilarity($resumeText, $experienceText);
+                $typeScore = $this->calculateTextSimilarity($resumeText, $typeText);
+
+                $totalScore = ($mainScore + $requirementsScore + $experienceScore + $typeScore) / 4;
+                $results[$resume->id] = $totalScore;
             } else {
                 $results[$resume->id] = 0.0;
             }
-            $index++;
         }
 
         return $results;
@@ -207,9 +328,9 @@ class ResumeRanker
 
         // Remove empty tokens and stopwords
         $tokens = array_filter($tokens, function ($token) {
-            return ! empty($token) &&
-                   strlen($token) > 2 &&
-                   ! in_array($token, $this->stopWords);
+            return !empty($token) &&
+                strlen($token) > 2 &&
+                !in_array($token, $this->stopWords);
         });
 
         // Apply stemming
@@ -248,9 +369,11 @@ class ResumeRanker
         ];
 
         foreach ($suffixes as $suffix => $replacement) {
-            if (strlen($word) > strlen($suffix) + 2 &&
-                substr($word, -strlen($suffix)) === $suffix) {
-                $word = substr($word, 0, -strlen($suffix)).$replacement;
+            if (
+                strlen($word) > strlen($suffix) + 2 &&
+                substr($word, -strlen($suffix)) === $suffix
+            ) {
+                $word = substr($word, 0, -strlen($suffix)) . $replacement;
                 break;
             }
         }
@@ -277,7 +400,7 @@ class ResumeRanker
     }
 
     /**
-     * Combine job post fields into searchable text
+     * Combine job post fields into searchable text (legacy, not used for scoring now)
      */
     private function getJobPostFullText(JobPost $jobPost): string
     {
@@ -362,9 +485,9 @@ class ResumeRanker
             'average_score' => count($scores) > 0 ? array_sum($scores) / count($scores) : 0,
             'max_score' => count($scores) > 0 ? max($scores) : 0,
             'min_score' => count($scores) > 0 ? min($scores) : 0,
-            'high_match_count' => count(array_filter($scores, fn ($score) => $score >= 0.7)),
-            'medium_match_count' => count(array_filter($scores, fn ($score) => $score >= 0.4 && $score < 0.7)),
-            'low_match_count' => count(array_filter($scores, fn ($score) => $score < 0.4)),
+            'high_match_count' => count(array_filter($scores, fn($score) => $score >= 0.7)),
+            'medium_match_count' => count(array_filter($scores, fn($score) => $score >= 0.4 && $score < 0.7)),
+            'low_match_count' => count(array_filter($scores, fn($score) => $score < 0.4)),
         ];
     }
 
@@ -374,18 +497,116 @@ class ResumeRanker
     private function getStopWords(): array
     {
         return [
-            'a', 'an', 'and', 'are', 'as', 'at', 'be', 'by', 'for', 'from',
-            'has', 'he', 'in', 'is', 'it', 'its', 'of', 'on', 'that', 'the',
-            'to', 'was', 'will', 'with', 'the', 'this', 'but', 'they', 'have',
-            'had', 'what', 'said', 'each', 'which', 'she', 'do', 'how', 'their',
-            'if', 'up', 'out', 'many', 'then', 'them', 'these', 'so', 'some',
-            'her', 'would', 'make', 'like', 'into', 'him', 'time', 'two', 'more',
-            'go', 'no', 'way', 'could', 'my', 'than', 'first', 'been', 'call',
-            'who', 'oil', 'sit', 'now', 'find', 'down', 'day', 'did', 'get',
-            'come', 'made', 'may', 'part', 'use', 'work', 'way', 'new', 'good',
-            'high', 'old', 'see', 'him', 'two', 'how', 'its', 'our', 'out',
-            'day', 'get', 'use', 'man', 'new', 'now', 'old', 'see', 'way',
-            'who', 'boy', 'did', 'its', 'let', 'put', 'say', 'she', 'too',
+            'a',
+            'an',
+            'and',
+            'are',
+            'as',
+            'at',
+            'be',
+            'by',
+            'for',
+            'from',
+            'has',
+            'he',
+            'in',
+            'is',
+            'it',
+            'its',
+            'of',
+            'on',
+            'that',
+            'the',
+            'to',
+            'was',
+            'will',
+            'with',
+            'the',
+            'this',
+            'but',
+            'they',
+            'have',
+            'had',
+            'what',
+            'said',
+            'each',
+            'which',
+            'she',
+            'do',
+            'how',
+            'their',
+            'if',
+            'up',
+            'out',
+            'many',
+            'then',
+            'them',
+            'these',
+            'so',
+            'some',
+            'her',
+            'would',
+            'make',
+            'like',
+            'into',
+            'him',
+            'time',
+            'two',
+            'more',
+            'go',
+            'no',
+            'way',
+            'could',
+            'my',
+            'than',
+            'first',
+            'been',
+            'call',
+            'who',
+            'oil',
+            'sit',
+            'now',
+            'find',
+            'down',
+            'day',
+            'did',
+            'get',
+            'come',
+            'made',
+            'may',
+            'part',
+            'use',
+            'work',
+            'way',
+            'new',
+            'good',
+            'high',
+            'old',
+            'see',
+            'him',
+            'two',
+            'how',
+            'its',
+            'our',
+            'out',
+            'day',
+            'get',
+            'use',
+            'man',
+            'new',
+            'now',
+            'old',
+            'see',
+            'way',
+            'who',
+            'boy',
+            'did',
+            'its',
+            'let',
+            'put',
+            'say',
+            'she',
+            'too',
             'use',
         ];
     }
