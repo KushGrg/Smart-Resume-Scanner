@@ -44,6 +44,13 @@ class ViewApplications extends Component
         ['id' => 'rejected', 'name' => 'Rejected'],
     ];
 
+    public bool $fullscreenPreview = false;
+
+    public function toggleFullscreen()
+    {
+        $this->fullscreenPreview = !$this->fullscreenPreview;
+    }
+
     public function mount()
     {
         $this->authorize('view job posts');
@@ -81,11 +88,11 @@ class ViewApplications extends Component
             ->when($this->search, function ($query) {
                 $query->where(function ($q) {
                     $q->whereHas('jobPost', function ($subQ) {
-                        $subQ->where('title', 'like', '%'.$this->search.'%');
+                        $subQ->where('title', 'like', '%' . $this->search . '%');
                     })
                         ->orWhereHas('jobSeekerDetail.user', function ($subQ) {
-                            $subQ->where('name', 'like', '%'.$this->search.'%')
-                                ->orWhere('email', 'like', '%'.$this->search.'%');
+                            $subQ->where('name', 'like', '%' . $this->search . '%')
+                                ->orWhere('email', 'like', '%' . $this->search . '%');
                         });
                 });
             })
@@ -123,7 +130,7 @@ class ViewApplications extends Component
             $this->selectedResume = $resume->load(['jobPost', 'jobSeekerDetail.user']);
             $this->viewingResume = true;
         } catch (\Exception $e) {
-            Log::error('Error viewing resume: '.$e->getMessage());
+            Log::error('Error viewing resume: ' . $e->getMessage());
             $this->error('Failed to load resume.');
         }
     }
@@ -132,15 +139,15 @@ class ViewApplications extends Component
     {
         try {
             $this->authorize('download', $resume);
-            $path = storage_path('app/public/'.$resume->file_path);
+            $path = storage_path('app/public/' . $resume->file_path);
 
-            if (! file_exists($path)) {
+            if (!file_exists($path)) {
                 throw new \Exception('Resume file not found');
             }
 
             return response()->download($path, $resume->file_name);
         } catch (\Exception $e) {
-            Log::error('Error downloading resume: '.$e->getMessage());
+            Log::error('Error downloading resume: ' . $e->getMessage());
             $this->error('Failed to download resume.');
         }
     }
@@ -171,7 +178,7 @@ class ViewApplications extends Component
             $this->selectedResume = null;
 
         } catch (\Exception $e) {
-            Log::error('Error updating status: '.$e->getMessage());
+            Log::error('Error updating status: ' . $e->getMessage());
             $this->error('Failed to update status.');
         }
     }

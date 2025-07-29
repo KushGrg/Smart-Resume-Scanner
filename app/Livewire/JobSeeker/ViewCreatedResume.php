@@ -25,9 +25,9 @@ class ViewCreatedResume extends Component
 
         if ($this->search) {
             $query->where(function ($q) {
-                $q->where('name', 'like', '%'.$this->search.'%')
-                    ->orWhere('designation', 'like', '%'.$this->search.'%')
-                    ->orWhere('summary', 'like', '%'.$this->search.'%');
+                $q->where('name', 'like', '%' . $this->search . '%')
+                    ->orWhere('designation', 'like', '%' . $this->search . '%')
+                    ->orWhere('summary', 'like', '%' . $this->search . '%');
             });
         }
 
@@ -57,16 +57,19 @@ class ViewCreatedResume extends Component
         $this->success('Resume restored.');
     }
 
-    public function downloadResume($id)
+    public function forceDeleteResume($id)
     {
-        $resume = \App\Models\JobSeeker\JobSeekerInfo::where('job_seeker_id', Auth::id())->findOrFail($id);
-        if (! $resume->pdf_path) {
-            $this->error('PDF not found.');
+        $resume = \App\Models\JobSeeker\JobSeekerInfo::onlyTrashed()
+            ->where('job_seeker_id', Auth::id())
+            ->findOrFail($id);
 
-            return;
+        // Delete the PDF file if exists
+        if ($resume->pdf_path) {
+            \Storage::delete('public/' . $resume->pdf_path);
         }
 
-        return response()->download(storage_path('app/public/'.$resume->pdf_path));
+        $resume->forceDelete();
+        $this->success('Resume permanently deleted.');
     }
 
     public function copyShareLink($id)

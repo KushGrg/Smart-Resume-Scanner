@@ -162,118 +162,140 @@
 
     {{-- Resume View Modal --}}
     @if($viewingResume && $selectedResume)
-        <x-modal wire:model="viewingResume" max-width="6xl" title="Resume Details">
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {{-- Resume Info Panel --}}
-                <div class="lg:col-span-1 space-y-4">
-                    <x-card class="bg-gray-50">
-                        <h3 class="font-bold text-lg mb-4">Applicant Details</h3>
-                        <div class="space-y-3">
-                            <div>
-                                <label class="text-sm font-medium text-gray-600">Name</label>
-                                <p class="font-medium">{{ $selectedResume->jobSeekerDetail->user->name }}</p>
-                            </div>
-                            <div>
-                                <label class="text-sm font-medium text-gray-600">Email</label>
-                                <p>{{ $selectedResume->jobSeekerDetail->user->email }}</p>
-                            </div>
-                            <div>
-                                <label class="text-sm font-medium text-gray-600">Job Applied</label>
-                                <p class="font-medium">{{ $selectedResume->jobPost->title }}</p>
-                            </div>
-                            <div>
-                                <label class="text-sm font-medium text-gray-600">Applied Date</label>
-                                <p>{{ $selectedResume->applied_at ? $selectedResume->applied_at->format('M d, Y H:i') : $selectedResume->created_at->format('M d, Y H:i') }}</p>
-                            </div>
-                            <div>
-                                <label class="text-sm font-medium text-gray-600">Score</label>
-                                @if($selectedResume->similarity_score !== null)
-                                    <div class="flex items-center gap-2">
-                                        <span class="font-bold text-lg {{ $this->getScoreColorClass($selectedResume->similarity_score) }}">
-                                            {{ number_format($selectedResume->similarity_score * 100, 1) }}%
-                                        </span>
-                                        <div class="flex-1 bg-gray-200 rounded-full h-3">
-                                            <div class="bg-blue-600 h-3 rounded-full transition-all duration-300" 
-                                                 style="width: {{ $selectedResume->similarity_score * 100 }}%"></div>
-                                        </div>
-                                    </div>
-                                @else
-                                    <p class="text-gray-400">N/A</p>
-                                @endif
-                            </div>
-                            <div>
-                                <label class="text-sm font-medium text-gray-600">Status</label>
-                                <x-badge 
-                                    value="{{ $selectedResume->status_display }}" 
-                                    class="badge-{{ $selectedResume->status_badge_color }}"
-                                />
-                            </div>
-                            <div>
-                                <label class="text-sm font-medium text-gray-600">File Info</label>
-                                <p class="text-sm">{{ $selectedResume->file_name }}</p>
-                                <p class="text-xs text-gray-500">{{ $selectedResume->file_size_formatted }}</p>
-                            </div>
+        <x-modal 
+        wire:model="viewingResume" 
+        max-width="7xl" 
+        title="Resume Details" 
+        persistent
+        x-on:click.outside="$wire.viewingResume = false"
+        class="backdrop-blur-sm"
+    >
+        <div class="space-y-8">
+
+            {{-- Applicant Info + Application Details --}}
+            <x-card class="shadow-sm p-6">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+
+                    {{-- Applicant Profile --}}
+                    <div class="flex items-center gap-4">
+                        <div class="w-20 h-20 rounded-full bg-primary text-white flex items-center justify-center text-2xl font-bold">
+                            {{ strtoupper(substr($selectedResume->jobSeekerDetail->user->name, 0, 1)) }}
                         </div>
-                        
-                        <div class="mt-6 space-y-2">
-                            <x-button 
-                                label="Update Status" 
-                                wire:click="openStatusModal({{ $selectedResume->id }})"
-                                class="w-full btn-primary"
-                                icon="o-pencil"
+                        <div>
+                            <h3 class="font-semibold text-xl">{{ $selectedResume->jobSeekerDetail->user->name }}</h3>
+                            <p class="text-sm text-gray-500">{{ $selectedResume->jobSeekerDetail->user->email }}</p>
+                        </div>
+                    </div>
+
+                    {{-- Job Info --}}
+                    <div class="space-y-2">
+                        <h4 class="text-gray-600 font-medium">Application</h4>
+                        <div class="text-sm text-gray-500">Job Post</div>
+                        <div class="font-semibold">{{ $selectedResume->jobPost->title }}</div>
+
+                        <div class="text-sm text-gray-500 mt-2">Applied On</div>
+                        <div>{{ $selectedResume->applied_at?->format('M d, Y H:i') ?? $selectedResume->created_at->format('M d, Y H:i') }}</div>
+                    </div>
+
+                    {{-- Score + Status --}}
+                    <div class="flex flex-col items-start gap-4">
+                        <div>
+                            <div class="text-sm text-gray-500">Status</div>
+                            <x-badge 
+                                value="{{ $selectedResume->status_display }}" 
+                                class="badge-{{ $selectedResume->status_badge_color }} text-base"
                             />
+                        </div>
+                        <div>
+                            <div class="text-sm text-gray-500">Match Score</div>
+                            @if($selectedResume->similarity_score !== null)
+                                <span class="text-2xl font-bold {{ $this->getScoreColorClass($selectedResume->similarity_score) }}">
+                                    {{ number_format($selectedResume->similarity_score * 100, 1) }}%
+                                </span>
+                            @else
+                                <p class="text-gray-400">N/A</p>
+                            @endif
+                        </div>
+                    </div>
+
+                </div>
+            </x-card>
+
+            {{-- Resume File + Actions --}}
+            <x-card class="shadow-sm p-6">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                    <div class="flex items-center gap-3 p-4 bg-white rounded-lg border w-full md:w-auto flex-grow">
+                        <x-icon name="o-document-text" class="w-8 h-8 text-gray-400" />
+                        <div class="min-w-0">
+                            <p class="font-medium truncate">{{ $selectedResume->file_name }}</p>
+                            <p class="text-xs text-gray-500">{{ $selectedResume->file_size_formatted }}</p>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-wrap justify-end gap-3">
+                        <x-button label="Update Status" wire:click="openStatusModal({{ $selectedResume->id }})" class="btn-primary" icon="o-pencil" />
+                        <x-button label="Download" wire:click="downloadResume({{ $selectedResume->id }})" class="btn-outline" icon="o-arrow-down-tray" />
+                        <x-button label="Close" wire:click="$set('viewingResume', false)" class="btn-ghost" icon="o-x-mark" />
+                    </div>
+                </div>
+            </x-card>
+
+            {{-- Resume Preview --}}
+            <x-card class="shadow-sm p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-bold">Resume Preview</h3>
+                    <div class="flex gap-2">
+                        <x-button 
+                            icon="{{ $fullscreenPreview ? 'o-arrows-pointing-in' : 'o-arrows-pointing-out' }}" 
+                            wire:click="toggleFullscreen"
+                            tooltip="{{ $fullscreenPreview ? 'Exit Fullscreen' : 'Fullscreen' }}"
+                            class="btn-sm btn-ghost"
+                        />
+                        <x-button 
+                            icon="o-arrow-down-tray" 
+                            wire:click="downloadResume({{ $selectedResume->id }})"
+                            tooltip="Download"
+                            class="btn-sm btn-ghost"
+                        />
+                    </div>
+                </div>
+
+                <div class="{{ $fullscreenPreview ? 'fixed inset-0 z-50 bg-white p-4' : 'h-[75vh] bg-gray-50 rounded-lg border' }} overflow-hidden relative">
+                    @if(pathinfo($selectedResume->file_path, PATHINFO_EXTENSION) === 'pdf')
+                        <iframe 
+                            src="{{ asset('storage/' . $selectedResume->file_path) }}#toolbar=0&navpanes=0"
+                            class="w-full h-full border-0" 
+                            allowfullscreen>
+                        </iframe>
+                    @else
+                        <div class="flex flex-col items-center justify-center h-full p-8 text-center">
+                            <x-icon name="o-document" class="w-16 h-16 text-gray-400 mb-4" />
+                            <h4 class="text-xl font-medium text-gray-600 mb-2">Preview Not Available</h4>
+                            <p class="text-gray-500 mb-6">This file format cannot be previewed in the browser</p>
                             <x-button 
                                 label="Download Resume" 
                                 wire:click="downloadResume({{ $selectedResume->id }})"
-                                class="w-full btn-outline"
+                                class="btn-primary"
                                 icon="o-arrow-down-tray"
                             />
                         </div>
-                    </x-card>
-                </div>
+                    @endif
 
-                {{-- Resume Preview Panel --}}
-                <div class="lg:col-span-2">
-                    <x-card>
-                        <h3 class="font-bold text-lg mb-4">Resume Preview</h3>
-                        <div class="h-[70vh]">
-                            @if(pathinfo($selectedResume->file_path, PATHINFO_EXTENSION) === 'pdf')
-                                <iframe 
-                                    src="{{ asset('storage/' . $selectedResume->file_path) }}"
-                                    class="w-full h-full border rounded-lg" 
-                                    frameborder="0"
-                                    allowfullscreen>
-                                    This browser does not support PDF viewing. 
-                                    <a href="{{ asset('storage/' . $selectedResume->file_path) }}" target="_blank" class="underline">
-                                        Click here to download the PDF
-                                    </a>.
-                                </iframe>
-                                <div class="text-xs text-gray-400 text-center mt-2">
-                                    If the preview does not load, 
-                                    <a href="{{ asset('storage/' . $selectedResume->file_path) }}" target="_blank" class="underline">
-                                        click here to download the PDF
-                                    </a>.
-                                </div>
-                            @else
-                                <div class="flex items-center justify-center h-full bg-gray-50 rounded-lg">
-                                    <div class="text-center">
-                                        <x-icon name="o-document" class="w-20 h-20 text-gray-400 mx-auto mb-4" />
-                                        <p class="text-lg font-medium text-gray-600 mb-2">Preview not available</p>
-                                        <p class="text-gray-500 mb-4">Download the resume to view its contents</p>
-                                        <x-button 
-                                            label="Download Resume" 
-                                            wire:click="downloadResume({{ $selectedResume->id }})"
-                                            class="btn-primary"
-                                            icon="o-arrow-down-tray"
-                                        />
-                                    </div>
-                                </div>
-                            @endif
+                    @if($fullscreenPreview)
+                        <div class="absolute top-4 right-4">
+                            <x-button 
+                                icon="o-x-mark" 
+                                wire:click="toggleFullscreen"
+                                tooltip="Close Fullscreen"
+                                class="btn-sm btn-ghost"
+                            />
                         </div>
-                    </x-card>
+                    @endif
                 </div>
-            </div>
-        </x-modal>
+            </x-card>
+
+        </div>
+    </x-modal>
     @endif
 
     {{-- Status Update Modal --}}
@@ -315,3 +337,4 @@
         </x-modal>
     @endif
 </div>
+              

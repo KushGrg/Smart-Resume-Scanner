@@ -63,9 +63,11 @@ class JobQueryService
 
         return Cache::remember($cacheKey, 120, function () use ($userId, $search, $perPage) {
             return Resume::query()
-                ->with(['jobPost' => function($query) {
-                    $query->select(['id', 'title', 'description', 'location', 'type', 'status', 'deadline']);
-                }])
+                ->with([
+                    'jobPost' => function ($query) {
+                        $query->select(['id', 'title', 'description', 'location', 'type', 'status', 'deadline']);
+                    }
+                ])
                 ->whereHas('jobSeekerDetail', function (Builder $query) use ($userId) {
                     $query->where('user_id', $userId);
                 })

@@ -28,17 +28,14 @@
                 <div class="flex flex-wrap gap-2 mt-4">
                     <x-button outline icon="o-eye" label="View Details"
                         wire:click="emitShowResumeDetails({{ $resume->id }})" />
-                    {{-- <x-button outline icon="o-pencil" label="Edit"
-                        :href="route('create_profile.index', ['resume_id' => $resume->id])" /> --}}
                     @if(!$showTrashed)
                         <x-button outline icon="o-trash" label="Delete" wire:click="deleteResume({{ $resume->id }})" />
                     @else
                         <x-button outline icon="o-arrow-path" label="Restore" wire:click="restoreResume({{ $resume->id }})" />
+                        <x-button outline icon="o-trash" label="Delete Permanently"
+                            wire:click="forceDeleteResume({{ $resume->id }})"
+                            wire:confirm="Are you sure you want to permanently delete this resume?" />
                     @endif
-                    <x-button outline icon="o-document-arrow-down" label="Download PDF"
-                        wire:click="downloadResume({{ $resume->id }})" />
-                    {{-- <x-button outline icon="o-share" label="Share" wire:click="copyShareLink({{ $resume->id }})" />
-                    --}}
                 </div>
             </div>
         @empty
