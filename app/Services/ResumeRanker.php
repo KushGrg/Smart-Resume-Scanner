@@ -30,13 +30,18 @@ class ResumeRanker
         $resumeText = $resume->extracted_text;
         $skillsText = $this->extractSkillsSection($resumeText);
 
-        // Enhanced weights with skill boost
+        // Fallback: if skills section not found, use whole resume
+        if (empty(trim($skillsText))) {
+            $skillsText = $resumeText;
+        }
+
+        // Increased weight for exact skill matches
         $weights = [
-            'title_description' => 0.25,
-            'requirements' => 0.45,  // Increased weight
-            'experience' => 0.2,
-            'type' => 0.1,
-            'exact_skills' => 0.3  // New exact match bonus
+            'title_description' => 0.20,
+            'requirements' => 0.25,
+            'experience' => 0.15,
+            'type' => 0.05,
+            'exact_skills' => 0.35 // More influence
         ];
 
         $scores = [
@@ -62,9 +67,14 @@ class ResumeRanker
             )
         ];
 
-        // Debug logging
-        Log::debug('Resume similarity scores', [
+        // Debug logging for skills
+        $requiredSkills = $this->extractSkillsFromRequirements($jobPost->requirements ?? '');
+        $resumeSkills = $this->extractSkillsFromText($skillsText);
+        Log::debug('Skill extraction', [
             'resume_id' => $resume->id,
+            'required_skills' => $requiredSkills,
+            'resume_skills' => $resumeSkills,
+            'matched_skills' => array_intersect($requiredSkills, $resumeSkills),
             'scores' => $scores,
             'weights' => $weights
         ]);
