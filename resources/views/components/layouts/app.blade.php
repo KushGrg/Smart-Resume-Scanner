@@ -10,7 +10,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="min-h-screen font-sans antialiased bg-base-200">
+<body class="min-h-screen font-sans antialiased bg-base-200 ">
 
     {{-- NAVBAR mobile only --}}
     <x-nav sticky class="lg:hidden">
@@ -85,7 +85,7 @@
                         class="-mx-2 !-my-2 rounded">
                         <x-slot:actions>
                             <div class="flex items-center gap-2">
-                                <x-theme-toggle class="btn btn-circle btn-ghost btn-sm" />
+                                {{-- <x-theme-toggle class="btn btn-circle btn-ghost btn-sm" /> --}}
                                 <x-button icon="o-arrow-right-start-on-rectangle" class="btn-circle btn-ghost btn-xs"
                                     tooltip-left="Log-out" no-wire-navigate link="/logout" />
                             </div>
