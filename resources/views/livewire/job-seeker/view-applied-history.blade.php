@@ -10,51 +10,59 @@
                 </x-slot:middle>
             </x-header>
         </div>
-        @if($applications->count())
-            <div class="grid gap-6">
-                @foreach($applications as $application)
-                    <x-card>
-                        <div class="font-bold text-xl">{{ $application->jobPost->title }}</div>
-                        <div class="text-sm text-gray-600">
-                            {{ $application->jobPost->type }} • {{ $application->jobPost->location }}
-                        </div>
-                        <div class="mt-2 text-sm">
-                            <span class="font-medium">Applied on:</span>
-                            {{ $application->created_at->format('M d, Y') }}
-                        </div>
-                        <div class="mt-2 text-sm">
-                            <span class="font-medium">Status:</span>
-                            <span
-                                class="badge badge-{{ $application->application_status === 'pending' ? 'warning' : ($application->application_status === 'accepted' ? 'success' : 'error') }}">
-                                {{ ucfirst($application->application_status) }}
-                            </span>
-                        </div>
-                        <div class="mt-2 text-sm">
-                            <span class="font-medium">Score:</span>
-                            @if(isset($application->similarity_score) && $application->similarity_score !== null)
-                                <span class="badge badge-info">
-                                    {{ number_format($application->similarity_score * 100, 1) }}%
+        <x-card class="inset-shadow-2xs shadow-lg">
+            @if($applications->count())
+                <div class="grid gap-6">
+                    @foreach($applications as $application)
+                        <x-card>
+                            <div class="font-bold text-xl">{{ $application->jobPost->title }}</div>
+                            <div class="text-sm text-gray-600 mt-2">
+                                <x-icon name="o-map-pin" class="w-4 h-4 " />
+                                {{ $application->jobPost->type }}
+                                <x-icon name="o-briefcase" class="w-4 h-4 " />
+                                {{ $application->jobPost->location }}
+                            </div>
+                            <div class="mt-2 text-sm">
+                                <span class="font-medium">Applied on:</span>
+                                {{ $application->created_at->format('M d, Y') }}
+                            </div>
+                            <div class="mt-2 text-sm">
+                                <span class="font-medium">Status:</span>
+                                <span
+                                    class="text-white badge badge-{{ $application->application_status === 'pending' ? 'warning' : ($application->application_status === 'accepted' ? 'success' : 'error') }}">
+                                    {{ ucfirst($application->application_status) }}
                                 </span>
-                            @else
-                                <span class="text-gray-400">N/A</span>
-                            @endif
-                        </div>
-                        <div class="mt-3 flex gap-2">
-                            <x-button label="View Resume" wire:click="viewResume({{ $application->id }})" sm />
-                            <x-button label="Download Resume" wire:click="downloadResume({{ $application->id }})" sm />
-                            <x-button label="Delete" class="btn-error" icon="o-trash"
-                                wire:click="confirmDelete({{ $application->id }})" tooltip="Delete this resume" sm />
-                        </div>
-                    </x-card>
-                @endforeach
-            </div>
+                            </div>
+                            <div class="mt-2 text-sm ">
+                                <span class="font-medium">Score:</span>
+                                @if(isset($application->similarity_score) && $application->similarity_score !== null)
+                                    <span class="badge badge-info text-white">
+                                        {{ number_format($application->similarity_score * 100, 1) }}%
+                                    </span>
+                                @else
+                                    <span class="text-gray-400">N/A</span>
+                                @endif
+                            </div>
+                            <div class="mt-3 flex gap-2">
+                                <x-button icon="o-eye" label="View Resume" wire:click="viewResume({{ $application->id }})"
+                                    class="bg-blue-600" tooltip="View resume" sm />
+                                <x-button icon="o-arrow-down-tray" label="Download Resume"
+                                    wire:click="downloadResume({{ $application->id }})" tooltip="Download resume"
+                                    class="bg-green-600" sm />
+                                <x-button label="Delete" class="btn bg-red-600" icon="o-trash"
+                                    wire:click="confirmDelete({{ $application->id }})" tooltip="Delete resume" sm />
+                            </div>
+                        </x-card>
+                    @endforeach
+                </div>
 
-            <div class="mt-4">
-                {{ $applications->links() }}
-            </div>
-        @else
-            <div class="p-6 text-center text-gray-500">You haven't applied to any jobs yet.</div>
-        @endif
+                <div class="mt-4">
+                    {{ $applications->links() }}
+                </div>
+            @else
+                <div class="p-6 text-center text-gray-500">You haven't applied to any jobs yet.</div>
+            @endif
+        </x-card>
     </x-card>
 
     {{-- Resume View Modal --}}

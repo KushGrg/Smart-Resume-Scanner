@@ -37,6 +37,10 @@ class JobPost extends Component
 
     public string $experience_level = '';
 
+    public float $min_salary = 0;
+    public float $max_salary = 0;
+
+
     public string $status = 'active';
 
     public array $jobTypes = [
@@ -100,6 +104,9 @@ class JobPost extends Component
         $this->deadline = $jobPost->deadline ? $jobPost->deadline->format('Y-m-d') : '';
         $this->requirements = $jobPost->requirements;
         $this->experience_level = $jobPost->experience_level;
+        $this->min_salary = $jobPost->min_salary;
+        $this->max_salary = $jobPost->max_salary;
+
         $this->status = $jobPost->status;
 
         $this->drawer = true;
@@ -117,6 +124,8 @@ class JobPost extends Component
         $this->deadline = '';
         $this->requirements = '';
         $this->experience_level = '';
+        $this->min_salary;
+        $this->max_salary;
         $this->status = 'active';
 
         $this->drawer = true;
@@ -133,6 +142,8 @@ class JobPost extends Component
             'requirements' => 'nullable|string',
             'experience_level' => 'nullable|string',
             'status' => 'required|string|in:active,inactive',
+            'min_salary' => 'nullable|numeric|min:0',
+            'max_salary' => 'nullable|numeric|min:0',
         ]);
 
         if ($this->editing_id) {

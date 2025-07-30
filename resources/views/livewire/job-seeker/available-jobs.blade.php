@@ -15,7 +15,7 @@
             <div class="grid gap-6 md:grid-cols-2">
 
                 @foreach($jobs as $job)
-                    <x-card class="shadow-lg">
+                    <x-card class="inset-shadow-2xs shadow-lg">
                         {{-- @php
                         dd($job->hrdetail->organization_name);
                         @endphp --}}
@@ -23,27 +23,38 @@
                             <div>
                                 <img src="{{ asset('storage/' . $job->hrdetail->logo) }}" alt="HR Logo"
                                     class="h-12 w-24 object-contain" />
+
+                            </div>
+                            <div class="mt-2">
                                 <x-icon name="o-building-office" class="w-4 h-4 " />
-                                {{ $job->hrdetail->organization_name }}
+                                <span>{{ $job->hrdetail->organization_name }}</span>
                             </div>
 
                         @endif
                         {{-- <x-icon name="o-identification" class="w-4 h-4 " /> --}}
-                        <div class="font-semibold text-xl">
-                        <x-icon name="o-identification" class="w-4 h-4 " />
-                        {{ $job->title }}</div>
-                        <span class="py-1 px-2 rounded-xl bg-gray-100 text-sm">
+                        <div class="font-semibold text-xl mb-2">
+                            <x-icon name="o-identification" class="w-4 h-4 " />
+                            {{ $job->title }}
+                        </div>
+
+                        <span class="py-1 px-2 rounded-xl bg-gray-100 text-sm mb-2">
                             <x-icon name="o-briefcase" class="w-4 h-4 " />
+                            {{ $job->type }}
+                        </span>
 
-                            {{ $job->type }}</span>
-                        <span class="py-1 px-2 rounded-xl bg-gray-100 text-sm">
+                        <span class="py-1 px-2 rounded-xl bg-gray-100 text-sm mb-2">
                             <x-icon name="o-map-pin" class="w-4 h-4 " />
+                            {{ $job->location }}
+                        </span>
 
-                            {{ $job->location }}</span>
-                        {{-- <div class="text-sm text-gray-600">{{ $job->type }} • {{ $job->location }}</div> --}}
-                        {{-- <p class="mt-2">{{ Str::limit($job->description, 100) }}</p> --}}
-                        <div class="mt-3 text-xs text-gray-400">
-                            Deadline: {{ $job->deadline?->format('Y-m-d') ?? 'N/A' }}
+                        <span class="py-1 px-2 rounded-xl bg-gray-100 text-sm mb-2">
+                            Rs. {{ $job->min_salary}} - {{$job->max_salary}}
+                        </span>
+
+                        <div class="mt-2 mx-2">
+                            <span class=" text-xs text-dark bg-gray-100 ">
+                                Deadline: {{ $job->deadline?->format('Y-m-d') ?? 'N/A' }}
+                            </span>
                         </div>
                         {{-- <div class="mt-3 text-xs text-gray-400">
                             Requirements:{{$job->requirements}}
@@ -52,7 +63,8 @@
 
                         <div class="mt-4 flex gap-2">
                             {{-- <x-button label="View" wire:click="viewJob({{ $job->id }})" sm /> --}}
-                            <x-button label="Apply Now " wire:click="applyJob({{ $job->id }})" sm class="btn-primary" />
+                            <x-button label="Apply Now " wire:click="applyJob({{ $job->id }})" sm
+                                class="btn bg-green-600 text-white" />
                         </div>
                     </x-card>
                 @endforeach
@@ -71,12 +83,23 @@
         <x-modal wire:model.defer="viewingJob">
             <x-slot name="title" class="text-xl font-bold">{{ $selectedJob?->title }}</x-slot>
             <div class="space-y-4">
+                {{-- @if ($job->hrdetail) --}}
+
+                {{-- <div>
+                    <img src="{{ asset('storage/' . $job->hrdetail->logo) }}" alt="HR Logo"
+                        class="h-12 w-24 object-contain" />
+                    <x-icon name="o-building-office" class="w-4 h-4 " />
+                    {{ $selectedJob->hrdetail->organization_name }}
+                </div> --}}
+                {{--
+                @endif --}}
                 <div class="flex items-center gap-2 text-sm text-gray-500">
-                    <x-icon name="o-briefcase" class="w-4 h-4" />
+                    <x-icon name="o-briefcase" class="w-4 h-4 " />
                     <span>{{ $selectedJob?->type }}</span>
                     <x-icon name="o-map-pin" class="w-4 h-4 ml-2" />
                     <span>{{ $selectedJob?->location }}</span>
                 </div>
+
 
                 <div class="flex items-center gap-2 text-xs text-gray-400">
                     <x-icon name="o-calendar" class="w-4 h-4" />

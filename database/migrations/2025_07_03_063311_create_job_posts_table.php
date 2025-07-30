@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -21,6 +20,8 @@ return new class extends Migration
             $table->date('deadline')->nullable();
             $table->text('requirement')->nullable();
             $table->string('experience')->nullable();
+            $table->unsignedBigInteger('min_salary')->nullable();
+            $table->unsignedBigInteger('max_salary')->nullable();
             $table->enum('status', ['active', 'inactive'])->default('active');
 
             $table->timestamps();

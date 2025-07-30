@@ -33,8 +33,8 @@
     </x-card>
 
     <!-- DRAWER FORM -->
-    <x-drawer wire:model="drawer" title="{{ $editing_id ? 'Edit Job Post' : 'Create Job Post' }}" right separator
-        with-close-button>
+    <x-drawer wire:model="drawer" class="w-11/12 lg:w-2/5"
+        title="{{ $editing_id ? 'Edit Job Post' : 'Create Job Post' }}" right separator with-close-button>
         <x-form wire:submit="save">
             <x-input label="Title" wire:model="title" />
             <x-textarea label="Description" wire:model="description" rows="5" />
@@ -45,7 +45,9 @@
             <x-datepicker label="Deadline" wire:model="deadline" />
             <x-textarea label="Requirements" wire:model="requirements" rows="3" />
             <x-input label="Experience Level" wire:model="experience_level" />
-            {{-- <x-input type=number label=" Salary" wire:model="salary" /> --}}
+            <x-input type=number label=" Min Salary" wire:model="min_salary" />
+            <x-input type=number label=" Max Salary" wire:model="max_salary" />
+
 
 
             <x-select label="Status" wire:model="status" :options="$statuses" />
