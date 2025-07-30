@@ -59,7 +59,7 @@ class ViewApplications extends Component
     public function headers(): array
     {
         return [
-            ['key' => 'id', 'label' => '#', 'class' => 'w-1'],
+            ['key' => 'id', 'label' => 'S.No', 'class' => 'w-1'],
             ['key' => 'job_post.title', 'label' => 'Job', 'sortable' => true],
             ['key' => 'job_seeker_detail.user.name', 'label' => 'Applicant', 'sortable' => true],
             ['key' => 'similarity_score', 'label' => 'Score', 'sortable' => true, 'class' => 'text-center'],

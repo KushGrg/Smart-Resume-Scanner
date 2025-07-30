@@ -27,7 +27,7 @@
     {{-- MAIN --}}
     <x-main>
         {{-- SIDEBAR --}}
-        <x-slot:sidebar drawer="main-drawer" collapsible class="bg-base-100 lg:bg-inherit">
+        <x-slot:sidebar drawer="main-drawer" collapsible class="bg-white">
 
             {{-- BRAND --}}
             <x-app-brand class="px-5 pt-4" />

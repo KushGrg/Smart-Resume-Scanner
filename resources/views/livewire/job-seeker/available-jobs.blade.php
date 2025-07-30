@@ -1,20 +1,47 @@
 <div>
-    <x-header title="Available Job Posts">
-        <x-slot:middle class="!justify-end">
-            <x-input placeholder="Search jobs..." wire:model.live.debounce="search" clearable
-                icon="o-magnifying-glass" />
-        </x-slot:middle>
-    </x-header>
+
 
     <x-card>
+        <div>
+            <x-header title="Available Job Posts">
+                <x-slot:middle class="!justify-end">
+                    <x-input placeholder="Search jobs..." wire:model.live.debounce="search" clearable
+                        icon="o-magnifying-glass" />
+                </x-slot:middle>
+            </x-header>
+        </div>
         @if($jobs->count())
+
             <div class="grid gap-6 md:grid-cols-2">
 
                 @foreach($jobs as $job)
                     <x-card class="shadow-lg">
-                        <div class="font-bold text-xl">{{ $job->title }}</div>
-                        <div class="text-sm text-gray-600">{{ $job->type }} • {{ $job->location }}</div>
-                        <p class="mt-2">{{ Str::limit($job->description, 100) }}</p>
+                        {{-- @php
+                        dd($job->hrdetail->organization_name);
+                        @endphp --}}
+                        @if ($job->hrdetail)
+                            <div>
+                                <img src="{{ asset('storage/' . $job->hrdetail->logo) }}" alt="HR Logo"
+                                    class="h-12 w-24 object-contain" />
+                                <x-icon name="o-building-office" class="w-4 h-4 " />
+                                {{ $job->hrdetail->organization_name }}
+                            </div>
+
+                        @endif
+                        {{-- <x-icon name="o-identification" class="w-4 h-4 " /> --}}
+                        <div class="font-semibold text-xl">
+                        <x-icon name="o-identification" class="w-4 h-4 " />
+                        {{ $job->title }}</div>
+                        <span class="py-1 px-2 rounded-xl bg-gray-100 text-sm">
+                            <x-icon name="o-briefcase" class="w-4 h-4 " />
+
+                            {{ $job->type }}</span>
+                        <span class="py-1 px-2 rounded-xl bg-gray-100 text-sm">
+                            <x-icon name="o-map-pin" class="w-4 h-4 " />
+
+                            {{ $job->location }}</span>
+                        {{-- <div class="text-sm text-gray-600">{{ $job->type }} • {{ $job->location }}</div> --}}
+                        {{-- <p class="mt-2">{{ Str::limit($job->description, 100) }}</p> --}}
                         <div class="mt-3 text-xs text-gray-400">
                             Deadline: {{ $job->deadline?->format('Y-m-d') ?? 'N/A' }}
                         </div>
@@ -24,8 +51,8 @@
                         </div> --}}
 
                         <div class="mt-4 flex gap-2">
-                            <x-button label="View" wire:click="viewJob({{ $job->id }})" sm />
-                            <x-button label="Apply" wire:click="applyJob({{ $job->id }})" sm class="btn-primary" />
+                            {{-- <x-button label="View" wire:click="viewJob({{ $job->id }})" sm /> --}}
+                            <x-button label="Apply Now " wire:click="applyJob({{ $job->id }})" sm class="btn-primary" />
                         </div>
                     </x-card>
                 @endforeach

@@ -28,6 +28,10 @@ class JobQueryService
     {
         return JobPost::query()
             ->with([
+                'hrDetail' => function ($query) {
+                    $query->select(['id', 'organization_name', 'email', 'phone', 'logo']);
+
+                },
                 'resumes' => function ($query) {
                     $query->where('processed', true)
                         ->orderByDesc('similarity_score')
@@ -45,7 +49,7 @@ class JobQueryService
                         ->orWhere('requirements', 'like', "%{$search}%");
                 });
             })
-            ->select(['id', 'title', 'description', 'location', 'type', 'experience_level', 'created_at', 'deadline'])
+            ->select(['id', 'user_id','title', 'description', 'location', 'type', 'experience_level', 'created_at', 'deadline'])
             ->latest('created_at')
             ->paginate($perPage);
     }
@@ -64,6 +68,7 @@ class JobQueryService
         return Cache::remember($cacheKey, 120, function () use ($userId, $search, $perPage) {
             return Resume::query()
                 ->with([
+
                     'jobPost' => function ($query) {
                         $query->select(['id', 'title', 'description', 'location', 'type', 'status', 'deadline']);
                     }

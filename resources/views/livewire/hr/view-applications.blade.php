@@ -1,16 +1,18 @@
 <div>
-    <x-header title="Job Applications" subtitle="Review and manage candidate applications">
-        <x-slot:middle class="!justify-end">
-            <x-input placeholder="Search applications..." wire:model.live.debounce="search" clearable
-                icon="o-magnifying-glass" />
-        </x-slot:middle>
-        <x-slot:actions>
-            <x-button label="Clear Filters" wire:click="clearFilters" class="btn-outline" />
-        </x-slot:actions>
-    </x-header>
+
 
     {{-- Filters Section --}}
     <x-card class="mb-6">
+        <x-header title="Job Applications" subtitle="Review and manage candidate applications" size="md">
+            <x-slot:middle class="!justify-end">
+                <x-input placeholder="Search applications..." wire:model.live.debounce="search" clearable
+                    icon="o-magnifying-glass" />
+            </x-slot:middle>
+            <x-slot:actions>
+                <x-button label="Clear Filters" wire:click="clearFilters"
+                    class="rounded-md btn bg-red-600 text-white " />
+            </x-slot:actions>
+        </x-header>
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
             {{-- Job Post Filter --}}
             <div>
@@ -47,75 +49,77 @@
                     option-label="name" />
             </div>
         </div>
+        <div class="mt-5">
+            @if($applications->count())
+                <x-table :headers="$headers" :rows="$applications" :sort-by="$sortBy" with-pagination class="table-zebra">
+                    @scope('cell_job_post.title', $application)
+                    <div class="font-medium">{{ $application->jobPost->title }}</div>
+                    <div class="text-xs text-gray-500">ID: {{ $application->jobPost->id }}</div>
+                    @endscope
+
+                    @scope('cell_job_seeker_detail.user.name', $application)
+                    <div class="font-medium">{{ $application->jobSeekerDetail->user->name }}</div>
+                    <div class="text-xs text-gray-500">{{ $application->jobSeekerDetail->user->email }}</div>
+                    @endscope
+
+                    @scope('cell_similarity_score', $application)
+                    <div class="text-center">
+                        @if($application->similarity_score !== null)
+                            <span class="{{ $this->getScoreColorClass($application->similarity_score) }}">
+                                {{ number_format($application->similarity_score * 100, 1) }}%
+                            </span>
+                            <div class="w-full bg-gray-200 rounded-full h-2 mt-1">
+                                <div class="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                                    style="width: {{ $application->similarity_score * 100 }}%"></div>
+                            </div>
+                        @else
+                            <span class="text-gray-400">N/A</span>
+                        @endif
+                    </div>
+                    @endscope
+
+                    @scope('cell_application_status', $application)
+                    <div class="text-center">
+                        <x-badge value="{{ $application->status_display }}"
+                            class="badge-{{ $application->status_badge_color }}" />
+                    </div>
+                    @endscope
+
+                    @scope('cell_applied_at', $application)
+                    <div>
+                        <div class="font-medium">{{ $application->applied_at->format('M d, Y')}} </div>
+                        {{-- <div class="text-xs text-gray-500">{{ $application->applied_at->format('M d, Y') }}</div> --}}
+                    </div>
+                    @endscope
+
+                    @scope('cell_actions', $application)
+                    <div class="flex gap-1">
+                        <x-button icon="o-eye" wire:click="viewResume({{ $application->id }})" tooltip="View Resume"
+                            class="btn-sm btn-ghost" />
+                        <x-button icon="o-arrow-down-tray" wire:click="downloadResume({{ $application->id }})"
+                            tooltip="Download Resume" class="btn-sm btn-ghost" />
+                        <x-button icon="o-pencil" wire:click="openStatusModal({{ $application->id }})"
+                            tooltip="Update Status" class="btn-sm btn-ghost" />
+                    </div>
+                    @endscope
+                </x-table>
+
+                <div class="mt-4">
+                    {{ $applications->links() }}
+                </div>
+            @else
+                <div class="p-8 text-center text-gray-500">
+                    <x-icon name="o-document-text" class="w-16 h-16 mx-auto mb-4 text-gray-300" />
+                    <h3 class="text-lg font-medium mb-2">No Applications Found</h3>
+                    <p>No job applications match your current filters.</p>
+                </div>
+            @endif
+        </div>
+
     </x-card>
 
     {{-- Applications Table --}}
-    <x-card>
-        @if($applications->count())
-            <x-table :headers="$headers" :rows="$applications" :sort-by="$sortBy" with-pagination class="table-zebra">
-                @scope('cell_job_post.title', $application)
-                <div class="font-medium">{{ $application->jobPost->title }}</div>
-                <div class="text-xs text-gray-500">ID: {{ $application->jobPost->id }}</div>
-                @endscope
 
-                @scope('cell_job_seeker_detail.user.name', $application)
-                <div class="font-medium">{{ $application->jobSeekerDetail->user->name }}</div>
-                <div class="text-xs text-gray-500">{{ $application->jobSeekerDetail->user->email }}</div>
-                @endscope
-
-                @scope('cell_similarity_score', $application)
-                <div class="text-center">
-                    @if($application->similarity_score !== null)
-                        <span class="{{ $this->getScoreColorClass($application->similarity_score) }}">
-                            {{ number_format($application->similarity_score * 100, 1) }}%
-                        </span>
-                        <div class="w-full bg-gray-200 rounded-full h-2 mt-1">
-                            <div class="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                                style="width: {{ $application->similarity_score * 100 }}%"></div>
-                        </div>
-                    @else
-                        <span class="text-gray-400">N/A</span>
-                    @endif
-                </div>
-                @endscope
-
-                @scope('cell_application_status', $application)
-                <div class="text-center">
-                    <x-badge value="{{ $application->status_display }}"
-                        class="badge-{{ $application->status_badge_color }}" />
-                </div>
-                @endscope
-
-                @scope('cell_applied_at', $application)
-                <div>
-                    <div class="font-medium">{{ $application->applied_at->format('M d, Y')}} </div>
-                    {{-- <div class="text-xs text-gray-500">{{ $application->applied_at->format('M d, Y') }}</div> --}}
-                </div>
-                @endscope
-
-                @scope('cell_actions', $application)
-                <div class="flex gap-1">
-                    <x-button icon="o-eye" wire:click="viewResume({{ $application->id }})" tooltip="View Resume"
-                        class="btn-sm btn-ghost" />
-                    <x-button icon="o-arrow-down-tray" wire:click="downloadResume({{ $application->id }})"
-                        tooltip="Download Resume" class="btn-sm btn-ghost" />
-                    <x-button icon="o-pencil" wire:click="openStatusModal({{ $application->id }})" tooltip="Update Status"
-                        class="btn-sm btn-ghost" />
-                </div>
-                @endscope
-            </x-table>
-
-            <div class="mt-4">
-                {{ $applications->links() }}
-            </div>
-        @else
-            <div class="p-8 text-center text-gray-500">
-                <x-icon name="o-document-text" class="w-16 h-16 mx-auto mb-4 text-gray-300" />
-                <h3 class="text-lg font-medium mb-2">No Applications Found</h3>
-                <p>No job applications match your current filters.</p>
-            </div>
-        @endif
-    </x-card>
 
     {{-- Resume View Modal --}}
     @if($viewingResume && $selectedResume)

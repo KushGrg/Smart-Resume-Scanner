@@ -14,10 +14,9 @@ new App\Models\Hr\HrDetail;
 new App\Models\JobSeeker\JobSeekerDetail;
 
 new
-#[Layout('components.layouts.empty')]
-#[Title('Registration')]
-class extends Component
-{
+    #[Layout('components.layouts.empty')]
+    #[Title('Registration')]
+    class extends Component {
     use WithFileUploads;
 
     #[Rule('required')]

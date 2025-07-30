@@ -125,12 +125,12 @@ class Resume extends Model
             $bytes /= 1024;
         }
 
-        return round($bytes, 2).' '.$units[$i];
+        return round($bytes, 2) . ' ' . $units[$i];
     }
 
     public function getScorePercentageAttribute(): ?string
     {
-        return $this->similarity_score ? round($this->similarity_score * 100, 2).'%' : null;
+        return $this->similarity_score ? round($this->similarity_score * 100, 2) . '%' : null;
     }
 
     public function getStatusBadgeColorAttribute(): string
@@ -147,7 +147,7 @@ class Resume extends Model
     public function getStatusDisplayAttribute(): string
     {
         return match ($this->application_status) {
-            'pending' => 'Under Review',
+            'pending' => 'In Review',
             'reviewed' => 'Reviewed',
             'shortlisted' => 'Shortlisted',
             'rejected' => 'Not Selected',

@@ -1,16 +1,19 @@
 <div>
-    <x-header title="Your Job Applications">
-        <x-slot:middle class="!justify-end">
-            <x-input placeholder="Search applications..." wire:model.live.debounce="search" clearable
-                icon="o-magnifying-glass" />
-        </x-slot:middle>
-    </x-header>
+
 
     <x-card>
+        <div>
+            <x-header title="Your Job Applications">
+                <x-slot:middle class="!justify-end">
+                    <x-input placeholder="Search applications..." wire:model.live.debounce="search" clearable
+                        icon="o-magnifying-glass" />
+                </x-slot:middle>
+            </x-header>
+        </div>
         @if($applications->count())
             <div class="grid gap-6">
                 @foreach($applications as $application)
-                    <x-card class="shadow-lg">
+                    <x-card>
                         <div class="font-bold text-xl">{{ $application->jobPost->title }}</div>
                         <div class="text-sm text-gray-600">
                             {{ $application->jobPost->type }} • {{ $application->jobPost->location }}
@@ -40,9 +43,7 @@
                             <x-button label="View Resume" wire:click="viewResume({{ $application->id }})" sm />
                             <x-button label="Download Resume" wire:click="downloadResume({{ $application->id }})" sm />
                             <x-button label="Delete" class="btn-error" icon="o-trash"
-                                wire:click="confirmDelete({{ $application->id }})"
-                                tooltip="Delete this resume"
-                                sm />
+                                wire:click="confirmDelete({{ $application->id }})" tooltip="Delete this resume" sm />
                         </div>
                     </x-card>
                 @endforeach
@@ -62,13 +63,15 @@
             <x-slot name="title">Your Resume</x-slot>
             <div class="h-[80vh]">
                 @if(pathinfo($selectedResume->file_path, PATHINFO_EXTENSION) === 'pdf')
-                    <iframe 
-                        src="{{ asset('storage/' . $selectedResume->file_path) }}"
-                        class="w-full h-full" frameborder="0"
+                    <iframe src="{{ asset('storage/' . $selectedResume->file_path) }}" class="w-full h-full" frameborder="0"
                         allowfullscreen>
-                        This browser does not support PDF viewing. <a href="{{ asset('storage/' . $selectedResume->file_path) }}" target="_blank" class="underline">Click here to download the PDF</a>.
+                        This browser does not support PDF viewing. <a
+                            href="{{ asset('storage/' . $selectedResume->file_path) }}" target="_blank" class="underline">Click
+                            here to download the PDF</a>.
                     </iframe>
-                    <div class="text-xs text-gray-400 text-center mt-2">If the preview does not load, <a href="{{ asset('storage/' . $selectedResume->file_path) }}" target="_blank" class="underline">click here to download the PDF</a>.</div>
+                    <div class="text-xs text-gray-400 text-center mt-2">If the preview does not load, <a
+                            href="{{ asset('storage/' . $selectedResume->file_path) }}" target="_blank" class="underline">click
+                            here to download the PDF</a>.</div>
                 @else
                     <div class="flex items-center justify-center h-full">
                         <x-icon name="o-document" class="w-16 h-16 text-gray-400" />

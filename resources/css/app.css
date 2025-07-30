@@ -40,3 +40,18 @@
 .mary-table-pagination button {
     @apply cursor-pointer
 }
+
+.drawer-content {
+    padding: 1rem !important;
+}
+
+/* .drawer-side {
+    width: 16rem;
+} */
+
+
+
+.input,
+.select {
+    border-radius: 0.5rem !important;
+}

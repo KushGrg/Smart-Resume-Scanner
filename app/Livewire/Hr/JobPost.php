@@ -58,7 +58,7 @@ class JobPost extends Component
     public function headers(): array
     {
         return [
-            ['key' => 'id', 'label' => '#', 'class' => 'w-1'],
+            ['key' => 'id', 'label' => 'S.No     ', 'class' => 'w-1'],
             ['key' => 'title', 'label' => 'Title', 'sortable' => true],
             // ['key' => 'reqirements', 'label' => 'Requirements', 'sortable' => true],
             ['key' => 'location', 'label' => 'Location', 'sortable' => true],

@@ -28,6 +28,7 @@ class JobPost extends Model
         'requirements',
         'experience_level',
         'status',
+        // 'salary',
         'salary_min',
         'salary_max',
     ];
@@ -35,8 +36,8 @@ class JobPost extends Model
     protected $casts = [
         'user_id' => 'integer',
         'deadline' => 'datetime',
-        'salary_min' => 'decimal:2',
-        'salary_max' => 'decimal:2',
+        // 'salary_min' => 'decimal:2',
+        // 'salary_max' => 'decimal:2',
     ];
 
     protected $dates = ['deadline'];

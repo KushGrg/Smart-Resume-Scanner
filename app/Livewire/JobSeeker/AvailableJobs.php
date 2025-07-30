@@ -403,6 +403,8 @@ class AvailableJobs extends Component
     {
         return view('livewire.job-seeker.available-jobs', [
             'jobs' => $this->availableJobs(),
+           
         ]);
+
     }
 }
