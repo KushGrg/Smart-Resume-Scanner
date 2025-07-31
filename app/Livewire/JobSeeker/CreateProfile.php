@@ -8,6 +8,7 @@ use App\Models\JobSeeker\JobSeekerInfo;
 use App\Models\JobSeeker\JobSeekerSkillAndSummary;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 class CreateProfile extends Component
@@ -15,9 +16,12 @@ class CreateProfile extends Component
     public $step = 1;
 
     // Profile Info
+    // #[Validate('required')]
+    // #[Validate('min:3', message: 'This title is too short')]
     public $name;
 
     public $designation;
+
 
     public $phone;
 
@@ -182,6 +186,7 @@ class CreateProfile extends Component
 
         // Generate PDF
         $filePath = $this->generateResumePdf($jobSeekerInfo);
+
 
         session()->flash('success', 'Resume created and PDF generated successfully!');
 

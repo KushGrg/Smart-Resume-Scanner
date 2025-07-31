@@ -15,7 +15,7 @@
                 <div class="grid gap-6">
                     @foreach($applications as $application)
                         <x-card>
-                            <div class="font-bold text-xl">{{ $application->jobPost->title }}</div>
+                            <div class="font-semibold text-xl">{{ $application->jobPost->title }}</div>
                             <div class="text-sm text-gray-600 mt-2">
                                 <x-icon name="o-map-pin" class="w-4 h-4 " />
                                 {{ $application->jobPost->type }}
@@ -45,12 +45,12 @@
                             </div>
                             <div class="mt-3 flex gap-2">
                                 <x-button icon="o-eye" label="View Resume" wire:click="viewResume({{ $application->id }})"
-                                    class="bg-blue-600" tooltip="View resume" sm />
+                                    class="bg-blue-600 rounded-md text-white" tooltip="View resume " sm />
                                 <x-button icon="o-arrow-down-tray" label="Download Resume"
                                     wire:click="downloadResume({{ $application->id }})" tooltip="Download resume"
-                                    class="bg-green-600" sm />
-                                <x-button label="Delete" class="btn bg-red-600" icon="o-trash"
-                                    wire:click="confirmDelete({{ $application->id }})" tooltip="Delete resume" sm />
+                                    class="bg-green-600 rounded-md text-white" sm />
+                                <x-button label="Delete" class="btn bg-red-600 rounded-md text-white" icon="o-trash"
+                                    wire:click="confirmDelete({{ $application->id }})" tooltip="Delete resume " sm />
                             </div>
                         </x-card>
                     @endforeach
@@ -98,14 +98,15 @@
 
     {{-- Delete Confirmation Modal --}}
     @if($confirmingDelete)
-        <x-modal wire:model="confirmingDelete" max-width="md" title="Delete Resume" persistent>
+        <x-modal wire:model="confirmingDelete" max-width="sm" title="Delete Resume" persistent>
             <div class="py-6 text-center">
                 <x-icon name="o-trash" class="w-12 h-12 text-error mx-auto mb-4" />
                 <div class="text-lg font-semibold mb-2">Are you sure you want to delete this resume?</div>
-                <div class="text-gray-500 mb-4">This action cannot be undone.</div>
+                {{-- <div class="text-gray-500 mb-4">This action cannot be undone.</div> --}}
                 <div class="flex justify-center gap-4 mt-6">
-                    <x-button label="Cancel" @click="$wire.confirmingDelete = false" />
-                    <x-button label="Delete" class="btn-error" icon="o-trash" wire:click="deleteResume" spinner />
+                    <x-button label="Cancel" class="btn bg-blue-500 rounded-md" @click="$wire.confirmingDelete = false" />
+                    <x-button label="Delete" class="btn bg-red-600 rounded-md" icon="o-trash" wire:click="deleteResume"
+                        spinner />
                 </div>
             </div>
         </x-modal>

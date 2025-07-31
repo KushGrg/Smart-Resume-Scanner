@@ -39,7 +39,7 @@
                 @if ($user = auth()->user())
 
                     {{-- Always Visible --}}
-                    <x-menu-item title="Dashboard" icon="o-home" link="/dashboard" />
+
                     <x-menu-item title="Profile" icon="o-user" link="/profile" />
 
 
@@ -56,6 +56,7 @@
                         @endrole
 
                         @role('job_seeker')
+                        <x-menu-item title="Dashboard" icon="o-home" link="/dashboard" />
                         <x-menu-item title="Available Jobs" icon="o-briefcase" link="/available-jobs" />
                         <x-menu-item title="View Applied History" icon="o-clock" link="/view-applied-history" />
                         <x-menu-item title="Create Resume" icon="o-document" link="/create-profile" />
@@ -66,6 +67,7 @@
 
                         {{-- HR Menu --}}
                         @role('hr')
+                        <x-menu-item title="Dashboard" icon="o-home" link="/hr/dashboard" />
                         <x-menu-item title="Job Post" icon="o-briefcase" link="/hr/jobpost" />
                         <x-menu-item title="View Applications" icon="o-document-text" link="/hr/applications" />
                         @endrole

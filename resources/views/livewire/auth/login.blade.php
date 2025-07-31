@@ -52,11 +52,18 @@ new
 }; ?>
 
 <div class="md:w-96 mx-auto mt-20">
-    <div class="mb-10">
-        <x-app-brand />
-    </div>
 
-    <x-card title="Login" subtitle="Enter your credentials to access your account">
+
+    <x-card w-full>
+        <div class="flex items-center gap-2 mb-3 justify-center mb-6">
+            {{-- <x-icon name="o-cube" class="w-6 -mb-1.5 text-purple-500 justify-center" /> --}}
+            <span
+                class="font-bold text-3xl me-3 bg-gradient-to-r from-purple-500 to-pink-300 bg-clip-text text-transparent ">
+                Smart Resume Scanner
+            </span>
+        </div>
+        {{-- <H2 class="mt-2 mb-3   text-center font-bold">Login</H2> --}}
+        {{-- <Legend>Login</Legend> --}}
         <x-form wire:submit="login">
             <x-input placeholder="E-mail" wire:model="email" icon="o-envelope" />
             <x-input placeholder="Password" wire:model="password" type="password" icon="o-key" />

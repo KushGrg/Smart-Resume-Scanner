@@ -5,8 +5,7 @@ namespace App\Livewire\JobSeeker;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Mary\Traits\Toast;
-
-// use \App\Models\JobSeeker;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ViewCreatedResume extends Component
 {
@@ -15,6 +14,10 @@ class ViewCreatedResume extends Component
     public $search = '';
 
     public $showTrashed = false;
+
+    public bool $showResumeModal = false;
+
+    public $selectedResume = null;
 
     protected $queryString = ['search', 'showTrashed'];
 
@@ -77,6 +80,47 @@ class ViewCreatedResume extends Component
         $publicUrl = route('public.resume.view', $id);
         $this->dispatch('copyToClipboard', $publicUrl);
         $this->success('Public link copied!');
+    }
+
+    public function showResumeDetails($id)
+    {
+        $this->selectedResume = \App\Models\JobSeeker\JobSeekerInfo::where('job_seeker_id', Auth::id())
+            ->when($this->showTrashed, fn($q) => $q->onlyTrashed())
+            ->findOrFail($id);
+
+        $this->showResumeModal = true;
+    }
+
+    public function closeResumeModal()
+    {
+        $this->showResumeModal = false;
+        $this->selectedResume = null;
+    }
+
+    public function downloadResume($id): ?StreamedResponse
+    {
+        try {
+            $resume = \App\Models\JobSeeker\JobSeekerInfo::where('job_seeker_id', Auth::id())
+                ->when($this->showTrashed, fn($q) => $q->onlyTrashed())
+                ->findOrFail($id);
+
+            if (!$resume->pdf_path) {
+                $this->error('No PDF file associated with this resume');
+                return null;
+            }
+
+            $filePath = storage_path('app/public/' . ltrim($resume->pdf_path, '/'));
+
+            if (!file_exists($filePath)) {
+                $this->error('PDF file not found in storage');
+                return null;
+            }
+
+            return response()->download($filePath, basename($resume->pdf_path));
+        } catch (\Exception $e) {
+            $this->error('Failed to download resume: ' . $e->getMessage());
+            return null;
+        }
     }
 
     public function render()

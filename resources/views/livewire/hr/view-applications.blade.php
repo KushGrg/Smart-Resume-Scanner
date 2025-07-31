@@ -125,85 +125,65 @@
     @if($viewingResume && $selectedResume)
         <x-modal wire:model="viewingResume" max-width="7xl" title="Resume Details" persistent
             x-on:click.outside="$wire.viewingResume = false" class="backdrop-blur-sm">
+
+            {{-- Close Button --}}
+            <div class="flex justify-end mb-4">
+                <x-button label="Close" wire:click="$set('viewingResume', false)" icon="o-x-mark" class="btn bg-red-600" />
+            </div>
+
             <div class="space-y-8">
 
-                {{-- Applicant Info + Application Details --}}
-                <x-card class="shadow-sm p-6">
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+                {{-- Profile + Job + Score --}}
+                {{-- <x-card class="shadow-sm p-6">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start"> --}}
 
-                        {{-- Applicant Profile --}}
-                        <div class="flex items-center gap-4">
-                            <div
-                                class="w-20 h-20 rounded-full bg-primary text-white flex items-center justify-center text-2xl font-bold">
-                                {{ strtoupper(substr($selectedResume->jobSeekerDetail->user->name, 0, 1)) }}
-                            </div>
-                            <div>
-                                <h3 class="font-semibold text-xl">{{ $selectedResume->jobSeekerDetail->user->name }}</h3>
-                                <p class="text-sm text-gray-500">{{ $selectedResume->jobSeekerDetail->user->email }}</p>
-                            </div>
-                        </div>
+                        {{-- Applicant --}}
+                        {{-- <div class="flex flex-col gap-1">
+                            <h3 class="text-xl font-bold">{{ $selectedResume->jobSeekerDetail->user->name }}</h3>
+                            <p class="text-sm text-gray-500">{{ $selectedResume->jobSeekerDetail->user->email }}</p>
+                        </div> --}}
 
                         {{-- Job Info --}}
-                        <div class="space-y-2">
-                            <h4 class="text-gray-600 font-medium">Application</h4>
-                            <div class="text-sm text-gray-500">Job Post</div>
-                            <div class="font-semibold">{{ $selectedResume->jobPost->title }}</div>
+                        {{-- <div class="space-y-2">
+                            <h4 class="font-semibold text-gray-700">Application Info</h4>
+                            <p class="text-sm text-gray-500">Job Post:</p>
+                            <p class="font-semibold text-gray-800">{{ $selectedResume->jobPost->title }}</p>
+                            <p class="text-sm text-gray-500 mt-2">Applied On:</p>
+                            <p class="text-gray-700">
+                                {{ $selectedResume->applied_at?->format('M d, Y H:i') ??
+                                $selectedResume->created_at->format('M d, Y H:i') }}
+                            </p>
+                        </div> --}}
 
-                            <div class="text-sm text-gray-500 mt-2">Applied On</div>
+                        {{-- Status + Score --}}
+                        {{-- <div class="space-y-4">
                             <div>
-                                {{ $selectedResume->applied_at?->format('M d, Y H:i') ?? $selectedResume->created_at->format('M d, Y H:i') }}
-                            </div>
-                        </div>
-
-                        {{-- Score + Status --}}
-                        <div class="flex flex-col items-start gap-4">
-                            <div>
-                                <div class="text-sm text-gray-500">Status</div>
+                                <p class="text-sm text-gray-500 mb-1">Status</p>
                                 <x-badge value="{{ $selectedResume->status_display }}"
                                     class="badge-{{ $selectedResume->status_badge_color }} text-base" />
                             </div>
                             <div>
-                                <div class="text-sm text-gray-500">Match Score</div>
+                                <p class="text-sm text-gray-500 mb-1">Match Score</p>
                                 @if($selectedResume->similarity_score !== null)
-                                    <span
-                                        class="text-2xl font-bold {{ $this->getScoreColorClass($selectedResume->similarity_score) }}">
-                                        {{ number_format($selectedResume->similarity_score * 100, 1) }}%
-                                    </span>
+                                <span
+                                    class="text-2xl font-bold {{ $this->getScoreColorClass($selectedResume->similarity_score) }}">
+                                    {{ number_format($selectedResume->similarity_score * 100, 1) }}%
+                                </span>
                                 @else
-                                    <p class="text-gray-400">N/A</p>
+                                <p class="text-gray-400">N/A</p>
                                 @endif
                             </div>
                         </div>
-
                     </div>
-                </x-card>
+                </x-card> --}}
 
-                {{-- Resume File + Actions --}}
-                <x-card class="shadow-sm p-6">
-                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                        <div class="flex items-center gap-3 p-4 bg-white rounded-lg border w-full md:w-auto flex-grow">
-                            <x-icon name="o-document-text" class="w-8 h-8 text-gray-400" />
-                            <div class="min-w-0">
-                                <p class="font-medium truncate">{{ $selectedResume->file_name }}</p>
-                                <p class="text-xs text-gray-500">{{ $selectedResume->file_size_formatted }}</p>
-                            </div>
-                        </div>
+                {{-- Resume File Details --}}
 
-                        <div class="flex flex-wrap justify-end gap-3">
-                            <x-button label="Update Status" wire:click="openStatusModal({{ $selectedResume->id }})"
-                                class="btn-primary" icon="o-pencil" />
-                            <x-button label="Download" wire:click="downloadResume({{ $selectedResume->id }})"
-                                class="btn-outline" icon="o-arrow-down-tray" />
-                            <x-button label="Close" wire:click="$set('viewingResume', false)" class="btn-ghost"
-                                icon="o-x-mark" />
-                        </div>
-                    </div>
-                </x-card>
 
                 {{-- Resume Preview --}}
                 <x-card class="shadow-sm p-6">
                     <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-bold">Resume Preview</h3>
+                        <h3 class="text-lg font-bold text-gray-800">Resume Preview</h3>
                         <div class="flex gap-2">
                             <x-button icon="{{ $fullscreenPreview ? 'o-arrows-pointing-in' : 'o-arrows-pointing-out' }}"
                                 wire:click="toggleFullscreen"
@@ -218,8 +198,7 @@
                         class="{{ $fullscreenPreview ? 'fixed inset-0 z-50 bg-white p-4' : 'h-[75vh] bg-gray-50 rounded-lg border' }} overflow-hidden relative">
                         @if(pathinfo($selectedResume->file_path, PATHINFO_EXTENSION) === 'pdf')
                             <iframe src="{{ asset('storage/' . $selectedResume->file_path) }}#toolbar=0&navpanes=0"
-                                class="w-full h-full border-0" allowfullscreen>
-                            </iframe>
+                                class="w-full h-full border-0" allowfullscreen></iframe>
                         @else
                             <div class="flex flex-col items-center justify-center h-full p-8 text-center">
                                 <x-icon name="o-document" class="w-16 h-16 text-gray-400 mb-4" />
@@ -236,12 +215,29 @@
                                     class="btn-sm btn-ghost" />
                             </div>
                         @endif
+
+                    </div>
+                    <div class="min-w-0 mt-2 text-center">
+                        <p class="font-medium truncate">{{ $selectedResume->file_name }}</p>
+                        {{-- <p class="text-xs text-gray-500">{{ $selectedResume->file_size_formatted }}</p> --}}
                     </div>
                 </x-card>
+                {{-- <x-card class="shadow-sm p-6">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                        <div class="flex items-center gap-3 p-4 bg-gray-50 rounded-lg border w-full md:w-auto flex-grow">
+                            <x-icon name="o-document-text" class="w-8 h-8 text-gray-400" />
+                            <div class="min-w-0">
+                                <p class="font-medium truncate">{{ $selectedResume->file_name }}</p>
+                                <p class="text-xs text-gray-500">{{ $selectedResume->file_size_formatted }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </x-card> --}}
 
             </div>
         </x-modal>
     @endif
+
 
     {{-- Status Update Modal --}}
     @if($statusModal && $selectedResume)
@@ -267,4 +263,5 @@
             </div>
         </x-modal>
     @endif
+
 </div>

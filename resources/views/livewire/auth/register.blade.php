@@ -115,12 +115,20 @@ new
 }; ?>
 
 <div class="md:w-96 mx-auto mt-20">
-    <div class="mb-10">
+    {{-- <div class="mb-10">
         <x-app-brand />
-    </div>
+    </div> --}}
 
-    <x-card title="Register" subtitle="Create a new account to get started">
+    <x-card>
+        <div class="flex items-center gap-2 mb-3 justify-center mb-6">
+            {{-- <x-icon name="o-cube" class="w-6 -mb-1.5 text-purple-500 justify-center" /> --}}
+            <span
+                class="font-bold text-3xl me-3 bg-gradient-to-r from-purple-500 to-pink-300 bg-clip-text text-transparent ">
+                Smart Resume Scanner
+            </span>
+        </div>
         <x-form wire:submit="register">
+
             <x-radio label="Select Role" wire:model="role" :options="$roles" inline />
             <x-input placeholder="Name" wire:model="name" icon="o-user" />
             <x-input placeholder="E-mail" wire:model="email" icon="o-envelope" />
@@ -131,8 +139,8 @@ new
                 <x-input placeholder=" Your Designation" wire:model="designation" />
             </div>
             <div wire:show="role === 'hr'">
-                <x-input placeholder="Organization Name" wire:model="organization_name" />
-                <x-file wire:model="photo" accept="image/png, image/jpeg" />
+                <x-input placeholder="Organization Name" wire:model="organization_name" class="mb-3" />
+                <x-file wire:model="photo" accept="image/png, image/jpeg" class="rounded-md" />
 
                 <div class="mt-2">
 

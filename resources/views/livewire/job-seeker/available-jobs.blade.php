@@ -37,22 +37,24 @@
                             {{ $job->title }}
                         </div>
 
-                        <span class="py-1 px-2 rounded-xl bg-gray-100 text-sm mb-2">
-                            <x-icon name="o-briefcase" class="w-4 h-4 " />
-                            {{ $job->type }}
-                        </span>
+                        <div class="flex gap-2">
+                            <span class="py-1 px-2 rounded-xl bg-gray-100 text-sm mb-2">
+                                <x-icon name="o-briefcase" class="w-4 h-4 " />
+                                {{ $job->type }}
+                            </span>
 
-                        <span class="py-1 px-2 rounded-xl bg-gray-100 text-sm mb-2">
-                            <x-icon name="o-map-pin" class="w-4 h-4 " />
-                            {{ $job->location }}
-                        </span>
+                            <span class="py-1 px-2 rounded-xl bg-gray-100 text-sm mb-2">
+                                <x-icon name="o-map-pin" class="w-4 h-4 " />
+                                {{ $job->location }}
+                            </span>
 
-                        <span class="py-1 px-2 rounded-xl bg-gray-100 text-sm mb-2">
-                            Rs. {{ $job->min_salary}} - {{$job->max_salary}}
-                        </span>
+                            <span class="py-1 px-2 rounded-xl bg-gray-100 text-sm mb-2">
+                                Rs. {{ $job->min_salary}} - {{$job->max_salary}}
+                            </span>
+                        </div>
 
-                        <div class="mt-2 mx-2">
-                            <span class=" text-xs text-dark bg-gray-100 ">
+                        <div class="mt-1 mx-2">
+                            <span class="py-1 px-2 rounded-xl text-sm text-dark bg-gray-100 ">
                                 Deadline: {{ $job->deadline?->format('Y-m-d') ?? 'N/A' }}
                             </span>
                         </div>

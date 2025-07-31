@@ -26,7 +26,7 @@ Route::middleware('guest')->group(function () {
 Route::get('/email/verify/{id}/{hash}', function (\Illuminate\Http\Request $request, $id, $hash) {
     $user = User::findOrFail($id);
 
-    if (! hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
+    if (!hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
         throw new AuthorizationException;
     }
 
@@ -38,15 +38,15 @@ Route::get('/email/verify/{id}/{hash}', function (\Illuminate\Http\Request $requ
     $user->previously_verified = true;
     $user->save();
 
-    if (! Auth::check()) {
+    if (!Auth::check()) {
         $message = $user->previously_verified
             ? 'Welcome back! Your new email address has been verified.'
             : 'Email verification completed successfully!';
         Auth::login($user);
     } else {
         $message = $user->previously_verified
-            ? 'New Email address has been verified for '.$user->name.'.'
-            : 'Email verification completed successfully for '.$user->name.'.';
+            ? 'New Email address has been verified for ' . $user->name . '.'
+            : 'Email verification completed successfully for ' . $user->name . '.';
     }
 
     $user->sendEmailVerificationNotification();
@@ -63,6 +63,7 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->group(function () {
     Volt::route('/profile', 'profile')->name('profile');
     Volt::route('/dashboard', 'dashboard')->name('dashboard')->middleware('permission:access dashboard');
+    Volt::route('/hr/dashboard', 'hr_dashboard')->name('dashboard')->middleware('permission:access dashboard');
     Volt::route('/logout', 'auth.logout')->name('logout');
     Route::get('/hr/jobpost', JobPost::class)->name('hr.jobpost.index')->middleware('permission:view job posts');
     Route::get('/hr/applications', ViewApplications::class)->name('hr.applications.index')->middleware('permission:view job posts');
