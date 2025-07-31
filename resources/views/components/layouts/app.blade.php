@@ -56,7 +56,7 @@
                         @endrole
 
                         @role('job_seeker')
-                        <x-menu-item title="Dashboard" icon="o-home" link="/dashboard" />
+                        <x-menu-item title="Dashboard" icon="o-home" link="/job_seeker/dashboard" />
                         <x-menu-item title="Available Jobs" icon="o-briefcase" link="/available-jobs" />
                         <x-menu-item title="View Applied History" icon="o-clock" link="/view-applied-history" />
                         <x-menu-item title="Create Resume" icon="o-document" link="/create-profile" />

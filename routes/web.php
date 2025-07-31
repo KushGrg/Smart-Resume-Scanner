@@ -64,6 +64,7 @@ Route::middleware('auth')->group(function () {
     Volt::route('/profile', 'profile')->name('profile');
     Volt::route('/dashboard', 'dashboard')->name('dashboard')->middleware('permission:access dashboard');
     Volt::route('/hr/dashboard', 'hr_dashboard')->name('dashboard')->middleware('permission:access dashboard');
+    Volt::route('/job_seeker/dashboard', 'dashboard')->name('dashboard')->middleware('permission:access dashboard');
     Volt::route('/logout', 'auth.logout')->name('logout');
     Route::get('/hr/jobpost', JobPost::class)->name('hr.jobpost.index')->middleware('permission:view job posts');
     Route::get('/hr/applications', ViewApplications::class)->name('hr.applications.index')->middleware('permission:view job posts');

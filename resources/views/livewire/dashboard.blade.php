@@ -21,6 +21,6 @@ new
 
     <div>
         {{-- Content of Dashboard Goes Here --}}
-        hi
+
     </div>
 </div>
