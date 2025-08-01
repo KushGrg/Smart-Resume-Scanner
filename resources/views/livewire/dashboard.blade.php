@@ -30,10 +30,20 @@ new
         $this->totalAvailableJobs = JobPost::where('status', 'active')->count();
 
         // Total applied jobs by this user (distinct job posts)
+        //$this->totalAppliedJobs = Resume::where('user_id', $userId)
+        //->whereNotNull('job_post_id')
+        // ->distinct('job_post_id')
+        // ->count();
+
+
+
         $this->totalAppliedJobs = Resume::where('user_id', $userId)
             ->whereNotNull('job_post_id')
-            ->distinct('job_post_id')
+            ->select('job_post_id')
+            ->groupBy('job_post_id')
+            ->get()
             ->count();
+
 
 
         // Total created resumes by this user (distinct files)

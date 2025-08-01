@@ -89,24 +89,74 @@ class ResumeRanker
     }
 
     /**
-     * Calculate exact skill matches (not just TF-IDF)
+     * Calculate similarity between two text strings with exact match bonus
+     */
+    public function calculateTextSimilarity(string $resumeText, string $jobDescription): float
+    {
+        if (empty($resumeText) || empty($jobDescription)) {
+            return 0.0;
+        }
+
+        $resumeTokens = $this->preprocessText($resumeText);
+        $jobTokens = $this->preprocessText($jobDescription);
+
+        if (empty($resumeTokens) || empty($jobTokens)) {
+            return 0.0;
+        }
+
+        // Create TF vectors with exact match bonus
+        $resumeVector = $this->createTFVector($resumeTokens);
+        $jobVector = $this->createTFVector($jobTokens);
+
+        // Calculate base cosine similarity
+        $baseScore = $this->cosineSimilarity($resumeVector, $jobVector);
+
+        // Calculate exact match bonus (percentage of exact matches)
+        $exactMatches = array_intersect($resumeTokens, $jobTokens);
+        $exactMatchBonus = count($exactMatches) / max(count($jobTokens), 1) * 0.3; // Up to 30% bonus
+
+        return min(1.0, $baseScore + $exactMatchBonus);
+    }
+
+    /**
+     * Create term frequency vector with exact match emphasis
+     */
+    private function createTFVector(array $tokens): array
+    {
+        $tokenFreq = array_count_values($tokens);
+        $totalTokens = count($tokens);
+
+        $tfVector = [];
+        foreach ($tokenFreq as $token => $freq) {
+            // Give higher weight to exact matches (2x multiplier)
+            $tfVector[$token] = ($freq / $totalTokens) * 2;
+        }
+
+        return $tfVector;
+    }
+
+    /**
+     * Calculate exact skill matches with higher precision
      */
     private function calculateExactSkillMatch(string $skillsText, string $requirements): float
     {
         $requiredSkills = $this->extractSkillsFromRequirements($requirements);
         $resumeSkills = $this->extractSkillsFromText($skillsText);
 
-        if (empty($requiredSkills))
+        if (empty($requiredSkills)) {
             return 0;
+        }
 
         $matches = 0;
         foreach ($requiredSkills as $skill) {
-            if (in_array($skill, $resumeSkills)) {
+            // Exact match check with case insensitivity
+            if (in_array(strtolower($skill), array_map('strtolower', $resumeSkills))) {
                 $matches++;
             }
         }
 
-        return $matches / count($requiredSkills);
+        // Give more weight to skill matches (up to 50% of total score)
+        return ($matches / count($requiredSkills)) * 1.5;
     }
 
     /**
@@ -211,81 +261,6 @@ class ResumeRanker
         }
 
         return $results;
-    }
-
-    /**
-     * Calculate similarity between two text strings directly
-     */
-    public function calculateTextSimilarity(string $resumeText, string $jobDescription): float
-    {
-        if (empty($resumeText) || empty($jobDescription)) {
-            return 0.0;
-        }
-
-        // Use simple TF vectors first, then enhance with IDF if needed
-        $resumeTokens = $this->preprocessText($resumeText);
-        $jobTokens = $this->preprocessText($jobDescription);
-
-        if (empty($resumeTokens) || empty($jobTokens)) {
-            return 0.0;
-        }
-
-        // Create TF vectors (term frequency)
-        $resumeVector = $this->createTFVector($resumeTokens);
-        $jobVector = $this->createTFVector($jobTokens);
-
-        return $this->cosineSimilarity($resumeVector, $jobVector);
-    }
-
-    /**
-     * Create term frequency vector
-     */
-    private function createTFVector(array $tokens): array
-    {
-        $tokenFreq = array_count_values($tokens);
-        $totalTokens = count($tokens);
-
-        $tfVector = [];
-        foreach ($tokenFreq as $token => $freq) {
-            $tfVector[$token] = $freq / $totalTokens;
-        }
-
-        return $tfVector;
-    }
-
-    /**
-     * Calculate TF-IDF vector for a document
-     */
-    private function calculateTFIDFVector(string $text, array $corpus): array
-    {
-        $tokens = $this->preprocessText($text);
-        $tokenFreq = array_count_values($tokens);
-        $totalTokens = count($tokens);
-
-        if ($totalTokens == 0) {
-            return [];
-        }
-
-        $tfidfVector = [];
-
-        foreach ($tokenFreq as $token => $freq) {
-            // Term Frequency (TF) - normalized
-            $tf = $freq / $totalTokens;
-
-            // Inverse Document Frequency (IDF)
-            $docCount = $this->getDocumentCount($token, $corpus);
-
-            if ($docCount > 0) {
-                $idf = log(count($corpus) / $docCount);
-                // TF-IDF Score
-                $tfidfVector[$token] = $tf * $idf;
-            } else {
-                // Term doesn't appear in corpus (shouldn't happen)
-                $tfidfVector[$token] = 0;
-            }
-        }
-
-        return $tfidfVector;
     }
 
     /**
@@ -618,6 +593,29 @@ class ResumeRanker
             'she',
             'too',
             'use',
+            'our',
+            'out',
+            'day',
+            'get',
+            'use',
+            'man',
+            'new',
+            'now',
+            'old',
+            'see',
+            'way',
+            'who',
+            'boy',
+            'did',
+            'its',
+            'let',
+            'put',
+            'say',
+            'she',
+            'too',
+            'use',
         ];
     }
 }
+
+
