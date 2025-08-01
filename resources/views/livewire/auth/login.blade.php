@@ -41,7 +41,7 @@ new
                 return redirect()->route('verification.notice');
             }
 
-            return redirect()->intended('/dashboard');
+            return redirect()->intended('/profile');
         }
 
         // Log failed login attempt
