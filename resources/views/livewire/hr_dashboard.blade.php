@@ -132,53 +132,55 @@ new class extends Component {
 }; ?>
 
 <div class="space-y-6">
-    <!-- Header -->
-    <div class="flex justify-between items-center">
-        <div>
-            <h1 class="text-3xl font-bold text-gray-900">HR Dashboard</h1>
-            <p class="text-gray-600 mt-1">Overview of your job posts and applications</p>
+    <x-card>
+        <div class="flex justify-between items-center mb-3">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900">HR Dashboard</h1>
+                <p class="text-gray-600 mt-1">Overview of your job posts and applications</p>
+            </div>
+            <x-button label="Refresh Data" wire:click="refreshData" class="btn-outline" icon="o-arrow-path"
+                spinner="refreshData" />
         </div>
-        <x-button label="Refresh Data" wire:click="refreshData" class="btn-outline" icon="o-arrow-path"
-            spinner="refreshData" />
-    </div>
 
-    <!-- Stats Cards Row 1 - Enhanced -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Total Job Posts with trend indicator -->
-        <x-stat title="Total Job Posts" :value="$totalJobPosts" icon="o-briefcase"
-            tooltip="Total number of job posts created" class="bg-gradient-to-r from-blue-500 to-blue-600 text-white"
-            :trend="$totalJobPosts > 0 ? 'up' : 'neutral'" trend-text="From last week" />
+        <!-- Stats Cards Row 1 - Enhanced -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-2">
+            <!-- Total Job Posts with trend indicator -->
+            <x-stat title="Total Job Posts" :value="$totalJobPosts" icon="o-briefcase"
+                tooltip="Total number of job posts created"
+                class="bg-gradient-to-r from-blue-500 to-blue-600 text-white" :trend="$totalJobPosts > 0 ? 'up' : 'neutral'" trend-text="From last week" />
 
-        <!-- Active Job Posts with status indicator -->
-        <x-stat title="Active Posts" :value="$activeJobPosts" icon="o-check-circle"
-            tooltip="Currently active job posts ({{ $totalJobPosts > 0 ? number_format(($activeJobPosts / $totalJobPosts) * 100, 0) : 0 }}% of total)"
-            class="bg-gradient-to-r from-green-500 to-green-600 text-white" :indicator="$activeJobPosts > 0 ? 'active' : 'inactive'" />
+            <!-- Active Job Posts with status indicator -->
+            <x-stat title="Active Posts" :value="$activeJobPosts" icon="o-check-circle"
+                tooltip="Currently active job posts ({{ $totalJobPosts > 0 ? number_format(($activeJobPosts / $totalJobPosts) * 100, 0) : 0 }}% of total)"
+                class="bg-gradient-to-r from-green-500 to-green-600 text-white" :indicator="$activeJobPosts > 0 ? 'active' : 'inactive'" />
 
-        <!-- Total Applications with comparison -->
-        <x-stat title="Total Applications" :value="$totalApplications" icon="o-document-text"
-            tooltip="Total applications received ({{ $totalJobPosts > 0 ? number_format($totalApplications / $totalJobPosts, 1) : 0 }} per job)"
-            class="bg-gradient-to-r from-purple-500 to-purple-600 text-white"
-            :comparison="$applicationTrends[6]['count'] > 0 ? number_format(($totalApplications - $applicationTrends[6]['count']) / $applicationTrends[6]['count'] * 100, 0) : 100"
-            comparison-text="vs last week" />
-    </div>
+            <!-- Total Applications with comparison -->
+            <x-stat title="Total Applications" :value="$totalApplications" icon="o-document-text"
+                tooltip="Total applications received ({{ $totalJobPosts > 0 ? number_format($totalApplications / $totalJobPosts, 1) : 0 }} per job)"
+                class="bg-gradient-to-r from-purple-500 to-purple-600 text-white"
+                :comparison="$applicationTrends[6]['count'] > 0 ? number_format(($totalApplications - $applicationTrends[6]['count']) / $applicationTrends[6]['count'] * 100, 0) : 100"
+                comparison-text="vs last week" />
+        </div>
 
-    <!-- Stats Cards Row 2 - Enhanced -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <!-- Pending Applications with urgency indicator -->
-        <x-stat title="Pending Review" :value="$pendingApplications" icon="o-clock"
-            tooltip="Applications awaiting review ({{ $totalApplications > 0 ? number_format(($pendingApplications / $totalApplications) * 100, 0) : 0 }}% of total)"
-            class="bg-gradient-to-r from-amber-400 to-amber-500 text-white" :indicator="$pendingApplications > 10 ? 'high' : ($pendingApplications > 0 ? 'medium' : 'low')" />
+        <!-- Stats Cards Row 2 - Enhanced -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-2">
+            <!-- Pending Applications with urgency indicator -->
+            <x-stat title="Pending Review" :value="$pendingApplications" icon="o-clock"
+                tooltip="Applications awaiting review ({{ $totalApplications > 0 ? number_format(($pendingApplications / $totalApplications) * 100, 0) : 0 }}% of total)"
+                class="bg-gradient-to-r from-amber-400 to-amber-500 text-white" :indicator="$pendingApplications > 10 ? 'high' : ($pendingApplications > 0 ? 'medium' : 'low')" />
 
-        <!-- Shortlisted with conversion rate -->
-        <x-stat title="Shortlisted" :value="$shortlistedApplications" icon="o-heart"
-            tooltip="Shortlisted candidates ({{ $totalApplications > 0 ? number_format(($shortlistedApplications / $totalApplications) * 100, 0) : 0 }}% conversion)"
-            class="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white" :trend="$shortlistedApplications > 0 ? 'up' : 'neutral'" />
+            <!-- Shortlisted with conversion rate -->
+            <x-stat title="Shortlisted" :value="$shortlistedApplications" icon="o-heart"
+                tooltip="Shortlisted candidates ({{ $totalApplications > 0 ? number_format(($shortlistedApplications / $totalApplications) * 100, 0) : 0 }}% conversion)"
+                class="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white" :trend="$shortlistedApplications > 0 ? 'up' : 'neutral'" />
 
-        <!-- Rejected with quality control indicator -->
-        <x-stat title="Rejected" :value="$rejectedApplications" icon="o-x-circle"
-            tooltip="Rejected applications (quality control)"
-            class="bg-gradient-to-r from-red-500 to-red-600 text-white" :indicator="$rejectedApplications > 0 ? 'active' : 'inactive'" />
-    </div>
+            <!-- Rejected with quality control indicator -->
+            <x-stat title="Rejected" :value="$rejectedApplications" icon="o-x-circle"
+                tooltip="Rejected applications (quality control)"
+                class="bg-gradient-to-r from-red-500 to-red-600 text-white" :indicator="$rejectedApplications > 0 ? 'active' : 'inactive'" />
+        </div>
+    </x-card>
+    <!-- Header -->
 
     <!-- Charts and Tables Row -->
     <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
