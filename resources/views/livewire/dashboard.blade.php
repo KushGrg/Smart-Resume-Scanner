@@ -19,7 +19,6 @@ new
 
     public function mount()
     {
-        $this->authorize('access dashboard');
         $this->loadDashboardData();
     }
 
@@ -30,20 +29,19 @@ new
         // Total available jobs (active)
         $this->totalAvailableJobs = JobPost::where('status', 'active')->count();
 
-        // Total applied jobs by this user
-        $this->totalAppliedJobs = Resume::where('user_id', $userId)->count();
+        // Total applied jobs by this user (distinct job posts)
+        $this->totalAppliedJobs = Resume::where('user_id', $userId)
+            ->whereNotNull('job_post_id')
+            ->distinct('job_post_id')
+            ->count();
 
-        // Total created resumes by this user
+
+        // Total created resumes by this user (distinct files)
         $this->totalCreatedResumes = Resume::where('user_id', $userId)
             ->distinct('file_path')
             ->count();
 
-        // Recent applications (last 5)
-        $this->recentApplications = Resume::where('user_id', $userId)
-            ->with('jobPost')
-            ->latest()
-            ->limit(5)
-            ->get();
+
 
         // Recent available jobs (last 5)
         $this->recentAvailableJobs = JobPost::where('status', 'active')
@@ -76,33 +74,6 @@ new
 
     <!-- Recent Activity -->
     <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
-        <!-- Recent Applications -->
-        <x-card title="Recent Applications">
-            @if($recentApplications->count() > 0)
-                <div class="space-y-3">
-                    @foreach($recentApplications as $application)
-                        <div class="flex items-center space-x-4 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                            <div class="flex-1 min-w-0">
-                                <p class="text-sm font-medium text-gray-900 truncate">
-                                    {{ $application->jobPost->title ?? 'N/A' }}
-                                </p>
-                                <p class="text-xs text-gray-600">
-                                    Applied {{ $application->created_at->diffForHumans() }}
-                                </p>
-                            </div>
-                            <x-badge :value="ucwords($application->application_status ?? 'pending')"
-                                class="badge-{{ $application->application_status === 'shortlisted' ? 'success' : ($application->application_status === 'rejected' ? 'error' : 'warning') }}" />
-                        </div>
-                    @endforeach
-                </div>
-            @else
-                <div class="text-center py-8 text-gray-500">
-                    <x-icon name="o-inbox" class="w-12 h-12 mx-auto mb-2 text-gray-300" />
-                    <p>No applications yet</p>
-                </div>
-            @endif
-        </x-card>
-
         <!-- Recent Available Jobs -->
         <x-card title="Recent Job Openings">
             @if($recentAvailableJobs->count() > 0)
@@ -128,16 +99,17 @@ new
                 </div>
             @endif
         </x-card>
+        <!-- Quick Actions -->
+        <x-card title="Quick Actions">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {{-- <x-button label="Browse Jobs" link="/job-seeker/available-jobs" class="btn-primary"
+                    icon="o-magnifying-glass" /> --}}
+                <x-button label="Create Resume" link="/create-profile" class="btn bg-green-500"
+                    icon="o-document-plus" />
+                <x-button label="Application History" link="/view-created-resume-list" class="btn bg-blue-500"
+                    icon="o-clock" />
+            </div>
+        </x-card>
     </div>
 
-    <!-- Quick Actions -->
-    <x-card title="Quick Actions" class="bg-gradient-to-r from-gray-50 to-gray-100">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {{-- <x-button label="Browse Jobs" link="/job-seeker/available-jobs" class="btn-primary"
-                icon="o-magnifying-glass" /> --}}
-            <x-button label="Create Resume" link="/create-profile" class="btn bg-green-500" icon="o-document-plus" />
-            <x-button label="Application History" link="/view-created-resume-list" class="btn bg-blue-500"
-                icon="o-clock" />
-        </div>
-    </x-card>
 </div>

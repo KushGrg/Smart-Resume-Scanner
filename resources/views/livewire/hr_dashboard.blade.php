@@ -32,20 +32,21 @@ new class extends Component {
         $userId = Auth::id();
         \Log::debug('Loading dashboard data', ['user_id' => $userId]);
 
-        // Job Posts Statistics
+        // Job Posts Statistics - Filter by current HR user only
         $jobPostsQuery = JobPost::where('user_id', $userId);
         $this->totalJobPosts = $jobPostsQuery->count();
         $this->activeJobPosts = $jobPostsQuery->where('status', 'active')->count();
 
-        // Applications Statistics
+        // Applications Statistics - Filter by current HR user's job posts
         $applicationsQuery = Resume::whereHas('jobPost', function ($q) use ($userId) {
             $q->where('user_id', $userId);
         });
 
+        // Count applications with fresh queries to ensure real-time status
         $this->totalApplications = $applicationsQuery->count();
-        $this->pendingApplications = $applicationsQuery->where('application_status', 'pending')->count();
-        $this->shortlistedApplications = $applicationsQuery->where('application_status', 'shortlisted')->count();
-        $this->rejectedApplications = $applicationsQuery->where('application_status', 'rejected')->count();
+        $this->pendingApplications = $applicationsQuery->clone()->where('application_status', 'pending')->count();
+        $this->shortlistedApplications = $applicationsQuery->clone()->where('application_status', 'shortlisted')->count();
+        $this->rejectedApplications = $applicationsQuery->clone()->where('application_status', 'rejected')->count();
 
         // Recent Applications (Last 5)
         $this->recentApplications = $applicationsQuery
@@ -142,7 +143,7 @@ new class extends Component {
     </div>
 
     <!-- Stats Cards Row 1 - Enhanced -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <!-- Total Job Posts with trend indicator -->
         <x-stat title="Total Job Posts" :value="$totalJobPosts" icon="o-briefcase"
             tooltip="Total number of job posts created" class="bg-gradient-to-r from-blue-500 to-blue-600 text-white"
@@ -300,7 +301,7 @@ new class extends Component {
         <!-- Top Job Posts by Applications -->
         <x-card title="Top Job Posts by Applications">
             <x-slot:menu>
-                <x-button label="Manage Posts" link="/hr/job-posts" class="btn-sm btn-outline" />
+                <x-button label="Manage Posts" link="/hr/jobpost" class="btn-sm btn-outline" />
             </x-slot:menu>
 
             @if($topJobPosts->count() > 0)
@@ -341,14 +342,14 @@ new class extends Component {
                 </div>
             @endif
         </x-card>
+        <x-card title="Quick Actions" class="bg-gradient-to-r from-gray-50 to-gray-100">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <x-button label="Create Job Post" link="/hr/jobpost" class="btn-primary" icon="o-plus" />
+                <x-button label="View Applications" link="/hr/applications" class="btn-outline" icon="o-eye" />
+
+            </div>
+        </x-card>
     </div>
 
     <!-- Quick Actions -->
-    <x-card title="Quick Actions" class="bg-gradient-to-r from-gray-50 to-gray-100">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <x-button label="Create Job Post" link="/hr/jobpost" class="btn-primary" icon="o-plus" />
-            <x-button label="View Applications" link="/hr/applications" class="btn-outline" icon="o-eye" />
-
-        </div>
-    </x-card>
 </div>
