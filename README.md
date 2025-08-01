@@ -75,6 +75,7 @@ After running the migrations and seeders, you can login with the following crede
 |-------|-------------------|----------|
 | Admin | admin@example.com | password |
 | User  | user@gmail.com  | password |
+| Hr  | hr@gmail.com  | password |
 
 ## Requirements
 
