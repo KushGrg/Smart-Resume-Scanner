@@ -159,8 +159,8 @@
                     </div>
 
                     <div class="border-t border-gray-100 pt-4">
-                        <x-file wire:model="resume" label="Upload Resume" accept=".pdf,.doc,.docx" hint="PDF Only (Max 2MB)"
-                            class="mt-4" />
+                        <x-file wire:model="resume" label="Upload Resume" accept=".pdf,.doc,.docx"
+                            hint="PDF and Docx file (Max 2MB)" class="mt-4" />
                     </div>
 
                     <div class="flex justify-end gap-2 pt-4 border-t border-gray-100">

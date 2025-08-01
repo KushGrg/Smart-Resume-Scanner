@@ -85,7 +85,8 @@ class ResumeRanker
             $totalScore += $score * $weights[$field];
         }
 
-        return min(1.0, $totalScore); // Cap at 1.0
+        // return min(1.0, $totalScore); // Cap at 1.0
+        return min(0.95, $totalScore); // Cap at 95%
     }
 
     /**

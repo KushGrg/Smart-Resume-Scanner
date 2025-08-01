@@ -6,7 +6,7 @@ use Livewire\Volt\Component;
 use App\Models\JobSeeker\Resume;
 use App\Models\Hr\JobPost;
 use Illuminate\Support\Facades\Auth;
-
+use Anuzpandey\LaravelNepaliDate\LaravelNepaliDate;
 new
     #[Layout('components.layouts.app')]
     #[Title('Dashboard')]
@@ -19,6 +19,10 @@ new
 
     public function mount()
     {
+        // $engDate = now();
+        //$nepDate = LaravelNepaliDate::from($engDate)->toNepaliDate();
+        // dd($nepDate);
+
         $this->loadDashboardData();
     }
 

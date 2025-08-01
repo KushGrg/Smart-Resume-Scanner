@@ -35,6 +35,7 @@
     ],
     "require": {
         "php": "^8.2",
+        "anuzpandey/laravel-nepali-date": "^2.3",
         "barryvdh/laravel-dompdf": "^3.1",
         "laravel/framework": "^12.0",
         "laravel/octane": "^2.10",
