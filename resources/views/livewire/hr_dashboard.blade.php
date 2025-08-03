@@ -300,8 +300,8 @@ new class extends Component {
             @endif
         </x-card>
 
-        <!-- Top Job Posts by Applications -->
-        <x-card title="Top Job Posts by Applications">
+        <!-- Job Posts by Applications -->
+        <x-card title=" Job Posts by Applications">
             <x-slot:menu>
                 <x-button label="Manage Posts" link="/hr/jobpost" class="btn-sm btn-outline" />
             </x-slot:menu>
@@ -344,7 +344,7 @@ new class extends Component {
                 </div>
             @endif
         </x-card>
-        <x-card title="Quick Actions" class="bg-gradient-to-r from-gray-50 to-gray-100">
+        <x-card title="Quick Actions">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <x-button label="Create Job Post" link="/hr/jobpost" class="btn-primary" icon="o-plus" />
                 <x-button label="View Applications" link="/hr/applications" class="btn-outline" icon="o-eye" />
