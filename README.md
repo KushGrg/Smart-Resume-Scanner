@@ -94,3 +94,4 @@ If you discover a security vulnerability within this starter kit, please send an
 ## License
 
 The Mary UI Starter Kit is open-source software licensed under the [MIT license](https://raw.githubusercontent.com/KushGrg/Smart-Resume-Scanner/refs/heads/main/LICENSE).
+Thank you 😊
