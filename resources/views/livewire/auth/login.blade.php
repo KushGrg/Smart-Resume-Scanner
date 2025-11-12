@@ -54,30 +54,27 @@ new
 <div class="md:w-96 mx-auto mt-20">
 
 
-    <x-card w-full>
-        <div class="flex items-center gap-2 mb-3 justify-center mb-6">
-            {{-- <x-icon name="o-cube" class="w-6 -mb-1.5 text-purple-500 justify-center" /> --}}
-            <span
-                class="font-bold text-3xl me-3 bg-gradient-to-r from-purple-500 to-pink-300 bg-clip-text text-transparent ">
-                Smart Resume Scanner
-            </span>
-        </div>
-        {{-- <H2 class="mt-2 mb-3   text-center font-bold">Login</H2> --}}
-        {{-- <Legend>Login</Legend> --}}
-        <x-form wire:submit="login">
-            <x-input placeholder="E-mail" wire:model="email" icon="o-envelope" />
-            <x-input placeholder="Password" wire:model="password" type="password" icon="o-key" />
+    <x-card class="shadow-xl">
+        {{-- <img src="{{ asset('storage/logos/slfinal.png') }}" alt="SRS Logo" class="h-12 w-auto justify-center " />
+        --}}
+        <x-app-brand />
+        <x-card title="Smart Resume Scanner" class="text-center">
 
-            <div class="text-right mt-2">
-                <a href="{{ route('password.request') }}" class="text-sm text-primary hover:text-primary-focus">
-                    Forgot your password?
-                </a>
-            </div>
+            <x-form wire:submit="login">
+                <x-input placeholder="E-mail" wire:model="email" icon="o-envelope" />
+                <x-input placeholder="Password" wire:model="password" type="password" icon="o-key" />
 
-            <x-slot:actions>
-                <x-button label="Create an account" class="btn-ghost" link="/register" />
-                <x-button label="Login" type="submit" icon="o-paper-airplane" class="btn-primary" spinner="login" />
-            </x-slot:actions>
-        </x-form>
+                <div class="text-right mt-2">
+                    <a href="{{ route('password.request') }}" class="text-sm text-primary hover:text-primary-focus">
+                        Forgot your password?
+                    </a>
+                </div>
+
+                <x-slot:actions>
+                    <x-button label="Create an account" class="btn-ghost" link="/register" />
+                    <x-button label="Login" type="submit" icon="o-paper-airplane" class="btn-primary" spinner="login" />
+                </x-slot:actions>
+            </x-form>
+        </x-card>
     </x-card>
 </div>

@@ -19,13 +19,13 @@ new
     class extends Component {
     use WithFileUploads;
 
-    #[Rule('required')]
+    #[Rule('required|string|max:255')]
     public string $name = '';
 
-    #[Rule('required|email|unique:users')]
+    #[Rule('required|email|unique:users|regex:/^[^\d][\w.-]*@[\w.-]+\.[a-zA-Z]{2,}$/')]
     public string $email = '';
 
-    #[Rule('required|confirmed')]
+    #[Rule('required|confirmed|min:8')]
     public string $password = '';
 
     #[Rule('required')]
@@ -33,13 +33,17 @@ new
 
     public $roles = [];
 
+    //#[Rule('required_if:role,hr|image|mimes:jpg,jpeg,png|max:2048')]
     public $photo;
 
+    #[Rule('required|numeric|digits_between:8,10')]
     public $phone;
 
-    public $organization_name;
+    #[Rule('required_if:role,hr|max:255')]
+    public $organization_name = '';
 
-    public $designation;
+    #[Rule('required_if:role,job_seeker|string|max:255')]
+    public $designation = '';
 
     #[Rule('required')]
     public $role = 'user';
@@ -65,8 +69,12 @@ new
     public function register()
     {
         $data = $this->validate();
-        // dd($data);
-        $data['avatar'] = '/empty-user.jpg';
+
+        $data['organization_name'] = $this->organization_name;
+        $data['designation'] = $this->designation;
+        // $data['photo'] = $this->photo;
+
+        // $data['avatar'] = '/empty-user.jpg';
         $data['password'] = Hash::make($data['password']);
 
         $user = User::create($data);
@@ -119,45 +127,43 @@ new
         <x-app-brand />
     </div> --}}
 
-    <x-card>
-        <div class="flex items-center gap-2 mb-3 justify-center mb-6">
-            {{-- <x-icon name="o-cube" class="w-6 -mb-1.5 text-purple-500 justify-center" /> --}}
-            <span
-                class="font-bold text-3xl me-3 bg-gradient-to-r from-purple-500 to-pink-300 bg-clip-text text-transparent ">
-                Smart Resume Scanner
-            </span>
-        </div>
-        <x-form wire:submit="register">
+    <x-card class="shadow-xl">
+        <x-app-brand />
+        <x-card title="Smart Resume Scanner" class="text-center">
+            <x-form wire:submit="register">
+                <x-radio label="Select Role" wire:model="role" :options="$roles" inline omitError="true" />
+                <x-input placeholder=" Name" wire:model="name" icon="o-user" errorField="name" firstErrorOnly="true" />
+                <x-input placeholder="E-mail" wire:model="email" icon="o-envelope" errorField="email"
+                    firstErrorOnly="true" />
+                <x-input placeholder="Password" wire:model="password" type="password" icon="o-key" errorField="password"
+                    firstErrorOnly="true" />
+                <x-input placeholder="Confirm Password" wire:model="password_confirmation" type="password"
+                    icon="o-key" />
+                <x-input type='number' placeholder="Phone Number" wire:model="phone" errorField="phone"
+                    firstErrorOnly="true" icon="o-phone" />
+                <div wire:show="role==='job_seeker'">
+                    <x-input placeholder=" Your Designation" wire:model="designation" errorField="designation"
+                        firstErrorOnly="true" icon="o-identification" />
+                </div>
+                <div wire:show="role === 'hr'">
+                    <x-input placeholder="Organization Name" wire:model="organization_name" icon="o-building-office" />
+                    <x-file wire:model="photo" accept="image/png, image/jpeg" class="rounded-md mt-4" />
 
-            <x-radio label="Select Role" wire:model="role" :options="$roles" inline />
-            <x-input placeholder="Name" wire:model="name" icon="o-user" />
-            <x-input placeholder="E-mail" wire:model="email" icon="o-envelope" />
-            <x-input placeholder="Password" wire:model="password" type="password" icon="o-key" />
-            <x-input placeholder="Confirm Password" wire:model="password_confirmation" type="password" icon="o-key" />
-            <x-input type='number' placeholder="Phone Number" wire:model="phone" min:8 max:10 />
-            <div wire:show="role==='job_seeker'">
-                <x-input placeholder=" Your Designation" wire:model="designation" />
-            </div>
-            <div wire:show="role === 'hr'">
-                <x-input placeholder="Organization Name" wire:model="organization_name" class="mb-3" />
-                <x-file wire:model="photo" accept="image/png, image/jpeg" class="rounded-md" />
+                    <div class="mt-2">
 
-                <div class="mt-2">
-
-                    @if ($photo)
-                        <img src="{{ $photo->temporaryUrl() }}" alt="Uploaded Photo"
-                            class="w-full h-32 object-cover rounded-md">
-                    @endif
+                        @if ($photo)
+                            <img src="{{ $photo->temporaryUrl() }}" alt="Uploaded Photo"
+                                class="w-full h-32 object-cover rounded-md">
+                        @endif
+                    </div>
                 </div>
 
-            </div>
-
-</div>
-
-<x-slot:actions>
-    <x-button label="Already registered?" class="btn-ghost" link="/login" />
-    <x-button label="Register" type="submit" icon="o-paper-airplane" class="btn-primary" spinner="register" />
-</x-slot:actions>
-</x-form>
-</x-card>
+                <x-slot:actions>
+                    <x-button label="Already registered?" class="btn-ghost" link="/login" />
+                    <x-button label="Register" type="submit" icon="o-paper-airplane" class="btn-primary"
+                        spinner="register" />
+                </x-slot:actions>
+            </x-form>
+        </x-card>
+    </x-card>
 </div>

@@ -57,11 +57,15 @@
 
                         @role('job_seeker')
                         <x-menu-item title="Dashboard" icon="o-home" link="/job_seeker/dashboard" />
-                        <x-menu-item title="Available Jobs" icon="o-briefcase" link="/available-jobs" />
-                        <x-menu-item title="View Applied History" icon="o-clock" link="/view-applied-history" />
-                        <x-menu-item title="Create Resume" icon="o-document" link="/create-profile" />
-                        <x-menu-item title="View Created Resume List" icon="o-document-magnifying-glass"
-                            link="/view-created-resume-list " />
+                        <x-menu-sub title="Jobs" icon="o-building-office">
+                            <x-menu-item title="Available Jobs" icon="o-briefcase" link="/available-jobs" />
+                            <x-menu-item title="View Applied History" icon="o-clock" link="/view-applied-history" />
+                        </x-menu-sub>
+                        <x-menu-sub title="Manage Resumes" icon="o-document-text">
+                            <x-menu-item title="Create Resume" icon="o-document" link="/create-profile" />
+                            <x-menu-item title="View Created Resume List" icon="o-document-magnifying-glass"
+                                link="/view-created-resume-list " />
+                        </x-menu-sub>
 
                         @endrole
 

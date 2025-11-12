@@ -135,6 +135,78 @@ class AvailableJobs extends Component
      *
      * @return void
      */
+    // public function submitApplication()
+    // {
+    //     try {
+    //         // ✅ Validate user authentication and job seeker profile
+    //         $jobSeekerDetail = auth()->user()?->jobSeekerDetail;
+
+    //         if (!auth()->user() || !$jobSeekerDetail) {
+    //             throw new \Exception('Job seeker profile not found.');
+    //         }
+
+    //         // ✅ Validate resume file
+    //         $this->validate([
+    //             'resume' => 'mimes:pdf,doc,docx|max:2048',
+    //         ], [
+    //             'resume.mimes' => 'The resume must be a file of type: pdf, doc, docx.',
+    //             'resume.max' => 'The resume may not be greater than 2MB in size.',
+    //         ]);
+
+    //         // ✅ Store resume file
+    //         $path = $this->resume->store('resumes', 'public');
+
+    //         if (!$path) {
+    //             throw new \Exception('Failed to store resume file.');
+    //         }
+
+    //         // ✅ Insert or update the resume for this job
+    //         $jobSeekerDetail->resumes()->updateOrCreate(
+    //             [
+    //                 'job_seeker_detail_id' => $jobSeekerDetail->id,
+    //                 'job_post_id' => $this->selectedJob->id,
+    //             ],
+    //             [
+    //                 'file_path' => $path,
+    //                 'file_name' => $this->resume->getClientOriginalName(),
+    //                 'file_type' => $this->resume->getClientOriginalExtension(),
+    //             ]
+    //         );
+
+    //         Log::info('Job application submitted (or updated) successfully', [
+    //             'job_id' => $this->selectedJob->id,
+    //             'user_id' => auth()->id(),
+    //             'file_path' => $path,
+    //         ]);
+
+    //         // ✅ Success message
+    //         $this->toast(
+    //             type: 'success',
+    //             title: 'Application Submitted',
+    //             description: 'Your application has been submitted successfully.',
+    //         );
+
+    //         session()->flash('message', 'Application submitted successfully.');
+    //         $this->reset(['applyingJob', 'resume']);
+
+    //     } catch (\Illuminate\Validation\ValidationException $e) {
+    //         // Let Livewire handle validation errors
+    //         throw $e;
+    //     } catch (\Exception $e) {
+    //         Log::error('Application submission failed', [
+    //             'job_id' => $this->selectedJob?->id,
+    //             'user_id' => auth()->id(),
+    //             'error' => $e->getMessage(),
+    //             'trace' => $e->getTraceAsString(),
+    //         ]);
+
+    //         $this->toast(
+    //             type: 'error',
+    //             title: 'Application Failed',
+    //             description: 'Unable to submit your application. Please try again later.',
+    //         );
+    //     }
+    // }
     public function submitApplication()
     {
         try {
@@ -145,13 +217,19 @@ class AvailableJobs extends Component
                 throw new \Exception('Job seeker profile not found.');
             }
 
-            // ✅ Validate resume file
+            // ✅ Validate resume file - ADD 'required' rule
             $this->validate([
-                'resume' => 'mimes:pdf,doc,docx|max:2048',
+                'resume' => 'required|mimes:pdf,doc,docx|max:2048',
             ], [
+                'resume.required' => 'Please upload your resume.',
                 'resume.mimes' => 'The resume must be a file of type: pdf, doc, docx.',
                 'resume.max' => 'The resume may not be greater than 2MB in size.',
             ]);
+
+            // ✅ Ensure file is a valid uploaded file
+            if (!$this->resume instanceof \Illuminate\Http\UploadedFile) {
+                throw new \Exception('Invalid file upload.');
+            }
 
             // ✅ Store resume file
             $path = $this->resume->store('resumes', 'public');
@@ -173,7 +251,7 @@ class AvailableJobs extends Component
                 ]
             );
 
-            Log::info('Job application submitted (or updated) successfully', [
+            Log::info('Job application submitted successfully', [
                 'job_id' => $this->selectedJob->id,
                 'user_id' => auth()->id(),
                 'file_path' => $path,
@@ -186,8 +264,8 @@ class AvailableJobs extends Component
                 description: 'Your application has been submitted successfully.',
             );
 
-            session()->flash('message', 'Application submitted successfully.');
-            $this->reset(['applyingJob', 'resume']);
+            // Close modal and reset
+            $this->reset(['applyingJob', 'resume', 'selectedJob']);
 
         } catch (\Illuminate\Validation\ValidationException $e) {
             // Let Livewire handle validation errors
@@ -203,207 +281,18 @@ class AvailableJobs extends Component
             $this->toast(
                 type: 'error',
                 title: 'Application Failed',
-                description: 'Unable to submit your application. Please try again later.',
+                description: $e->getMessage(),
             );
         }
     }
 
-    // public function submitApplication()
-    // {
-    //     try {
-    //         // ✅ Validate user authentication and job seeker profile
-    //         $jobSeekerDetail = auth()->user()?->jobSeekerDetail;
 
-    //         if (!auth()->user() || !$jobSeekerDetail) {
-    //             throw new \Exception('Job seeker profile not found.');
-    //         }
-
-    //         // ✅ Validate resume file
-    //         $this->validate([
-    //             'resume' => 'mimes:pdf,doc,docx|max:2048'
-    //         ], [
-    //             'resume.mimes' => 'The resume must be a file of type: pdf, doc, docx.',
-    //             'resume.max' => 'The resume may not be greater than 2MB in size.'
-    //         ]);
-
-    //         // ✅ Check if the user already applied for this job
-    //         $alreadyApplied = $jobSeekerDetail->resumes()
-    //             ->where('job_post_id', $this->selectedJob->id)
-    //             ->exists();
-
-    //         if ($alreadyApplied) {
-    //             $this->toast(
-    //                 type: 'error',
-    //                 title: 'Already Applied',
-    //                 description: 'You have already applied for this job.',
-    //             );
-    //             return;
-    //         }
-
-    //         // ✅ Store resume file
-    //         $path = $this->resume->store('resumes', 'public');
-
-    //         if (!$path) {
-    //             throw new \Exception('Failed to store resume file.');
-    //         }
-
-    //         // ✅ Save resume record
-    //         $jobSeekerDetail->resumes()->create([
-    //             'job_seeker_detail_id' => $jobSeekerDetail->id,
-    //             'job_post_id' => $this->selectedJob->id,
-    //             'file_path' => $path,
-    //             'file_name' => $this->resume->getClientOriginalName(),
-    //         ]);
-
-    //         Log::info('Job application submitted successfully', [
-    //             'job_id' => $this->selectedJob->id,
-    //             'user_id' => auth()->id(),
-    //             'file_path' => $path,
-    //         ]);
-
-    //         // ✅ Success message
-    //         $this->toast(
-    //             type: 'success',
-    //             title: 'Application Submitted',
-    //             description: 'Your application has been submitted successfully.',
-    //         );
-
-    //         session()->flash('message', 'Application submitted successfully.');
-    //         $this->reset(['applyingJob', 'resume']);
-
-    //     } catch (\Illuminate\Validation\ValidationException $e) {
-    //         // Let Livewire handle validation errors
-    //         throw $e;
-
-    //     } catch (\Exception $e) {
-    //         Log::error('Application submission failed', [
-    //             'job_id' => $this->selectedJob?->id,
-    //             'user_id' => auth()->id(),
-    //             'error' => $e->getMessage(),
-    //             'trace' => $e->getTraceAsString(),
-    //         ]);
-
-    //         $this->toast(
-    //             type: 'error',
-    //             title: 'Application Failed',
-    //             description: 'Unable to submit your application. Please try again later.',
-    //         );
-    //     }
-    // }
-
-    // public function submitApplication()
-    // {
-
-    //     try {
-
-    //         // Validate user authentication and job seeker profile
-    //         if (!auth()->user() || !auth()->user()->jobSeekerDetail) {
-    //             throw new \Exception('Job seeker profile not found');
-    //         }
-
-    //         // Validate resume file
-    //         $this->validate([
-    //             'resume' => 'mimes:pdf,doc,docx|max:2048',
-    //         ], [
-    //             'resume.mimes' => 'The resume must be a file of type: pdf, doc, docx.',
-    //             'resume.max' => 'The resume may not be greater than 2MB in size.',
-    //         ]);
-
-    //         // Store resume file
-    //         $path = $this->resume->store('resumes', 'public');
-
-    //         if (!$path) {
-    //             throw new TextExtractionException('Failed to store resume file');
-    //         }
-    //         // dd(auth()->user()->jobSeekerDetail->resume());
-
-    //         // Save to resumes table
-    //         auth()->user()->jobSeekerDetail->resumes()->create([
-    //             'job_seeker_detail_id' => auth()->user()->jobSeekerDetail->id,
-    //             'job_post_id' => $this->selectedJob->id,
-    //             'file_path' => $path,
-    //         ]);
-
-    //         Log::info('Job application submitted successfully', [
-    //             'job_id' => $this->selectedJob->id,
-    //             'user_id' => auth()->id(),
-    //             'file_path' => $path,
-    //         ]);
-
-    //         $this->toast(
-    //             type: 'success',
-    //             title: 'Application Submitted',
-    //             description: 'Your application has been submitted successfully.',
-    //         );
-
-    //         $this->reset(['applyingJob', 'resume']);
-
-    //     } catch (TextExtractionException $e) {
-    //         Log::error('Resume processing failed during application', [
-    //             'job_id' => $this->selectedJob?->id,
-    //             'user_id' => auth()->id(),
-    //             'error' => $e->getMessage(),
-    //         ]);
-
-    //         $this->toast(
-    //             type: 'error',
-    //             title: 'Resume Processing Failed',
-    //             description: 'There was an issue processing your resume. Please try again.',
-    //         );
-
-    //     } catch (\Illuminate\Validation\ValidationException $e) {
-    //         // Let Livewire handle validation errors naturally
-    //         throw $e;
-    //     } catch (\Exception $e) {
-    //         Log::error('Application submission failed', [
-    //             'job_id' => $this->selectedJob?->id,
-    //             'user_id' => auth()->id(),
-    //             'error' => $e->getMessage(),
-    //             'trace' => $e->getTraceAsString(),
-    //         ]);
-
-    //         $this->toast(
-    //             type: 'error',
-    //             title: 'Application Failed',
-    //             description: 'Unable to submit your application. Please try again later.',
-    //         );
-    //     }
-    // }
-    // public function submitApplication()
-    // {
-    //     // dd(auth()->user()->jobSeekerDetail->resumes());
-    //     $this->validate([
-    //         'resume' => 'mimes:pdf,doc,docx|max:2048'
-    //     ], [
-    //         'resume.mimes' => 'The resume must be a file of type: pdf, doc, docx.',
-    //         'resume.max' => 'The resume may not be greater than 2MB in size.'
-    //     ]);
-
-    //     $path = $this->resume->store('resumes', 'public');
-
-    //     // Save to resumes table
-    //     auth()->user()->jobSeekerDetail->resumes()->create([
-    //         'job_seeker_detail_id' => auth()->user()->jobSeekerDetail->id,
-    //         'job_post_id' => $this->selectedJob->id,
-    //         'file_path' => $path,
-    //         'file_name' => $this->resume->getClientOriginalName()
-    //     ]);
-
-    //     $this->toast(
-    //         type: 'error',
-    //         title: 'Already Applied',
-    //         description: 'You have already applied for this job.',
-    //     );
-
-    //     session()->flash('message', 'Application submitted successfully.');
-    //     $this->reset(['applyingJob', 'resume']);
-    // }
 
     public function render()
     {
         return view('livewire.job-seeker.available-jobs', [
             'jobs' => $this->availableJobs(),
-           
+
         ]);
 
     }
