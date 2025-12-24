@@ -1,4 +1,4 @@
-# Mary UI Starter Kit for Laravel
+# Mary UI Starter Kit for Laravel For SRS
 
 
 A production-ready Laravel starter kit combining the power of [Laravel Volt](https://livewire.laravel.com/docs/volt) with [Mary UI](https://github.com/robsontenorio/mary). This package provides a complete authentication system and role-based authorization powered by Spatie's Laravel Permission package.
