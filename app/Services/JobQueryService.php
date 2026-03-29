@@ -46,7 +46,10 @@ class JobQueryService
                         ->orWhere('description', 'like', "%{$search}%")
                         ->orWhere('location', 'like', "%{$search}%")
                         ->orWhere('experience_level', 'like', "%{$search}%")
-                        ->orWhere('requirements', 'like', "%{$search}%");
+                        ->orWhere('requirements', 'like', "%{$search}%")
+                        ->orWhereHas('hrDetail', function ($q) use ($search) {
+                            $q->where('organization_name', 'like', "%{$search}%");
+                        });
                 });
             })
             ->select(['id', 'user_id', 'title', 'description', 'location', 'type', 'experience_level', 'created_at', 'deadline', 'min_salary', 'max_salary'])

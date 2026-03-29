@@ -1,5 +1,5 @@
 <div>
-    <x-card>
+    <x-card class="shadow-lg">
         {{-- <div class="max-w-4xl mx-auto px-6 py-10 bg-white shadow-lg rounded-xl"> --}}
             {{-- Step Tracker --}}
             <div class="mb-10">

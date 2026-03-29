@@ -22,14 +22,11 @@ class AppBrand extends Component
     public function render(): View|Closure|string
     {
         return <<<'HTML'
-                <a href="/" wire:navigate>
+                <a href="" wire:navigate>
                     <!-- Hidden when collapsed -->
                     <div {{ $attributes->class(["hidden-when-collapsed"]) }}>
-                        <div class="flex items-center gap-2">
-                            <x-icon name="o-cube" class="w-6 -mb-1.5 text-purple-500" />
-                            <span class="font-bold text-3xl me-3 bg-gradient-to-r from-purple-500 to-pink-300 bg-clip-text text-transparent ">
-                                SRS
-                            </span>
+                        <div class="flex justify-center items-center">
+                            <img src="{{ asset('storage/logos/tchan.png') }}" alt="SRS Logo" class="h-12 w-auto justify-center " />
                         </div>
                     </div>
 

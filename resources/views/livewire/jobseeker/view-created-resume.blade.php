@@ -76,7 +76,7 @@
                 <x-slot:actions>
                     <x-button label="Download" wire:click="downloadResume({{ $selectedResume->id ?? 0 }})"
                         icon="o-document-arrow-down" />
-                    <x-button label="Close" wire:click="closeResumeModal" />
+                    <x-button class="bg-red-600 text-white" label="Close" wire:click="closeResumeModal" />
                 </x-slot:actions>
             </x-card>
         </x-modal>
